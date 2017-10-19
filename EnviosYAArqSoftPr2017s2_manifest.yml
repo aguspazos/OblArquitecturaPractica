@@ -1,0 +1,10 @@
+applications:
+- name: EnviosYAArqSoftPr2017s2
+  instances: 1
+  memory: 256M
+  disk_quota: 1024M
+  routes:
+  - route: EnviosYAArqSoftPr2017s2.mybluemix.net
+  buildpack: https://github.com/aguspazos/OblArquitecturaPractica.git
+  command: rails server -p 3000
+  stack: cflinuxfs2
