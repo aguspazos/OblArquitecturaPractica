@@ -36,6 +36,11 @@
     <%= form.text_field :image, id: :user_image %>
   </div>
 
+  <div class="field">
+    <%= form.label :avatar %>
+    <%= form.file_field :avatar,id: :user_avatar %>
+  </div>
+  
   <div class="actions">
     <%= form.submit %>
   </div>
