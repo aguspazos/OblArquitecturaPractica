@@ -40,6 +40,10 @@ ActiveRecord::Schema.define(version: 20171021145044) do
     t.string "avatar_content_type"
     t.integer "avatar_file_size"
     t.datetime "avatar_updated_at"
+    t.string "provider"
+    t.string "uid"
+    t.string "oauth_token"
+    t.datetime "oauth_expires_at"
     t.string "password"
   end
 
