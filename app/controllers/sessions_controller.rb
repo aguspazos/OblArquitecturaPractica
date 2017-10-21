@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
       cadet_log_in cadet
       redirect_to cadet
     else
-        
+      flash.now[:danger] = 'Invalid email/password combination'
       render 'new_cadet'
     end
   end
@@ -34,6 +34,7 @@ class SessionsController < ApplicationController
       user_log_in user
       redirect_to user
     else
+      flash.now[:danger] = 'Invalid email/password combination'
       render 'new_user'
     end
   end
