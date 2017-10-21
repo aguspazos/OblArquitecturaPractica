@@ -3,7 +3,9 @@ Rails.application.routes.draw do
   root 'sessions#new_user'
   resources :cadets
   resources :users
-  
+  resources :admins
+
+
   get    '/cadet-login',   to: 'sessions#new_cadet'
   post   '/cadet-login',   to: 'sessions#create_cadet'
   delete '/cadet-logout',  to: 'sessions#destroy_cadet'
@@ -11,6 +13,11 @@ Rails.application.routes.draw do
   get    '/login',   to: 'sessions#new_user'
   post   '/login',   to: 'sessions#create_user'
   delete '/logout',  to: 'sessions#destroy_user'
+  
+  get    '/admin',         to: 'admins#index'
+  get    '/admin-login',   to: 'sessions#new_admin'
+  post   '/admin-login',   to: 'sessions#create_admin'
+  delete '/admin-logout',  to: 'sessions#destroy_admin'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
