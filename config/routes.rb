@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  resources :shipments
   root 'sessions#new_user'
   resources :cadets
   

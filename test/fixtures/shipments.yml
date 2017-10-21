@@ -1,0 +1,35 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  origin_lat: MyString
+  origin_lng: MyString
+  destiny_lat: MyString
+  destiny_lng: MyString
+  sender_id: 
+  receiver_id: 
+  receiver_email: MyString
+  price: 1.5
+  final_price: false
+  cadet_id: 
+  status: 
+  sender_pays: false
+  receiver_pays: false
+  delivery_time: 2017-10-21 23:09:08
+  payment_method: 
+
+two:
+  origin_lat: MyString
+  origin_lng: MyString
+  destiny_lat: MyString
+  destiny_lng: MyString
+  sender_id: 
+  receiver_id: 
+  receiver_email: MyString
+  price: 1.5
+  final_price: false
+  cadet_id: 
+  status: 
+  sender_pays: false
+  receiver_pays: false
+  delivery_time: 2017-10-21 23:09:08
+  payment_method: 
