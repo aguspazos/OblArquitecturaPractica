@@ -42,7 +42,7 @@ class SessionsController < ApplicationController
     user = User.find_by(email: params[:session][:email].downcase)
     if user && user.authenticate(params[:session][:password])
       user_log_in user
-      redirect_to user
+      redirect_to '/users/main'
     else
       flash.now[:danger] = 'Invalid email/password combination'
       render 'new_user'
@@ -52,6 +52,28 @@ class SessionsController < ApplicationController
   def destroy_user
     user_log_out
     render 'new_user'
+  end
+  
+  def new_admin
+    if current_admin!= nil
+      redirect_to current_admin
+    end
+  end
+  
+  def create_admin
+    admin = Admin.find_by(email: params[:session][:email].downcase)
+    if admin && admin.authenticate(params[:session][:password])
+      admin_log_in admin
+      redirect_to '/admin'
+    else
+      flash.now[:danger] = 'Invalid email/password combination'
+      render 'new_admin'
+    end
+  end
+
+  def destroy_admin
+    admin_log_out
+    render 'new_admin'
   end
 end
 
