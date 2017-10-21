@@ -2,12 +2,14 @@
 <html>
 <head>
   <title>Workspace</title>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCF9196u3KCJdvmTenZhNVxiu7IGFsGZPY"></script>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
-  <% if controller_name == "users_controller" && action_name == "login" %>
-     <%= stylesheet_link_tag "users/login" %>
-     <%= javascript_include_tag "users/login" %>
+  
+  <% if controller_name == "users_controller" && action_name == "create_shipment" %>
+    <%= stylesheet_link_tag "shipments/shipment" %>
+    <%= javascript_include_tag "shipments/shipment" %>  
   <% end %>
 </head>
 <body>
