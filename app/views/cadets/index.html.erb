@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Cadets</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>First name</th>
+      <th>Last name</th>
+      <th>Email</th>
+      <th>Document</th>
+      <th>Status</th>
+      <th>Available</th>
+      <th>Position</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @cadets.each do |cadet| %>
+      <tr>
+        <td><%= cadet.first_name %></td>
+        <td><%= cadet.last_name %></td>
+        <td><%= cadet.email %></td>
+        <td><%= cadet.document %></td>
+        <td><%= cadet.status %></td>
+        <td><%= cadet.available %></td>
+        <td><%= cadet.position %></td>
+        <td><%= link_to 'Show', cadet %></td>
+        <td><%= link_to 'Edit', edit_cadet_path(cadet) %></td>
+        <td><%= link_to 'Destroy', cadet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Cadet', new_cadet_path %>

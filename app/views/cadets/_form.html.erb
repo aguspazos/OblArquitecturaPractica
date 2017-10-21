@@ -1,0 +1,52 @@
+<%= form_with(model: cadet, local: true) do |form| %>
+  <% if cadet.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(cadet.errors.count, "error") %> prohibited this cadet from being saved:</h2>
+
+      <ul>
+      <% cadet.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :first_name %>
+    <%= form.text_field :first_name, id: :cadet_first_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :last_name %>
+    <%= form.text_field :last_name, id: :cadet_last_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.text_field :email, id: :cadet_email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :document %>
+    <%= form.text_field :document, id: :cadet_document %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.text_field :status, id: :cadet_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :available %>
+    <%= form.check_box :available, id: :cadet_available %>
+  </div>
+
+  <div class="field">
+    <%= form.label :position %>
+    <%= form.text_field :position, id: :cadet_position %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
