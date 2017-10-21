@@ -26,10 +26,5 @@ test:
   host: localhost
 
 production:
-  adapter: postgresql
-  encoding: SQL_ASCII
-  database: envios_ya_db
-  pool: 5
-  username: envios_ya
-  password: password
-  host: localhost
+production:
+  url: <%= ENV['DATABASE_URL'] %>
