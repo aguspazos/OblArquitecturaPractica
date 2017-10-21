@@ -16,6 +16,11 @@
 </p>
 
 <p>
+  <strong>Password:</strong>
+  <%= @cadet.password %>
+</p>
+
+<p>
   <strong>Document:</strong>
   <%= @cadet.document %>
 </p>
@@ -37,3 +42,4 @@
 
 <%= link_to 'Edit', edit_cadet_path(@cadet) %> |
 <%= link_to 'Back', cadets_path %>
+<%= link_to 'Log out', 'cadet-logout', method: :delete %>

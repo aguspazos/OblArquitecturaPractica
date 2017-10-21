@@ -1,7 +1,12 @@
 Rails.application.routes.draw do
-  resources :cadets
+  
   root 'users#login'
+  resources :cadets
   resources :users
+  
+  get    '/cadet-login',   to: 'sessions#new_cadet'
+  post   '/cadet-login',   to: 'sessions#create_cadet'
+  delete '/cadet-logout',  to: 'sessions#destroy_cadet'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

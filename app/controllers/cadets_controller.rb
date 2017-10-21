@@ -1,6 +1,6 @@
 class CadetsController < ApplicationController
   before_action :set_cadet, only: [:show, :edit, :update, :destroy]
-
+  
   # GET /cadets
   # GET /cadets.json
   def index
@@ -60,7 +60,7 @@ class CadetsController < ApplicationController
       format.json { head :no_content }
     end
   end
-
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_cadet
@@ -69,6 +69,6 @@ class CadetsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def cadet_params
-      params.require(:cadet).permit(:first_name, :last_name, :email, :document, :status, :available, :position)
+      params.require(:cadet).permit(:first_name, :last_name, :email, :password, :document, :status, :available, :position)
     end
 end
