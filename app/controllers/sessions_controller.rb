@@ -19,7 +19,7 @@ class SessionsController < ApplicationController
 
   def destroy_cadet
     cadet_log_out
-    redirect_to 'new_cadet'
+    render 'new_cadet'
   end
   
 end
