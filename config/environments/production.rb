@@ -76,6 +76,18 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+    config.assets.raise_runtime_errors = true
+  ActionMailer::Base.delivery_method = :sendmail
+   ActionMailer::Base.sendmail_settings = {
+    address:              'smtp.gmail.com',
+    port:                 587,
+    domain:               'smtp.gmail.com',
+    user_name:            'agustin.pazosm@gmail.com',
+    password:             'unaviejaenmoto1',
+    authentication:       'plain',
+    enable_starttls_auto: true  }
+  config.action_mailer.raise_delivery_errors = false
+  ActionMailer::Base.perform_deliveries = true
   
   
 end

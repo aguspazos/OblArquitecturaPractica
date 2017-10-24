@@ -1,3 +1,8 @@
+<% if @existingUser.present? %>
+     <h2>Tu amigo <%= @existingUser.name + @existingUser.lastName %> te invitó a EnviosYa</h2>
+     <p> Completa el registro y obtendras un 50% de descuento para ambos!</p>
+  <% end %>
+
 <%= form_with(model: user, local: true) do |form| %>
   <% if user.errors.any? %>
     <div id="error_explanation">

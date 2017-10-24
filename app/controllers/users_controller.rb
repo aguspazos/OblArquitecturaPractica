@@ -13,6 +13,18 @@ class UsersController < ApplicationController
     end
   end
   
+  def invite
+    if(current_user==nil)
+      redirect_to '/login'
+    end
+  end
+  
+  def send_invite
+    
+    MailerHelperMailer.send_invite(current_user,params[:user][:email]).deliver!
+    redirect_to '/users/invite'
+  end
+  
   # GET /users
   # GET /users.json
   def index
@@ -27,6 +39,13 @@ class UsersController < ApplicationController
   # GET /users/new
   def new
     @user = User.new
+    
+    if(params.has_key?(:existingUser))
+      existingUser = User.find(params[:existingUser])
+      if(existingUser != nil)
+        @existingUser = existingUser
+      end
+    end
   end
 
   # GET /users/1/edit
@@ -72,7 +91,7 @@ class UsersController < ApplicationController
       format.json { head :no_content }
     end
   end
-
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
