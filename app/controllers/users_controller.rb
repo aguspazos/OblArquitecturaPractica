@@ -59,10 +59,17 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
+        puts params[:user]
+        if (params.has_key?(:inviterId))
+          puts "conchadetuhermana"
+          UserDiscount.createDiscount(params[:inviterId])
+          UserDiscount.createDiscount(@user.id)
+        end
+        
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render :show, status: :created, location: @user }
       else
-        format.html { render :new }
+        format.html { render 'users/new?'+params.has_key?(:inviterId) ? params[:inviterId] : '' }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end

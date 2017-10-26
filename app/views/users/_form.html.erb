@@ -25,6 +25,10 @@
     <%= form.label :lastName %>
     <%= form.text_field :lastName, id: :user_lastName %>
   </div>
+  <% if @existingUser.present? %>
+      
+      <%= hidden_field_tag 'inviterId', @existingUser.id %>
+  <% end %>
 
   <div class="field">
     <%= form.label :email %>
