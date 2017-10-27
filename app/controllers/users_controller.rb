@@ -1,3 +1,4 @@
+require 'aws-sdk'
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
   
@@ -72,7 +73,22 @@ class UsersController < ApplicationController
       format.json { head :no_content }
     end
   end
+  def facebook
+    @user = User.from_omniauth(request.env["omniauth.auth"])
 
+    if @user.persisted?
+      sign_in_and_redirect @user, :event => :authentication
+      set_flash_message(:notice, :success, :kind => "Facebook") if is_navigational_format?
+    else
+      session["devise.facebook_data"] = request.env["omniauth.auth"]
+      redirect_to new_user_registration_url
+    end
+  end
+
+  def failure
+    redirect_to root_path
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
@@ -82,6 +98,6 @@ class UsersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
       
-      params.require(:user).permit(:name, :lastName, :email, :password, :document, :image,:avatar)
+      params.require(:user).permit(:name, :lastName, :email, :password, :document,:avatar)
     end
 end

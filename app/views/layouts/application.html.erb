@@ -2,14 +2,10 @@
 <html>
 <head>
   <title>Workspace</title>
-<<<<<<< HEAD
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCF9196u3KCJdvmTenZhNVxiu7IGFsGZPY"></script>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCF9196u3KCJdvmTenZhNVxiu7IGFsGZPY"></script>
   <% if controller_name == "users_controller" && action_name == "create_shipment" %>
     <%= stylesheet_link_tag "users/shipment" %>
      <%= javascript_include_tag "users/shipment" %>
@@ -19,16 +15,7 @@
     <%= link_to "Sign out", signout_path, id: "sign_out" %>
   <% else %>
     <%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in" %>
-=======
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCF9196u3KCJdvmTenZhNVxiu7IGFsGZPY"></script>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-  
-  <% if controller_name == "users_controller" && action_name == "create_shipment" %>
-    <%= stylesheet_link_tag "shipments/shipment" %>
-    <%= javascript_include_tag "shipments/shipment" %>  
->>>>>>> bdf19928bb4d0cd8d28c15dbff9eab42ecd8c1fc
+
   <% end %>
 </div>
 <%= yield %>

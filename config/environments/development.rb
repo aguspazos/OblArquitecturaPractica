@@ -1,3 +1,4 @@
+require 'aws-sdk'
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -38,4 +39,15 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
-end
+  
+  #paperclip S3 
+    config.paperclip_defaults = {
+        storage: :s3,
+        s3_region: "us-east-1",
+        s3_credentials: {
+          bucket: "user-images-ort",
+          access_key_id: "AKIAJ3DBGNVFD2GVHPFA",
+          secret_access_key: "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"
+          }
+        }
+  end
