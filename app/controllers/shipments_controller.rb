@@ -1,6 +1,7 @@
 class ShipmentsController < ApplicationController
   before_action :set_shipment, only: [:show, :edit, :update, :destroy]
 
+
   def create_shipment
     if current_user== nil
       redirect_to '/login'
