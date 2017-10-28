@@ -9,8 +9,6 @@ Rails.application.routes.draw do
   resources :cadets
   
   get '/users/main',  to: 'users#main'
-  get '/users/create-shipment',  to: 'users#create_shipment'
-
 
   get '/users/invite', to:'users#invite'
   post '/users/send_invite', to:'users#send_invite'

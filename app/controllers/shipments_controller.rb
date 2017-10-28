@@ -31,7 +31,7 @@ class ShipmentsController < ApplicationController
   # POST /shipments
   # POST /shipments.json
   def create
-    @shipment = Shipment.new(origin_lat: params[:origin_lat], origin_lng: params[:origin_lng], destiny_lat: params[:destiny_lat], destiny_lng: params[:destiny_lng], sender_id: params[:sender_id], receiver_id:"", receiver_email: params[:shipment][:receiver_email], price: params[:price], final_price: params[:price], cadet_id:0, status:1, sender_pays:"", receiver_pays:"", delivery_time: "", payment_method: params[:shipment][:payment_method])
+    @shipment = Shipment.new(origin_lat: params[:origin_lat], origin_lng: params[:origin_lng], destiny_lat: params[:destiny_lat], destiny_lng: params[:destiny_lng], sender_id: params[:sender_id], receiver_id:"", receiver_email: params[:shipment][:receiver_email], price: params[:price], final_price: params[:price], cadet_id:0, status:1, sender_pays: params[:shipment][:sender_pays], receiver_pays: params[:shipment][:receiver_pays], delivery_time: "", payment_method: params[:shipment][:payment_method])
 
     respond_to do |format|
       if @shipment.save

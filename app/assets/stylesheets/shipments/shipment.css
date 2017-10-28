@@ -8,10 +8,30 @@ body{
     height: 500px;
 }
 
-.row{
-    margin: 40px 20px;
-}
-
 h4{
     float: left;
+}
+
+.input_container input{
+    float: left;
+    margin-right: 20px;
+}
+
+.input_container label{
+    float: left;
+    width: 110px;
+}
+
+.col-md-4{
+    margin: 20px 0px;
+}
+
+.row{
+    margin-bottom: 9px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+#error_message{
+    display: none;
 }
