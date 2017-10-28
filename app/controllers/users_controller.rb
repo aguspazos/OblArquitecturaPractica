@@ -7,12 +7,6 @@ class UsersController < ApplicationController
     end
   end
   
-  def create_shipment
-    if current_user== nil
-      redirect_to '/login'
-    end
-  end
-  
   # GET /users
   # GET /users.json
   def index

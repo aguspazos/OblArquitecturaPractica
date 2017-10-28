@@ -1,11 +1,13 @@
 Rails.application.routes.draw do
   
-  resources :shipments
   root 'sessions#new_user'
+  
+  get '/shipments/create-shipment',  to: 'shipments#create_shipment'
+  
+  resources :shipments
   resources :cadets
   
   get '/users/main',  to: 'users#main'
-  get '/users/create-shipment',  to: 'users#create_shipment'
   resources :users
   resources :admins
 

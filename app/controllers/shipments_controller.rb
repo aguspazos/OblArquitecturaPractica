@@ -1,6 +1,12 @@
 class ShipmentsController < ApplicationController
   before_action :set_shipment, only: [:show, :edit, :update, :destroy]
 
+  def create_shipment
+    if current_user== nil
+      redirect_to '/login'
+    end
+  end
+
   # GET /shipments
   # GET /shipments.json
   def index
@@ -20,6 +26,7 @@ class ShipmentsController < ApplicationController
   # GET /shipments/1/edit
   def edit
   end
+
 
   # POST /shipments
   # POST /shipments.json
