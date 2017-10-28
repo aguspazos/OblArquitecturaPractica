@@ -49,6 +49,26 @@ ActiveRecord::Schema.define(version: 20171026014542) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "shipments", force: :cascade do |t|
+    t.string "origin_lat"
+    t.string "origin_lng"
+    t.string "destiny_lat"
+    t.string "destiny_lng"
+    t.integer "sender_id"
+    t.integer "receiver_id"
+    t.string "receiver_email"
+    t.float "price"
+    t.boolean "final_price"
+    t.integer "cadet_id"
+    t.integer "status"
+    t.boolean "sender_pays"
+    t.boolean "receiver_pays"
+    t.datetime "delivery_time"
+    t.integer "payment_method"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "user_discounts", force: :cascade do |t|
     t.integer "user_id"
     t.boolean "used"

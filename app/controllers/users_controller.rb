@@ -25,6 +25,7 @@ class UsersController < ApplicationController
     redirect_to '/users/invite'
   end
   
+
   # GET /users
   # GET /users.json
   def index

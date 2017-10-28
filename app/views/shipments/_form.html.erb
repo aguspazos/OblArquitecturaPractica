@@ -1,0 +1,91 @@
+<%= form_with(model: shipment, local: true) do |form| %>
+  <% if shipment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(shipment.errors.count, "error") %> prohibited this shipment from being saved:</h2>
+
+      <ul>
+      <% shipment.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= hidden_field_tag "origin_lat" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :origin_lng %>
+    <%= form.text_field :origin_lng, id: :shipment_origin_lng %>
+  </div>
+
+  <div class="field">
+    <%= form.label :destiny_lat %>
+    <%= form.text_field :destiny_lat, id: :shipment_destiny_lat %>
+  </div>
+
+  <div class="field">
+    <%= form.label :destiny_lng %>
+    <%= form.text_field :destiny_lng, id: :shipment_destiny_lng %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sender_id %>
+    <%= form.text_field :sender_id, id: :shipment_sender_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :receiver_id %>
+    <%= form.text_field :receiver_id, id: :shipment_receiver_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :receiver_email %>
+    <%= form.text_field :receiver_email, id: :shipment_receiver_email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :price %>
+    <%= form.text_field :price, id: :shipment_price %>
+  </div>
+
+  <div class="field">
+    <%= form.label :final_price %>
+    <%= form.check_box :final_price, id: :shipment_final_price %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cadet_id %>
+    <%= form.text_field :cadet_id, id: :shipment_cadet_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.text_field :status, id: :shipment_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sender_pays %>
+    <%= form.check_box :sender_pays, id: :shipment_sender_pays %>
+  </div>
+
+  <div class="field">
+    <%= form.label :receiver_pays %>
+    <%= form.check_box :receiver_pays, id: :shipment_receiver_pays %>
+  </div>
+
+  <div class="field">
+    <%= form.label :delivery_time %>
+    <%= form.datetime_select :delivery_time, id: :shipment_delivery_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :payment_method %>
+    <%= form.text_field :payment_method, id: :shipment_payment_method %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
