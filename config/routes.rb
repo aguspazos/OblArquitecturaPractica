@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   get '/users/invite', to:'users#invite'
   post '/users/send_invite', to:'users#send_invite'
+  post '/users/search', to:"users#search"
   resources :users
   resources :admins
 

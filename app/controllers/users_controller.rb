@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
   
+  require 'ci_uy'
+  before_action :set_user, only: [:show, :edit, :update, :destroy]
   def main
     if current_user== nil
       redirect_to '/login'
@@ -25,6 +26,18 @@ class UsersController < ApplicationController
     redirect_to '/users/invite'
   end
   
+  def search 
+    if params[:receiverEmail]
+      @user = User.search_by_email(params[:receiverEmail])
+    else
+      @user = "la concha de tu hermana"
+    end
+    respond_to do |format|  ## Add this
+      format.json { render json: @user.to_json, status: :ok}
+      format.html 
+    end
+
+  end
 
   # GET /users
   # GET /users.json
@@ -59,25 +72,27 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     respond_to do |format|
-      if @user.save
-        puts params[:user]
-        if (params.has_key?(:inviterId))
-          UserDiscount.createDiscount(params[:inviterId])
-          UserDiscount.createDiscount(@user.id)
+
+        if @user.save
+          puts params[:user]
+          if (params.has_key?(:inviterId))
+            UserDiscount.createDiscount(params[:inviterId])
+            UserDiscount.createDiscount(@user.id)
+          end
+          
+          format.html { redirect_to @user, notice: 'User was successfully created.' }
+          format.json { render :show, status: :created, location: @user }
+        else
+          format.html { render 'users/new', :existingUser => params[:inviterId] if params.has_key?(:inviterId) }
+          format.json { render json: @user.errors, status: :unprocessable_entity }
         end
-        
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render :show, status: :created, location: @user }
-      else
-        format.html { render 'users/new', :existingUser => params[:inviterId] if params.has_key?(:inviterId) }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
     end
   end
 
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
+    
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
@@ -110,4 +125,5 @@ class UsersController < ApplicationController
       
       params.require(:user).permit(:name, :lastName, :email, :password, :document, :image,:avatar)
     end
+  
 end
