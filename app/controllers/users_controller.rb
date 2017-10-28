@@ -69,7 +69,7 @@ class UsersController < ApplicationController
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render :show, status: :created, location: @user }
       else
-        format.html { render 'users/new?'+params.has_key?(:inviterId) ? params[:inviterId] : '' }
+        format.html { render 'users/new', :existingUser => params[:inviterId] if params.has_key?(:inviterId) }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end

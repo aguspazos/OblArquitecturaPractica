@@ -12,6 +12,14 @@ class ApplicationController < ActionController::Base
   def current_user
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
-  
+  def check_admin
+    return unless  @admin.blank?
+    puts @admin.blank?
+    puts "la concha de tu hermanas"
+    redirect_to "/admin" 
+    
+    
+  end
+    
 end
 
