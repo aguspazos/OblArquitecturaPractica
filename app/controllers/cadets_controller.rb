@@ -4,7 +4,11 @@ class CadetsController < ApplicationController
   # GET /cadets
   # GET /cadets.json
   def index
-    @cadets = Cadet.all
+    if current_cadet.blank?
+      redirect_to '/cadet-login'
+    else
+      @cadet = current_cadet
+    end
   end
 
   # GET /cadets/1

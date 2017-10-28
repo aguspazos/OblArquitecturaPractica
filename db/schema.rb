@@ -23,6 +23,16 @@ ActiveRecord::Schema.define(version: 20171028024703) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "cadet_shipments", force: :cascade do |t|
+    t.bigint "cadet_id"
+    t.bigint "shipment_id"
+    t.boolean "sent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cadet_id"], name: "index_cadet_shipments_on_cadet_id"
+    t.index ["shipment_id"], name: "index_cadet_shipments_on_shipment_id"
+  end
+
   create_table "cadets", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -99,4 +109,6 @@ ActiveRecord::Schema.define(version: 20171028024703) do
     t.string "password"
   end
 
+  add_foreign_key "cadet_shipments", "cadets"
+  add_foreign_key "cadet_shipments", "shipments"
 end

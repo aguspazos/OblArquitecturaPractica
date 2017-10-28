@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cadet: one
+  shipment: one
+  sent: false
+
+two:
+  cadet: two
+  shipment: two
+  sent: false
