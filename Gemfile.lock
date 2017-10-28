@@ -42,6 +42,7 @@ GEM
     bindex (0.5.0)
     builder (3.2.3)
     byebug (9.0.6)
+    ci_uy (0.1.1)
     climate_control (0.2.0)
     cocaine (0.5.8)
       climate_control (>= 0.0.3, < 1.0)
@@ -114,6 +115,10 @@ GEM
       mime-types
       mimemagic (~> 0.3.0)
     pg (0.20.0)
+    pg_search (2.1.1)
+      activerecord (>= 4.2)
+      activesupport (>= 4.2)
+      arel (>= 6)
     puma (3.9.1)
     rack (2.0.3)
     rack-test (0.6.3)
@@ -193,6 +198,7 @@ PLATFORMS
 
 DEPENDENCIES
   byebug (= 9.0.6)
+  ci_uy
   coffee-rails (= 4.2.2)
   jbuilder (= 2.7.0)
   jquery-rails (= 4.3.1)
@@ -200,6 +206,7 @@ DEPENDENCIES
   omniauth-facebook
   paperclip (= 5.0.0)
   pg (= 0.20.0)
+  pg_search
   puma (= 3.9.1)
   rails (= 5.1.2)
   sass-rails (= 5.0.6)

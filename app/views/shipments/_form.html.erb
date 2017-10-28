@@ -1,3 +1,7 @@
+<style>
+
+</style>
+
 <%= form_with(model: shipment, local: true) do |form| %>
   <% if shipment.errors.any? %>
     <div id="error_explanation">
@@ -23,7 +27,9 @@
     <%= form.label :receiver_email %>
     <%= form.text_field :receiver_email, id: :shipment_receiver_email %>
   </div>
+  <div id="suggesstion-box"></div>
 
+  </div>
   <div class="field">
     <%= form.label :sender_pays %>
     <%= form.check_box :sender_pays, id: :shipment_sender_pays %>
