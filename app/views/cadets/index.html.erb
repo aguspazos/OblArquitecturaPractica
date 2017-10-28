@@ -18,19 +18,9 @@
   </thead>
 
   <tbody>
-    <% @cadets.each do |cadet| %>
+    <% @cadet.shipments.each do |shipment| %>
       <tr>
-        <td><%= cadet.first_name %></td>
-        <td><%= cadet.last_name %></td>
-        <td><%= cadet.email %></td>
-        <td><%= cadet.password %></td>
-        <td><%= cadet.document %></td>
-        <td><%= cadet.status %></td>
-        <td><%= cadet.available %></td>
-        <td><%= cadet.position %></td>
-        <td><%= link_to 'Show', cadet %></td>
-        <td><%= link_to 'Edit', edit_cadet_path(cadet) %></td>
-        <td><%= link_to 'Destroy', cadet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Details', shipment %></td>
       </tr>
     <% end %>
   </tbody>

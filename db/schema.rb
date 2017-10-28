@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171026014542) do
+ActiveRecord::Schema.define(version: 20171028024703) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,16 @@ ActiveRecord::Schema.define(version: 20171026014542) do
     t.string "password"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "cadet_shipments", force: :cascade do |t|
+    t.bigint "cadet_id"
+    t.bigint "shipment_id"
+    t.boolean "sent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cadet_id"], name: "index_cadet_shipments_on_cadet_id"
+    t.index ["shipment_id"], name: "index_cadet_shipments_on_shipment_id"
   end
 
   create_table "cadets", force: :cascade do |t|
@@ -38,6 +48,10 @@ ActiveRecord::Schema.define(version: 20171026014542) do
     t.string "avatar_content_type"
     t.integer "avatar_file_size"
     t.datetime "avatar_updated_at"
+    t.string "license_file_name"
+    t.string "license_content_type"
+    t.integer "license_file_size"
+    t.datetime "license_updated_at"
   end
 
   create_table "images", force: :cascade do |t|
@@ -81,13 +95,20 @@ ActiveRecord::Schema.define(version: 20171026014542) do
     t.string "lastName"
     t.string "email"
     t.string "document"
+    t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "avatar_file_name"
     t.string "avatar_content_type"
     t.integer "avatar_file_size"
     t.datetime "avatar_updated_at"
+    t.string "provider"
+    t.string "uid"
+    t.string "oauth_token"
+    t.datetime "oauth_expires_at"
     t.string "password"
   end
 
+  add_foreign_key "cadet_shipments", "cadets"
+  add_foreign_key "cadet_shipments", "shipments"
 end

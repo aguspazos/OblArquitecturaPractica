@@ -4,7 +4,11 @@ class CadetsController < ApplicationController
   # GET /cadets
   # GET /cadets.json
   def index
-    @cadets = Cadet.all
+    if current_cadet.blank?
+      redirect_to '/cadet-login'
+    else
+      @cadet = current_cadet
+    end
   end
 
   # GET /cadets/1
@@ -69,6 +73,6 @@ class CadetsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def cadet_params
-      params.require(:cadet).permit(:first_name, :last_name, :email, :password, :document, :status, :available, :position,:avatar)
+      params.require(:cadet).permit(:first_name, :last_name, :email, :password, :document, :status, :available, :position,:avatar,:license)
     end
 end

@@ -62,7 +62,6 @@ class UsersController < ApplicationController
       if @user.save
         puts params[:user]
         if (params.has_key?(:inviterId))
-          puts "conchadetuhermana"
           UserDiscount.createDiscount(params[:inviterId])
           UserDiscount.createDiscount(@user.id)
         end
