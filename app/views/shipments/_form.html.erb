@@ -10,59 +10,18 @@
       </ul>
     </div>
   <% end %>
-
-  <div class="field">
-    <%= hidden_field_tag "origin_lat" %>
-  </div>
-
-  <div class="field">
-    <%= form.label :origin_lng %>
-    <%= form.text_field :origin_lng, id: :shipment_origin_lng %>
-  </div>
-
-  <div class="field">
-    <%= form.label :destiny_lat %>
-    <%= form.text_field :destiny_lat, id: :shipment_destiny_lat %>
-  </div>
-
-  <div class="field">
-    <%= form.label :destiny_lng %>
-    <%= form.text_field :destiny_lng, id: :shipment_destiny_lng %>
-  </div>
-
-  <div class="field">
-    <%= form.label :sender_id %>
-    <%= form.text_field :sender_id, id: :shipment_sender_id %>
-  </div>
-
-  <div class="field">
-    <%= form.label :receiver_id %>
-    <%= form.text_field :receiver_id, id: :shipment_receiver_id %>
-  </div>
-
+    
+  <%= hidden_field_tag "origin_lat", :value => "hola" %>
+  <%= hidden_field_tag "origin_lng" %>
+  <%= hidden_field_tag "destiny_lat" %>
+  <%= hidden_field_tag "destiny_lng" %>
+  <%= hidden_field_tag "sender_id", current_user.id %>
+  <%= hidden_field_tag "receiver_id" %>
+  <%= hidden_field_tag "price" %>
+  
   <div class="field">
     <%= form.label :receiver_email %>
     <%= form.text_field :receiver_email, id: :shipment_receiver_email %>
-  </div>
-
-  <div class="field">
-    <%= form.label :price %>
-    <%= form.text_field :price, id: :shipment_price %>
-  </div>
-
-  <div class="field">
-    <%= form.label :final_price %>
-    <%= form.check_box :final_price, id: :shipment_final_price %>
-  </div>
-
-  <div class="field">
-    <%= form.label :cadet_id %>
-    <%= form.text_field :cadet_id, id: :shipment_cadet_id %>
-  </div>
-
-  <div class="field">
-    <%= form.label :status %>
-    <%= form.text_field :status, id: :shipment_status %>
   </div>
 
   <div class="field">
@@ -76,13 +35,14 @@
   </div>
 
   <div class="field">
-    <%= form.label :delivery_time %>
-    <%= form.datetime_select :delivery_time, id: :shipment_delivery_time %>
+    <%= form.label :payment_method %>
+    <%= form.text_field :payment_method, id: :shipment_payment_method %>
   </div>
 
   <div class="field">
     <%= form.label :payment_method %>
-    <%= form.text_field :payment_method, id: :shipment_payment_method %>
+    <%= radio_button("shipment", "payment_method", "1") %>
+    <%= radio_button("shipment", "payment_method", "2") %>
   </div>
 
   <div class="actions">
