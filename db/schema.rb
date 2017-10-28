@@ -91,12 +91,17 @@ ActiveRecord::Schema.define(version: 20171028025251) do
     t.string "lastName"
     t.string "email"
     t.string "document"
+    t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "avatar_file_name"
     t.string "avatar_content_type"
     t.integer "avatar_file_size"
     t.datetime "avatar_updated_at"
+    t.string "provider"
+    t.string "uid"
+    t.string "oauth_token"
+    t.datetime "oauth_expires_at"
     t.string "password"
   end
 
