@@ -1,3 +1,4 @@
+# require 'aws-sdk'
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -35,7 +36,30 @@ Rails.application.configure do
   # Checks for improperly declared sprockets dependencies.
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
+  ActionMailer::Base.delivery_method = :smtp
+   ActionMailer::Base.smtp_settings = {
+    address:              'smtp.gmail.com',
+    port:                 587,
+    domain:               'smtp.gmail.com',
+    user_name:            'agustin.pazosm@gmail.com',
+    password:             'unaviejaenmoto1',
+    authentication:       'plain',
+    enable_starttls_auto: true  }
+  config.action_mailer.raise_delivery_errors = false
+  ActionMailer::Base.perform_deliveries = true
+
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
-end
+  
+  #paperclip S3 
+    # config.paperclip_defaults = {
+    #     storage: :s3,
+    #     s3_region: "us-east-1",
+    #     s3_credentials: {
+    #       bucket: "user-images-ort",
+    #       access_key_id: "AKIAJ3DBGNVFD2GVHPFA",
+    #       secret_access_key: "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"
+    #       }
+    #     }
+  end

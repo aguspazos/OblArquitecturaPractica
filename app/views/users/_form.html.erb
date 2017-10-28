@@ -1,3 +1,8 @@
+<% if @existingUser.present? %>
+     <h2>Tu amigo <%= @existingUser.name + @existingUser.lastName %> te invitó a EnviosYa</h2>
+     <p> Completa el registro y obtendras un 50% de descuento para ambos!</p>
+  <% end %>
+
 <%= form_with(model: user, local: true) do |form| %>
   <% if user.errors.any? %>
     <div id="error_explanation">
@@ -20,6 +25,10 @@
     <%= form.label :lastName %>
     <%= form.text_field :lastName, id: :user_lastName %>
   </div>
+  <% if @existingUser.present? %>
+      
+      <%= hidden_field_tag 'inviterId', @existingUser.id %>
+  <% end %>
 
   <div class="field">
     <%= form.label :email %>
@@ -34,11 +43,6 @@
   <div class="field">
     <%= form.label :document %>
     <%= form.text_field :document, id: :user_document %>
-  </div>
-
-  <div class="field">
-    <%= form.label :image %>
-    <%= form.text_field :image, id: :user_image %>
   </div>
 
   <div class="field">

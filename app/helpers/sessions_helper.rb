@@ -1,4 +1,5 @@
 module SessionsHelper
+
     
     def cadet_log_in(cadet)
         session[:cadet_id] = cadet.id

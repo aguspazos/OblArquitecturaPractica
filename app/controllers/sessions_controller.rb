@@ -1,5 +1,16 @@
 class SessionsController < ApplicationController
   
+  def create
+    user = User.from_omniauth(Env["omniauth.auth"])
+    session[:user_id] = user.id
+    redirect_to root_path
+  end
+
+  def destroy
+    session[:user_id] = nil
+    redirect_to root_path
+  end
+  
   def new_cadet
     if current_cadet!= nil
       redirect_to current_cadet
@@ -66,3 +77,8 @@ class SessionsController < ApplicationController
     render 'new_admin'
   end
 end
+
+
+
+
+

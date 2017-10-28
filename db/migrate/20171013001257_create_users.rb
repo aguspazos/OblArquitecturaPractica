@@ -5,9 +5,13 @@ class CreateUsers < ActiveRecord::Migration[5.1]
       t.string :lastName
       t.string :email
       t.string :document
-      t.string :image
 
       t.timestamps
     end
+  end
+  def self.up
+    add_column :users, :provider, :string
+    add_column :users, :uid, :string
+    add_column :users, :image, :text
   end
 end

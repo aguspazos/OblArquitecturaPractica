@@ -3,6 +3,7 @@ Map.latitude = -34.8804869;
 Map.longitude = -56.1341587;
 Map.markers = [];
 $(document).ready(function () {
+    $('#')
     var mapCanvas = document.getElementById('map');
     var mapOptions = {
         draggable: true,

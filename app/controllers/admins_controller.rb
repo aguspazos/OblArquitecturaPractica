@@ -1,6 +1,7 @@
 class AdminsController < ApplicationController
   before_action :set_admin, only: [:show, :edit, :update, :destroy]
-
+  before_action :check_admin, only: [:show,:edit,:update,:destroy,:new]
+  
 
 
   # GET /admins/1
@@ -16,7 +17,6 @@ class AdminsController < ApplicationController
   # GET /admins/1/edit
   def edit
   end
-  
   def index
     if(current_admin == nil)
       render 'sessions/new_admin'
@@ -24,6 +24,7 @@ class AdminsController < ApplicationController
        @cadets = Cadet.all
     end
   end
+  
 
   
 

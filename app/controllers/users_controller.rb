@@ -7,6 +7,25 @@ class UsersController < ApplicationController
     end
   end
   
+  def create_shipment
+    if current_user== nil
+      redirect_to '/login'
+    end
+  end
+  
+  def invite
+    if(current_user==nil)
+      redirect_to '/login'
+    end
+  end
+  
+  def send_invite
+    
+    MailerHelperMailer.send_invite(current_user,params[:user][:email]).deliver!
+    redirect_to '/users/invite'
+  end
+  
+
   # GET /users
   # GET /users.json
   def index
@@ -21,6 +40,13 @@ class UsersController < ApplicationController
   # GET /users/new
   def new
     @user = User.new
+    
+    if(params.has_key?(:existingUser))
+      existingUser = User.find(params[:existingUser])
+      if(existingUser != nil)
+        @existingUser = existingUser
+      end
+    end
   end
 
   # GET /users/1/edit
@@ -34,10 +60,17 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
+        puts params[:user]
+        if (params.has_key?(:inviterId))
+          puts "conchadetuhermana"
+          UserDiscount.createDiscount(params[:inviterId])
+          UserDiscount.createDiscount(@user.id)
+        end
+        
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render :show, status: :created, location: @user }
       else
-        format.html { render :new }
+        format.html { render 'users/new', :existingUser => params[:inviterId] if params.has_key?(:inviterId) }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
@@ -66,7 +99,7 @@ class UsersController < ApplicationController
       format.json { head :no_content }
     end
   end
-
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
