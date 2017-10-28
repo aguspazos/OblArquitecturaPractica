@@ -1,4 +1,3 @@
-require 'aws-sdk'
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
   
@@ -12,6 +11,18 @@ class UsersController < ApplicationController
     if current_user== nil
       redirect_to '/login'
     end
+  end
+  
+  def invite
+    if(current_user==nil)
+      redirect_to '/login'
+    end
+  end
+  
+  def send_invite
+    
+    MailerHelperMailer.send_invite(current_user,params[:user][:email]).deliver!
+    redirect_to '/users/invite'
   end
   
   # GET /users
@@ -28,6 +39,13 @@ class UsersController < ApplicationController
   # GET /users/new
   def new
     @user = User.new
+    
+    if(params.has_key?(:existingUser))
+      existingUser = User.find(params[:existingUser])
+      if(existingUser != nil)
+        @existingUser = existingUser
+      end
+    end
   end
 
   # GET /users/1/edit
@@ -41,10 +59,17 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
+        puts params[:user]
+        if (params.has_key?(:inviterId))
+          puts "conchadetuhermana"
+          UserDiscount.createDiscount(params[:inviterId])
+          UserDiscount.createDiscount(@user.id)
+        end
+        
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render :show, status: :created, location: @user }
       else
-        format.html { render :new }
+        format.html { render 'users/new', :existingUser => params[:inviterId] if params.has_key?(:inviterId) }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
@@ -73,21 +98,6 @@ class UsersController < ApplicationController
       format.json { head :no_content }
     end
   end
-  def facebook
-    @user = User.from_omniauth(request.env["omniauth.auth"])
-
-    if @user.persisted?
-      sign_in_and_redirect @user, :event => :authentication
-      set_flash_message(:notice, :success, :kind => "Facebook") if is_navigational_format?
-    else
-      session["devise.facebook_data"] = request.env["omniauth.auth"]
-      redirect_to new_user_registration_url
-    end
-  end
-
-  def failure
-    redirect_to root_path
-  end
   
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -98,6 +108,6 @@ class UsersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
       
-      params.require(:user).permit(:name, :lastName, :email, :password, :document,:avatar)
+      params.require(:user).permit(:name, :lastName, :email, :password, :document, :image,:avatar)
     end
 end

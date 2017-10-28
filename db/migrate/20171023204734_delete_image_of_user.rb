@@ -1,5 +1,5 @@
 class DeleteImageOfUser < ActiveRecord::Migration[5.1]
   def change
-    remove_column :table_users, :column_image
+    remove_column :users, :image
   end
 end

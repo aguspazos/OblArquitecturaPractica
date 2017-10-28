@@ -10,12 +10,10 @@ gem 'jquery-rails', '4.3.1'
 gem 'turbolinks',   '5.0.1'
 gem 'jbuilder',     '2.7.0'
 gem "paperclip",    '5.0.0'
-gem 'omniauth-facebook', '4.0.0'
+gem 'omniauth-facebook'
 gem 'listen',                '3.0.8'
 gem 'spring',                '2.0.2'
 gem 'spring-watcher-listen', '2.0.1'
-gem 'aws-sdk'
-
 
 group :development, :test do
   gem 'byebug', '9.0.6', platform: :mri
