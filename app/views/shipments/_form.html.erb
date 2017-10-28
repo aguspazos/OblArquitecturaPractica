@@ -11,7 +11,7 @@
     </div>
   <% end %>
     
-  <%= hidden_field_tag "origin_lat", :value => "hola" %>
+  <%= hidden_field_tag "origin_lat" %>
   <%= hidden_field_tag "origin_lng" %>
   <%= hidden_field_tag "destiny_lat" %>
   <%= hidden_field_tag "destiny_lng" %>
@@ -19,33 +19,33 @@
   <%= hidden_field_tag "receiver_id" %>
   <%= hidden_field_tag "price" %>
   
-  <div class="field">
+  <div class="col-md-4 input_container">
     <%= form.label :receiver_email %>
     <%= form.text_field :receiver_email, id: :shipment_receiver_email %>
   </div>
-
-  <div class="field">
-    <%= form.label :sender_pays %>
-    <%= form.check_box :sender_pays, id: :shipment_sender_pays %>
+  <div class="col-md-4 input_container">
+    <div class="row">
+      <%= form.label :sender_pays %>  
+      <%= form.check_box :sender_pays, id: :shipment_sender_pays  %>    
+    </div>
+    <div class="row">
+      <%= form.label :receiver_pays %>
+      <%= form.check_box :receiver_pays, id: :shipment_receiver_pays %>  
+    </div>
   </div>
-
-  <div class="field">
-    <%= form.label :receiver_pays %>
-    <%= form.check_box :receiver_pays, id: :shipment_receiver_pays %>
+  <div class="col-md-4">
+    <div class="row">
+      <%= form.label :payment_method %>
+    </div>
+    <div class="row input_container">
+      <%= form.label :payment_method, "Online", :value => 1  %>
+      <%= form.radio_button :payment_method, 1, :checked =>true %>
+      <%= form.label :payment_method, "Cash", :value => 2  %>
+      <%= form.radio_button :payment_method, 2 %>  
+    </div>
   </div>
-
-  <div class="field">
-    <%= form.label :payment_method %>
-    <%= form.text_field :payment_method, id: :shipment_payment_method %>
-  </div>
-
-  <div class="field">
-    <%= form.label :payment_method %>
-    <%= radio_button("shipment", "payment_method", "1") %>
-    <%= radio_button("shipment", "payment_method", "2") %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
+  <div id="error_message" class="alert alert-warning"></div>
+  <div class="actions col-md-12">
+    <button type="button" class="btn btn-primary" id="submit_button">Create</button>
   </div>
 <% end %>
