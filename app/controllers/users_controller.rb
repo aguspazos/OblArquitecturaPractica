@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   
   require 'ci_uy'
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :check_admin, only:[:edit,:update]
   def main
     if current_user== nil
       redirect_to '/login'
@@ -73,18 +74,25 @@ class UsersController < ApplicationController
 
     respond_to do |format|
 
-        if @user.save
-          puts params[:user]
-          if (params.has_key?(:inviterId))
-            UserDiscount.createDiscount(params[:inviterId])
-            UserDiscount.createDiscount(@user.id)
-          end
+         user = User.find_by(email: params[:session][:email].downcase)
+        if(user)
+          if @user.save
+            puts params[:user]
+            if (params.has_key?(:inviterId))
+              UserDiscount.createDiscount(params[:inviterId])
+              UserDiscount.createDiscount(@user.id)
+            end
           
           format.html { redirect_to @user, notice: 'User was successfully created.' }
           format.json { render :show, status: :created, location: @user }
+          else
+            format.html { render 'users/new', :existingUser => params[:inviterId] if params.has_key?(:inviterId) }
+            format.json { render json: @user.errors, status: :unprocessable_entity }
+          end
         else
-          format.html { render 'users/new', :existingUser => params[:inviterId] if params.has_key?(:inviterId) }
-          format.json { render json: @user.errors, status: :unprocessable_entity }
+            @user.errors.messages[:name] << "Mail existente"
+            format.html { render 'users/new', :existingUser => params[:inviterId] if params.has_key?(:inviterId) }
+            format.json { render json: @user.errors, status: :unprocessable_entity }
         end
     end
   end

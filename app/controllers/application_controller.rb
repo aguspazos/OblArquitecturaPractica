@@ -15,10 +15,13 @@ class ApplicationController < ActionController::Base
   def check_admin
     return unless  @admin.blank?
     puts @admin.blank?
-    puts "la concha de tu hermanas"
     redirect_to "/admin" 
-    
-    
+  end
+  
+  def check_user
+    return unless  @user.blank?
+    puts @user.blank?
+    redirect_to "/" 
   end
     
 end
