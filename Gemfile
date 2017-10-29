@@ -18,6 +18,7 @@ gem 'pg_search'
 gem 'ci_uy'
 gem 'rest-client'
 gem 'geokit'
+gem 'aws-sdk', '2.10.47'
 
 group :development, :test do
   gem 'byebug', '9.0.6', platform: :mri
