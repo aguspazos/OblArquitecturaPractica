@@ -7,7 +7,9 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    session[:user_id] = nil
+    if(session[:user_id])
+      session[:user_id] = nil
+    end
     redirect_to root_path
   end
   
@@ -21,7 +23,7 @@ class SessionsController < ApplicationController
     cadet = Cadet.find_by(email: params[:session][:email].downcase)
     if cadet && cadet.authenticate(params[:session][:password])
       cadet_log_in cadet
-      redirect_to cadet
+      redirect_to '/cadets'
     else
       flash.now[:danger] = 'Invalid email/password combination'
       render 'new_cadet'

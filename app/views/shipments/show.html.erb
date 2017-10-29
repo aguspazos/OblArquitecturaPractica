@@ -1,6 +1,18 @@
 <p id="notice"><%= notice %></p>
 
 <p>
+  
+  <% if @shipment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@shipment.errors.count, "error") %> prohibited this shipment from being saved:</h2>
+
+      <ul>
+      <% @shipment.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
   <strong>Origin lat:</strong>
   <%= @shipment.origin_lat %>
 </p>
@@ -75,10 +87,13 @@
   <%= @shipment.payment_method %>
 </p>
 
+<p>
+  Comprobante de entrega: <br>
+  <%= image_tag @shipment.confirm_reception.url(:medium) if @shipment.status == Shipment.SENT %>
+</p>
 
-<% if @shipment.status == 1 %>
+<% if @shipment.status == Shipment.PENDING %>
   <%= render 'form_confirm_reseption', shipment: @shipment %>
 <% end %>
 
-<%= link_to 'Edit', edit_shipment_path(@shipment) %> |
-<%= link_to 'Back', shipments_path %>
+<%= link_to 'Back', '/cadets' %>

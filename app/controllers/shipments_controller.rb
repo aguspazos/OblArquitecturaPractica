@@ -97,6 +97,30 @@ class ShipmentsController < ApplicationController
       format.html 
     end
   end
+  
+  def confirm
+    
+    @shipment = Shipment.find(params[:shipment_id])
+    respond_to do |format|
+      if(@shipment)
+        if(params[:shipment] && params[:shipment][:confirm_reception])
+         @shipment.status = Shipment.SENT
+          @shipment.delivery_time = DateTime.now
+          @shipment.confirm_reception = params[:shipment][:confirm_reception]
+          if @shipment.save
+            format.html{redirect_to '/cadets'}
+          else
+              format.html { render :show,location: @shipment }
+              format.json { render json: @shipment.errors, status: :unprocessable_entity }
+          end
+        else
+          @shipment.errors.add(:base, "Debe ingresar el comprobante de firma")
+          format.html { render :show,location: @shipment }
+          format.json { render json: @shipment.errors, status: :unprocessable_entity }
+        end
+      end
+    end
+  end
 
   # PATCH/PUT /shipments/1
   # PATCH/PUT /shipments/1.json

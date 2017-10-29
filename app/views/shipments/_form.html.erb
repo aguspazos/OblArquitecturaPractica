@@ -26,13 +26,11 @@
   <%= hidden_field_tag "receiver_id" %>
   <%= hidden_field_tag "price" %>
   
-<<<<<<< HEAD
-=======
+
   <div class="col-md-12">
     <p id="price_label">Price: </p> 
   </div>  
   <div class="col-md-4 input_container">
->>>>>>> 84e7c86f9c11ef050019e1ff1019aefb013460f1
     <%= form.label :receiver_email %>
     <%= form.text_field :receiver_email, id: :shipment_receiver_email ,:autocomplete => :off  %>
   
@@ -61,6 +59,7 @@
       <%= form.radio_button :payment_method, 2 %>  
     </div>
   </div>
+
   <div id="error_message" class="alert alert-warning"></div>
   <div class="actions col-md-12">
     <button type="button" class="btn btn-primary" id="submit_button">Create</button>

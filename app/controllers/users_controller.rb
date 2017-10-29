@@ -77,6 +77,7 @@ class UsersController < ApplicationController
     respond_to do |format|
         user = User.find_by(email: params[:user][:email].downcase)
         if(user.blank?)
+          @user.email = @user.email.downcase
           if @user.save
             puts params[:user]
             if (params.has_key?(:inviterId))
