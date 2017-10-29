@@ -1,13 +1,18 @@
 class User < ApplicationRecord
+  include PgSearch
    has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "/images/:style/missing.png"
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
-  
+  pg_search_scope :search_by_email, against: [:email], using: {
+      tsearch: {
+        prefix: true
+      }
+    }
   def authenticate(password)
         return self.password == password
   end
    
    
- 
+
   
     
   def self.new_with_session(params, session)
