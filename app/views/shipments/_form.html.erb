@@ -23,6 +23,9 @@
   <%= hidden_field_tag "receiver_id" %>
   <%= hidden_field_tag "price" %>
   
+  <div class="col-md-12">
+    <p id="price_label">Price: </p> 
+  </div>  
   <div class="col-md-4 input_container">
     <%= form.label :receiver_email %>
     <%= form.text_field :receiver_email, id: :shipment_receiver_email %>
