@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   get '/shipments/create-shipment',  to: 'shipments#create_shipment'
   
   
+  post '/shipments/confirm',  to: 'shipments#confirm'
+  
+  
   
   get '/shipments/create-shipment',  to: 'shipments#create_shipment'
   
@@ -49,17 +52,17 @@ Rails.application.routes.draw do
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
-    get 'auth/:provider/callback', to: 'sessions#create'
-    get 'auth/failure', to: redirect('/')
-    get 'signout', to: 'sessions#destroy', as: 'signout'
+  get 'auth/:provider/callback', to: 'sessions#create'
+  get 'auth/failure', to: redirect('/')
+  get 'signout', to: 'sessions#destroy', as: 'signout'
 
-    resources :sessions, only: [:create, :destroy]
-    resource :home, only: [:show]
+  resources :sessions, only: [:create, :destroy]
+  resource :home, only: [:show]
 
-    root to: "home#show"
-    
+  root to: "home#show"
+  
 
-    get '*404', :to => 'application#render_404'
+  get '*404', :to => 'application#render_404'
   
 end
 

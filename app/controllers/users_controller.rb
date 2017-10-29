@@ -31,7 +31,7 @@ class UsersController < ApplicationController
     if params[:receiverEmail]
       @user = User.search_by_email(params[:receiverEmail])
     else
-      @user = "la concha de tu hermana"
+      @user = "la "
     end
     respond_to do |format|  ## Add this
       format.json { render json: @user.to_json, status: :ok}

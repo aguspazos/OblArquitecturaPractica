@@ -7,6 +7,8 @@ class ShipmentsController < ApplicationController
       redirect_to '/login'
     end
   end
+  def confirm
+  end
 
   # GET /shipments
   # GET /shipments.json
@@ -77,6 +79,6 @@ class ShipmentsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def shipment_params
-      params.require(:shipment).permit(:origin_lat, :origin_lng, :destiny_lat, :destiny_lng, :sender_id, :receiver_id, :receiver_email, :price, :final_price, :cadet_id, :status, :sender_pays, :receiver_pays, :delivery_time, :payment_method)
+      params.require(:shipment).permit(:origin_lat, :origin_lng, :destiny_lat, :destiny_lng, :sender_id, :receiver_id, :receiver_email, :price, :final_price, :cadet_id, :status, :sender_pays, :receiver_pays, :delivery_time, :payment_method,:confirm_reception)
     end
 end
