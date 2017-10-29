@@ -6,7 +6,7 @@ include ShipmentsHelper
 class ShipmentsController < ApplicationController
   before_action :set_shipment, only: [:show, :edit, :update, :destroy]
   before_action :check_cadet, only:[:show]
-  
+  skip_before_action :verify_authenticity_token, :only => [:calculate_price, :get_cost]
   include ShipmentsHelper
   
 
@@ -81,10 +81,12 @@ class ShipmentsController < ApplicationController
         origin_area = get_area_for_point params[:origin_lat], params[:origin_lng], areas
         destiny_area = get_area_for_point params[:destiny_lat], params[:destiny_lng], areas
         if origin_area != false && destiny_area != false
-          price = calc_price origin_area, destiny_area
-          msg = {:status => "ok", :price => price, :origin_area => origin_area['polygon'], :destiny_area => destiny_area['polygon']}    
+          zone_price = calc_zone_price origin_area, destiny_area
+          #cost_per_kilogram = get_cost  
+          msg = {:status => "ok", :price => zone_price , :origin_area => origin_area['polygon'], :destiny_area => destiny_area['polygon']}    
         else
-          msg = {:status => "error", :errorMessage => "Areas not found"}
+          estimated_zone_price = 40
+          msg = {:status => "ok", :price => estimated_zone_price , :origin_area => [], :destiny_area => []}    
         end
       else
         msg = {:status => "error", :errorMessage => "Service not available"}
@@ -119,6 +121,23 @@ class ShipmentsController < ApplicationController
           format.json { render json: @shipment.errors, status: :unprocessable_entity }
         end
       end
+      
+  def get_cost
+    alive = ping_server 
+      if alive
+        cost = get_cost_per_kilo
+        if cost!= false
+          msg = {:status => "ok", :cost => cost }
+        else
+          estimated_cost = 50
+          msg = {:status => "ok", :cost => estimated_cost, :estimated => "true" }  
+        end
+      else
+        msg = {:status => "error", :errorMessage => "Service not available"}  
+      end
+    respond_to do |format|
+      format.json { render json: msg, status: :ok}
+      format.html 
     end
   end
 
