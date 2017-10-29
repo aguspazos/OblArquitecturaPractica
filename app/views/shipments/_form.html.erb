@@ -1,6 +1,3 @@
-<style>
-
-</style>
 
 <%= form_with(model: shipment, local: true) do |form| %>
   <% if shipment.errors.any? %>
@@ -14,6 +11,12 @@
       </ul>
     </div>
   <% end %>
+  
+    <%= javascript_include_tag 'shipments/shipment.js', 'data-turbolinks-track' => true %>
+  <h1>Create Shipment</h1>
+  <h4>Choose origin and destiny</h4>
+  <div id='map'></div>
+
     
   <%= hidden_field_tag "origin_lat" %>
   <%= hidden_field_tag "origin_lng" %>

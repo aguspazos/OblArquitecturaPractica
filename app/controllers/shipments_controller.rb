@@ -1,6 +1,7 @@
 class ShipmentsController < ApplicationController
   before_action :set_shipment, only: [:show, :edit, :update, :destroy]
-
+  include ShipmentsHelper
+  
 
   def create_shipment
     if current_user== nil
@@ -32,15 +33,25 @@ class ShipmentsController < ApplicationController
   # POST /shipments
   # POST /shipments.json
   def create
-    @shipment = Shipment.new(origin_lat: params[:origin_lat], origin_lng: params[:origin_lng], destiny_lat: params[:destiny_lat], destiny_lng: params[:destiny_lng], sender_id: params[:sender_id], receiver_id:"", receiver_email: params[:shipment][:receiver_email], price: params[:price], final_price: params[:price], cadet_id:0, status:1, sender_pays: params[:shipment][:sender_pays], receiver_pays: params[:shipment][:receiver_pays], delivery_time: "", payment_method: params[:shipment][:payment_method])
+    @shipment = Shipment.new(origin_lat: params[:origin_lat], origin_lng: params[:origin_lng], destiny_lat: params[:destiny_lat], destiny_lng: params[:destiny_lng], sender_id: params[:sender_id], receiver_id:"", receiver_email: params[:shipment][:receiver_email], price: params[:price], final_price: params[:price], cadet_id:0, status: Shipment.PENDING, sender_pays: params[:shipment][:sender_pays], receiver_pays: params[:shipment][:receiver_pays], delivery_time: "", payment_method: params[:shipment][:payment_method])
+    cadet = Cadet.getNearest(@shipment.origin_lat,@shipment.origin_lng)
 
     respond_to do |format|
-      if @shipment.save
-        format.html { redirect_to @shipment, notice: 'Shipment was successfully created.' }
-        format.json { render :show, status: :created, location: @shipment }
-      else
+      if(cadet.blank?)
+        @shipment.errors.add(:base, "No contamos con ningún cadete disponible, intente en unos minutos")
         format.html { render :new }
         format.json { render json: @shipment.errors, status: :unprocessable_entity }
+      else
+        @shipment.cadet_id = cadet.id
+        set_receiver
+        if @shipment.save
+          
+          format.html { redirect_to @shipment, notice: 'Shipment was successfully created.' }
+          format.json { render :show, status: :created, location: @shipment }
+        else
+          format.html { render :new }
+          format.json { render json: @shipment.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
