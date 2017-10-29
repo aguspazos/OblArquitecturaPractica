@@ -89,5 +89,5 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = false
   ActionMailer::Base.perform_deliveries = true
   
-  
+  config.exceptions_app = self.routes
 end

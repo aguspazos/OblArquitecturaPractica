@@ -62,4 +62,6 @@ Rails.application.configure do
     #       secret_access_key: "eduoYKiXtaCqERW6RUMQBswtDP3Z3q25l4t6b9ti"
     #       }
     #     }
+    
+    config.exceptions_app = self.routes
   end

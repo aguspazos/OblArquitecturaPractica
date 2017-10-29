@@ -1,5 +1,5 @@
 class Admin < ApplicationRecord
-      def authenticate(password)
+    def authenticate(password)
         return self.password == password
     end
 end

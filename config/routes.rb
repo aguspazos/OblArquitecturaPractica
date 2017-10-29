@@ -5,6 +5,10 @@ Rails.application.routes.draw do
   
   get '/shipments/create-shipment',  to: 'shipments#create_shipment'
   
+  
+  
+  get '/shipments/create-shipment',  to: 'shipments#create_shipment'
+  
   resources :shipments
   resources :cadets
   
@@ -27,6 +31,7 @@ Rails.application.routes.draw do
   delete '/logout',  to: 'sessions#destroy_user'
   
   get    '/admin',         to: 'admins#index'
+  get '/admins/accept_cadet', to:'admins#accept_cadet'
   get    '/admin-login',   to: 'sessions#new_admin'
   post   '/admin-login',   to: 'sessions#create_admin'
   delete '/admin-logout',  to: 'sessions#destroy_admin'
@@ -53,6 +58,9 @@ Rails.application.routes.draw do
     resource :home, only: [:show]
 
     root to: "home#show"
+    
+
+    get '*unmatched_route', :to => 'application#render_404'
   
 end
 

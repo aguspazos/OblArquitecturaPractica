@@ -15,10 +15,33 @@ class ApplicationController < ActionController::Base
   def check_admin
     return unless  @admin.blank?
     puts @admin.blank?
-    puts "la concha de tu hermanas"
+    puts "la"
     redirect_to "/admin" 
-    
-    
+  end
+  
+  
+  def render_404
+    if params[:format].present? && params[:format] != 'html'
+      head status: 404
+    else
+     render 'application/404', status: 404
+    end
+  end
+
+  def on_access_denied
+    if params[:format].present? && params[:format] != 'html'
+      head status: 401
+    else
+      render 'application/401', status: 401
+    end
+  end
+
+  def on_record_not_found
+    render_404
+  end
+
+  def on_routing_error
+    render_404
   end
     
 end
