@@ -61,7 +61,7 @@ Rails.application.routes.draw do
     root to: "home#show"
     
 
-    get '*unmatched_route', :to => 'application#render_404'
+    get '*404', :to => 'application#render_404'
   
 end
 

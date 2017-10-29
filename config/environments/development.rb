@@ -53,15 +53,15 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
   
   #paperclip S3 
-    # config.paperclip_defaults = {
-    #     storage: :s3,
-    #     s3_region: "us-east-1",
-    #     s3_credentials: {
-    #       bucket: "user-images-ort",
-    #       access_key_id: "AKIAJ3DBGNVFD2GVHPFA",
-    #       secret_access_key: "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"
-    #       }
-    #     }
+     config.paperclip_defaults = {
+        storage: :s3,
+         s3_region: "us-east-1",
+         s3_credentials: {
+           bucket: "user-images-ort",
+           access_key_id: "AKIAIHTW3ACVCAPP5U3A",
+           secret_access_key: "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"
+           }
+         }
     
     config.exceptions_app = self.routes
   end
