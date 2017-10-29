@@ -4,10 +4,13 @@ class CadetsController < ApplicationController
   # GET /cadets
   # GET /cadets.json
   def index
-    if current_cadet.blank?
+    if current_cadet == nil
       redirect_to '/cadet-login'
     else
       @cadet = current_cadet
+      @pendingShipments = Shipment.where(cadet_id: @cadet.id).where(status: Shipment.PENDING)
+      @sentShipments = Shipment.where(status: Shipment.SENT)
+      
     end
   end
 
@@ -29,12 +32,19 @@ class CadetsController < ApplicationController
   # POST /cadets.json
   def create
     @cadet = Cadet.new(cadet_params)
-
+    @cadet.status = Cadet.PENDING
     respond_to do |format|
-      if @cadet.save
-        format.html { redirect_to @cadet, notice: 'Cadet was successfully created.' }
-        format.json { render :show, status: :created, location: @cadet }
+      cadet = Cadet.find_by(email: params[:cadet][:email].downcase)
+      if(cadet.blank?)
+        if @cadet.save
+          format.html { redirect_to @cadet, notice: 'Cadet was successfully created.' }
+          format.json { render :show, status: :created, location: @cadet }
+        else
+          format.html { render :new }
+          format.json { render json: @cadet.errors, status: :unprocessable_entity }
+        end
       else
+        @cadet.errors.add(:base,"Ya existe un cadete con ese email")
         format.html { render :new }
         format.json { render json: @cadet.errors, status: :unprocessable_entity }
       end

@@ -3,8 +3,8 @@ Map.latitude = -34.8804869;
 Map.longitude = -56.1341587;
 Map.markers = [];
 Map.pointsSelected = false;
-$(document).ready(function () {
 
+$(document).ready(function () {
     $('#shipment_receiver_email').on('keyup',function(e){
         $(this).css("background","#FFF url(/images/LoaderIcon.gif) no-repeat 165px");
 
@@ -22,7 +22,8 @@ $(document).ready(function () {
         zoom: 13
     };
     var map = new google.maps.Map(mapCanvas, mapOptions);
-
+    Map.map = map;
+    
     google.maps.event.addListener(map, 'click', function (event) {
         if (Map.markers.length<2){
             var name = Map.markers.length == 0 ? 'Origin' : 'Destiny';
@@ -60,6 +61,7 @@ $(document).ready(function () {
                         strokeWeight: 10,
                         map: map
                     });
+                    Map.calculate_price(Map.markers[0].position, marker.position);
                 }
                 Map.markers.push(marker);
             }        
@@ -87,6 +89,47 @@ $(document).ready(function () {
     
 });
 
+Map.calculate_price = function(origin, destiny){
+    $.ajax({
+        type: "POST", 
+        url: "https://envios-ya-martinlg.c9users.io/shipments/calculate_price",
+        data: {'origin_lat': (origin.lat), 'origin_lng': (origin.lng), 'destiny_lat': (destiny.lat), 'destiny_lng': (destiny.lng)},
+        success: function (response) {
+            if (response.status == 'ok') {
+                var path = [Map.markers[0].position, Map.markers[1].position]
+                var origin_area = new google.maps.Polygon({
+                  paths: response.origin_area,
+                  strokeColor: '#FF0000',
+                  strokeOpacity: 0.8,
+                  strokeWeight: 3,
+                  fillColor: '#FF0000',
+                  fillOpacity: 0.35
+                });
+                origin_area.setMap(Map.map);
+                var destiny_area = new google.maps.Polygon({
+                  paths: response.destiny_area,
+                  strokeColor: '#FF0000',
+                  strokeOpacity: 0.8,
+                  strokeWeight: 3,
+                  fillColor: '#FF0000',
+                  fillOpacity: 0.35
+                });
+                destiny_area.setMap(Map.map);
+                var path = new google.maps.Polyline({
+                  path: path,
+                  geodesic: true,
+                  strokeColor: '#FF0000',
+                  strokeOpacity: 1.0,
+                  strokeWeight: 2
+                });
+                path.setMap(Map.map);   
+                $('#price_label').text('Price: $'+response.price)
+            } else {
+                
+            }
+        }
+    });
+}
 
 function searchUser(text){
     var myObject = new Object();
@@ -96,7 +139,7 @@ function searchUser(text){
             url: "https://envios-ya-martinlg.c9users.io/shipments/new/users/search",
             async: false,
             contentType: "application/json",
-             data: JSON.stringify(myObject),
+            data: JSON.stringify(myObject),
             success: function (response) {
 			    $("#suggesstion-box").empty();
 

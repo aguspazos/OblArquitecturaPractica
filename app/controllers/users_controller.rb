@@ -73,9 +73,8 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     respond_to do |format|
-
-         user = User.find_by(email: params[:session][:email].downcase)
-        if(user)
+        user = User.find_by(email: params[:user][:email].downcase)
+        if(user.blank?)
           if @user.save
             puts params[:user]
             if (params.has_key?(:inviterId))
@@ -86,12 +85,20 @@ class UsersController < ApplicationController
           format.html { redirect_to @user, notice: 'User was successfully created.' }
           format.json { render :show, status: :created, location: @user }
           else
-            format.html { render 'users/new', :existingUser => params[:inviterId] if params.has_key?(:inviterId) }
+            if(params[:inviterId])
+              format.html { render :new, :existingUser => params[:inviterId] if params.has_key?(:inviterId) }
+            else
+              format.html { render :new }
+            end
             format.json { render json: @user.errors, status: :unprocessable_entity }
           end
         else
-            @user.errors.messages[:name] << "Mail existente"
-            format.html { render 'users/new', :existingUser => params[:inviterId] if params.has_key?(:inviterId) }
+          @user.errors.add(:base,"Ya existe un usuario con ese email")
+            if(params[:inviterId])
+              format.html { render :new, :existingUser => params[:inviterId] if params.has_key?(:inviterId) }
+            else
+              format.html { render :new }
+            end
             format.json { render json: @user.errors, status: :unprocessable_entity }
         end
     end
@@ -131,7 +138,7 @@ class UsersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
       
-      params.require(:user).permit(:name, :lastName, :email, :password, :document, :image,:avatar)
+      params.require(:user).permit(:name, :lastName, :email, :document, :image,:avatar,:password)
     end
   
 end

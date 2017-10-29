@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   
   root 'sessions#new_user'
   
-  get '/shipments/create-shipment',  to: 'shipments#create_shipment'
+  post '/shipments/calculate_price',  to: 'shipments#calculate_price'
   
   
   post '/shipments/confirm',  to: 'shipments#confirm'
@@ -16,12 +16,11 @@ Rails.application.routes.draw do
   resources :cadets
   
   get '/users/main',  to: 'users#main'
-
+  
   get '/users/invite', to:'users#invite'
   post '/users/send_invite', to:'users#send_invite'
   post '/users/search', to:"users#search"
   resources :users
-  resources :admins
 
 
   get    '/cadet-login',   to: 'sessions#new_cadet'
@@ -33,10 +32,13 @@ Rails.application.routes.draw do
   delete '/logout',  to: 'sessions#destroy_user'
   
   get    '/admin',         to: 'admins#index'
-  get '/admins/accept_cadet', to:'admins#accept_cadet'
+  get    '/admins/accept_cadet', to:'admins#accept_cadet'
+  get    '/admins/reject_cadet', to:'admins#reject_cadet'
   get    '/admin-login',   to: 'sessions#new_admin'
   post   '/admin-login',   to: 'sessions#create_admin'
   delete '/admin-logout',  to: 'sessions#destroy_admin'
+    resources :admins
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

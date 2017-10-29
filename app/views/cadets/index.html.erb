@@ -1,26 +1,19 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Cadets</h1>
+<h1>Cadet</h1>
 
+
+<h3> Envios pendientes: </h3>
 <table>
   <thead>
     <tr>
-      <th>First name</th>
-      <th>Last name</th>
-      <th>Email</th>
-      <th>Password</th>
-      <th>Document</th>
-      <th>Status</th>
-      <th>Available</th>
-      <th>Position</th>
-      <th colspan="3"></th>
     </tr>
   </thead>
 
   <tbody>
-    <% @cadet.shipments.each do |shipment| %>
+    <% @pendingShipments.each do |shipment| %>
       <tr>
-        <td>@cadet.</td>
+        <td>De <%= shipment.sender.email %> A <%= shipment.receiver_email %> </td>
         <td><%= link_to 'Details', shipment %></td>
       </tr>
       
@@ -28,6 +21,20 @@
   </tbody>
 </table>
 
-<br>
+<h3> Envios Realizados: </h3>
+<table>
+  <thead>
+    <tr>
+    </tr>
+  </thead>
 
-<%= link_to 'New Cadet', new_cadet_path %>
+  <tbody>
+    <% @sentShipments.each do |shipment| %>
+      <tr>
+        <td>De <%= shipment.sender.email %> A <%= shipment.receiver_email %> </td>
+        <td><%= link_to 'Details', shipment %></td>
+      </tr>
+      
+    <% end %>
+  </tbody>
+</table>
