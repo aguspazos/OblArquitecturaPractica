@@ -56,10 +56,6 @@ ActiveRecord::Schema.define(version: 20171029060703) do
     t.string "vehicle_documentation_content_type"
     t.integer "vehicle_documentation_file_size"
     t.datetime "vehicle_documentation_updated_at"
-    t.string "confirm_reception_file_name"
-    t.string "confirm_reception_content_type"
-    t.integer "confirm_reception_file_size"
-    t.datetime "confirm_reception_updated_at"
   end
 
   create_table "images", force: :cascade do |t|

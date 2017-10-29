@@ -1,9 +1,24 @@
 module ShipmentsHelper
 
     def get_areas
-        areas = RestClient::Request.execute method: :get, url: "https://delivery-rates.mybluemix.net/areas", user: '178253', password: '5y239sa8CPpa'
-        areas_json = JSON.parse(areas) 
-        return parse_areas(areas_json)
+        begin
+            areas = RestClient::Request.execute method: :get, url: "https://delivery-rates.mybluemix.net/areas", user: '178253', password: '5y239sa8CPpa'
+            areas_json = JSON.parse(areas) 
+            return parse_areas(areas_json)
+        rescue RestClient::ExceptionWithResponse => err
+            return []
+        end
+    end
+    
+    def get_cost_per_kilo
+        begin
+            cost = RestClient::Request.execute method: :get, url: "https://delivery-rates.mybluemix.net/cost", user: '178253', password: '5y239sa8CPpa'
+            cost_json = JSON.parse(cost) 
+            puts cost_json
+            return 50
+        rescue RestClient::ExceptionWithResponse => err
+            return false
+        end
     end
     
     def get_area_for_point(lat, lng, areas)
@@ -18,9 +33,13 @@ module ShipmentsHelper
         return false
     end
     
-    def calc_price(area_origin, area_destiny)
+    def calc_zone_price(area_origin, area_destiny)
         id = area_destiny['id']
         return area_origin['cost_to_areas'][id]
+    end
+    
+    def get_cost(package_price)
+        
     end
     
     def ping_server

@@ -28,9 +28,23 @@
   
 
   <div class="col-md-12">
-    <p id="price_label">Price: </p> 
-  </div>  
+    <p id="price_zone_label">Zone Price: </p> 
+  </div>
+  <div class="col-md-12">
+    <p id="price_per_kilo" style="float: left;">Price per kilo: </p> 
+    <div class="loader" style="float: left;"></div>
+  </div>
   <div class="col-md-4 input_container">
+    <div class="row">
+      <%= form.label :receiver_email %>
+      <%= form.text_field :receiver_email, id: :shipment_receiver_email %>  
+    </div>
+    <div class="row">
+      <label for="weight">Package weight</label>
+      <input type="text" id="weight" >
+    </div>
+  </div>
+
     <%= form.label :receiver_email %>
     <%= form.text_field :receiver_email, id: :shipment_receiver_email ,:autocomplete => :off  %>
   
@@ -59,8 +73,15 @@
       <%= form.radio_button :payment_method, 2 %>  
     </div>
   </div>
+
   <div id="error_message" class="alert alert-warning"></div>
-  <div class="actions col-md-12">
+  <div class="actions col-md-8">
     <button type="button" class="btn btn-primary" id="submit_button">Create</button>
+  </div>
+  <div class="actions col-md-4">
+    <button type="button" class="btn btn-warning" id="remove_markers">Remove markers</button>
+  </div>
+  <div class="col-md-12">
+    <button type="button" class="btn" id="request_cost">Request cost</button>
   </div>
 <% end %>
