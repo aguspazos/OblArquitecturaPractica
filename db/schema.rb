@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171029002557) do
+ActiveRecord::Schema.define(version: 20171029060703) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,6 +85,10 @@ ActiveRecord::Schema.define(version: 20171029002557) do
     t.integer "payment_method"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "confirm_reception_file_name"
+    t.string "confirm_reception_content_type"
+    t.integer "confirm_reception_file_size"
+    t.datetime "confirm_reception_updated_at"
   end
 
   create_table "user_discounts", force: :cascade do |t|

@@ -75,5 +75,10 @@
   <%= @shipment.payment_method %>
 </p>
 
+
+<% if @shipment.status == 1 %>
+  <%= render 'form_confirm_reseption', shipment: @shipment %>
+<% end %>
+
 <%= link_to 'Edit', edit_shipment_path(@shipment) %> |
 <%= link_to 'Back', shipments_path %>

@@ -184,9 +184,10 @@ Map.calculate_price = function(origin, destiny){
 function searchUser(text){
     var myObject = new Object();
     myObject.receiverEmail = text;
+    $( "#shipment_receiver_email" ).autocomplete()
     $.ajax({
             type: "POST", 
-            url: "https://envios-ya-martinlg.c9users.io/shipments/new/users/search",
+            url: "https://enviosya-aguspazos.c9users.io/users/search",
             async: false,
             contentType: "application/json",
             data: JSON.stringify(myObject),
@@ -194,16 +195,22 @@ function searchUser(text){
 			    $("#suggesstion-box").empty();
 
 			    $("#shipment_receiver_email").css("background","#FFF");
+			    var options = [];
 			    for(var i = 0;i<response.length;i++){
 			        var user = response[i];
     			    if(user.email !== undefined){
-        			    $("#suggesstion-box").show();
-        			    $("#suggesstion-box").append("<div class='suggesstion'>" + user.email + "</div>");
-    			        $('.suggesstion').on('click',function(e){
-                            setMail($(this).html());
-                        });
+    			        options.push(user.email);
     			    }
 			    }
+			    $( "#shipment_receiver_email" ).autocomplete({
+			        source: options,
+			        scroll: true,
+			           messages: {
+                        noResults: '',
+                        results: function() {}
+                    }
+
+                 });
 
             }
     });

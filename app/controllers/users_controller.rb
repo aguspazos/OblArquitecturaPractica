@@ -3,6 +3,8 @@ class UsersController < ApplicationController
   require 'ci_uy'
   before_action :set_user, only: [:show, :edit, :update, :destroy]
   before_action :check_admin, only:[:edit,:update]
+    skip_before_action :verify_authenticity_token, :only => [:search]
+
   def main
     if current_user== nil
       redirect_to '/login'
@@ -31,7 +33,7 @@ class UsersController < ApplicationController
     if params[:receiverEmail]
       @user = User.search_by_email(params[:receiverEmail])
     else
-      @user = "la concha de tu hermana"
+      @user = "la "
     end
     respond_to do |format|  ## Add this
       format.json { render json: @user.to_json, status: :ok}

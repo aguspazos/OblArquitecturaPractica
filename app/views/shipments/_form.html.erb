@@ -26,6 +26,7 @@
   <%= hidden_field_tag "receiver_id" %>
   <%= hidden_field_tag "price" %>
   
+
   <div class="col-md-12">
     <p id="price_zone_label">Zone Price: </p> 
   </div>
@@ -42,8 +43,10 @@
       <label for="weight">Package weight</label>
       <input type="text" id="weight" >
     </div>
-    
   </div>
+
+    <%= form.label :receiver_email %>
+    <%= form.text_field :receiver_email, id: :shipment_receiver_email ,:autocomplete => :off  %>
   
   <div id="suggesstion-box"></div>
 
