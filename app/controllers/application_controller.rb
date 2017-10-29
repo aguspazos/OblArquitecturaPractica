@@ -15,8 +15,6 @@ class ApplicationController < ActionController::Base
   def check_admin
     return unless  @admin.blank?
     puts @admin.blank?
-<<<<<<< HEAD
-    puts "la"
     redirect_to "/admin" 
   end
   
@@ -43,7 +41,6 @@ class ApplicationController < ActionController::Base
 
   def on_routing_error
     render_404
-=======
     redirect_to "/admin" 
   end
   
@@ -51,7 +48,6 @@ class ApplicationController < ActionController::Base
     return unless  @user.blank?
     puts @user.blank?
     redirect_to "/" 
->>>>>>> a58839511cadce51016e01be1932c7a44dcc9e71
   end
     
 end
