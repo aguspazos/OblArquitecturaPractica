@@ -1,3 +1,8 @@
+require 'rest-client'
+require 'json'
+require 'geokit'
+include ShipmentsHelper
+
 class ShipmentsController < ApplicationController
   before_action :set_shipment, only: [:show, :edit, :update, :destroy]
   before_action :check_cadet, only:[:show]
@@ -63,6 +68,31 @@ class ShipmentsController < ApplicationController
           end
         end
       end
+    end
+  end
+  
+  def calculate_price
+    if params[:origin_lat] && params[:origin_lng] && params[:destiny_lat] && params[:destiny_lng]
+      alive = ping_server 
+      if alive
+        areas = get_areas
+        origin_area = get_area_for_point params[:origin_lat], params[:origin_lng], areas
+        destiny_area = get_area_for_point params[:destiny_lat], params[:destiny_lng], areas
+        if origin_area != false && destiny_area != false
+          price = calc_price origin_area, destiny_area
+          msg = {:status => "ok", :price => price, :origin_area => origin_area['polygon'], :destiny_area => destiny_area['polygon']}    
+        else
+          msg = {:status => "error", :errorMessage => "Areas not found"}
+        end
+      else
+        msg = {:status => "error", :errorMessage => "Service not available"}
+      end
+    else 
+      msg = {:status => "error", :errorMessage => "Invalid data"}
+    end
+    respond_to do |format|
+      format.json { render json: msg, status: :ok}
+      format.html 
     end
   end
 

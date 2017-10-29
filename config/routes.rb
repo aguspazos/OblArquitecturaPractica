@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   
   root 'sessions#new_user'
   
-  get '/shipments/create-shipment',  to: 'shipments#create_shipment'
+  post '/shipments/calculate_price',  to: 'shipments#calculate_price'
   
   
   
@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   resources :cadets
   
   get '/users/main',  to: 'users#main'
-
+  
   get '/users/invite', to:'users#invite'
   post '/users/send_invite', to:'users#send_invite'
   post '/users/search', to:"users#search"

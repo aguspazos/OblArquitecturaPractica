@@ -18,6 +18,8 @@ gem 'pg_search'
 gem 'ci_uy'
 gem 'rails-jquery-autocomplete'
 gem 'jquery-ui-rails'
+gem 'rest-client'
+gem 'geokit'
 gem 'aws-sdk', '2.10.47'
 
 group :development, :test do
