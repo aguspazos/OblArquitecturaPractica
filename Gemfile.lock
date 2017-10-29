@@ -238,11 +238,8 @@ DEPENDENCIES
   pg_search
   puma (= 3.9.1)
   rails (= 5.1.2)
-<<<<<<< HEAD
   rails-jquery-autocomplete
-=======
   rest-client
->>>>>>> 84e7c86f9c11ef050019e1ff1019aefb013460f1
   sass-rails (= 5.0.6)
   spring (= 2.0.2)
   spring-watcher-listen (= 2.0.1)
