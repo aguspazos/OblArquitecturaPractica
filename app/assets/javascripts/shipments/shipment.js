@@ -1,8 +1,12 @@
 var Map = {};
 Map.latitude = -34.8804869;
 Map.longitude = -56.1341587;
-Map.markers = [];
+Map.origin_marker;
+Map.destiny_marker;
+Map.origin_polygon;
+Map.destiny_polygon;
 Map.pointsSelected = false;
+Map.markers_count = 0;
 
 $(document).ready(function () {
     $('#shipment_receiver_email').on('keyup',function(e){
@@ -13,6 +17,8 @@ $(document).ready(function () {
         }, 200);
 
     });
+    
+    Map.request_cost();
 
     var mapCanvas = document.getElementById('map');
     var mapOptions = {
@@ -25,46 +31,33 @@ $(document).ready(function () {
     Map.map = map;
     
     google.maps.event.addListener(map, 'click', function (event) {
-        if (Map.markers.length<2){
-            var name = Map.markers.length == 0 ? 'Origin' : 'Destiny';
+        if (Map.markers_count<2){
+            var is_origin = Map.markers_count == 0 ;
+            var name = is_origin ? 'Origin' : 'Destiny';
             var marker = new google.maps.Marker({
                 position: event.latLng,
-                map: map,
                 title: name
             });
-            
+            marker.setMap(Map.map);
+            if (is_origin) {
+                Map.origin_marker = marker;
+                Map.markers_count++;
+                $('#origin_lat').val(marker.position.lat);
+                $('#origin_lng').val(marker.position.lng);
+            } else {
+                Map.destiny_marker = marker;
+                Map.markers_count++;
+                $('#destiny_lat').val(marker.position.lat);
+                $('#destiny_lng').val(marker.position.lng);
+                Map.calculate_price(Map.origin_marker.position, marker.position);
+            } 
             google.maps.event.addListener(marker , 'click', function(){
-              var infowindow = new google.maps.InfoWindow({
-                content:marker.title,
-                position: marker.position,
-              });
-            infowindow.open(map);  
+                var infowindow = new google.maps.InfoWindow({
+                    content:marker.title,
+                    position: marker.position,
+                });
+                infowindow.open(Map.map);  
             });
-            
-            if (Map.markers.length<2) {
-                if (Map.markers.length==0) {
-                    $('#origin_lat').val(marker.position.lat);
-                    $('#origin_lng').val(marker.position.lng);
-                } else {
-                    $('#destiny_lat').val(marker.position.lat);
-                    $('#destiny_lng').val(marker.position.lng);
-                    
-                    var a =Map.markers[0].position.lat;
-                    var b  = Map.markers[0].position.lng;
-                    new google.maps.Polyline({
-                        path: [
-                            new google.maps.LatLng(Map.markers[0].position.lat, Map.markers[0].position.lng), 
-                            new google.maps.LatLng(marker.position.lat, marker.position.lng)
-                        ],
-                        strokeColor: "#FF0000",
-                        strokeOpacity: 1.0,
-                        strokeWeight: 10,
-                        map: map
-                    });
-                    Map.calculate_price(Map.markers[0].position, marker.position);
-                }
-                Map.markers.push(marker);
-            }        
         }
     });
     
@@ -72,7 +65,7 @@ $(document).ready(function () {
         "click" : function(){
             if ($.trim($('#shipment_receiver_email').val()) != '') {
                 if ($("#shipment_receiver_pays").is(":checked") || $("#shipment_sender_pays").is(":checked")) {
-                    if (Map.markers.length==2) {
+                    if (Map.markers_count==2) {
                         $("form").submit();     
                     } else {
                         Map.alert("Select origin and destiny points")
@@ -87,7 +80,63 @@ $(document).ready(function () {
         }
     });
     
+    $('#request_cost').on({
+        "click" : function(){
+            Map.request_cost();
+        }
+    });
+    
+    $('#remove_markers').on({
+        "click" : function(){
+            Map.remove_markers();
+            Map.remove_polygons();
+            Map.markers_count = 0;
+        }
+    });
 });
+
+Map.request_cost = function(){
+    $.ajax({
+        type: "POST", 
+        url: "https://envios-ya-martinlg.c9users.io/shipments/get_cost",
+        success: function (response) {
+            if (response.status == 'ok') {
+                $('.loader').css('display','none');
+                if (response.estimated == 'true') {
+                    $('#price_per_kilo').text('Price per kilo estimated: '+response.cost);
+                } else {
+                    $('#price_per_kilo').text('Price per kilo: '+response.cost);
+                }
+                
+            }
+        }, 
+        error: function(){
+            console.log('error request cost');
+        }
+    });  
+};
+
+Map.remove_markers = function(){
+    if (Map.origin_marker) {
+        Map.origin_marker.setMap(null);
+        Map.destiny_marker.setMap(null);
+    }
+    if (Map.destiny_marker) {
+        Map.origin_marker = null;
+        Map.destiny_marker = null;
+    }
+};
+
+Map.remove_polygons = function(){
+    if (Map.origin_polygon) {
+        Map.origin_polygon.setMap(null);
+        Map.origin_polygon = null;
+    }
+    if (Map.destiny_polygon) {
+        Map.destiny_polygon.setMap(null);
+        Map.destiny_polygon = null;    
+    }
+};
 
 Map.calculate_price = function(origin, destiny){
     $.ajax({
@@ -96,40 +145,41 @@ Map.calculate_price = function(origin, destiny){
         data: {'origin_lat': (origin.lat), 'origin_lng': (origin.lng), 'destiny_lat': (destiny.lat), 'destiny_lng': (destiny.lng)},
         success: function (response) {
             if (response.status == 'ok') {
-                var path = [Map.markers[0].position, Map.markers[1].position]
-                var origin_area = new google.maps.Polygon({
-                  paths: response.origin_area,
-                  strokeColor: '#FF0000',
-                  strokeOpacity: 0.8,
-                  strokeWeight: 3,
-                  fillColor: '#FF0000',
-                  fillOpacity: 0.35
-                });
-                origin_area.setMap(Map.map);
-                var destiny_area = new google.maps.Polygon({
-                  paths: response.destiny_area,
-                  strokeColor: '#FF0000',
-                  strokeOpacity: 0.8,
-                  strokeWeight: 3,
-                  fillColor: '#FF0000',
-                  fillOpacity: 0.35
-                });
-                destiny_area.setMap(Map.map);
-                var path = new google.maps.Polyline({
-                  path: path,
-                  geodesic: true,
-                  strokeColor: '#FF0000',
-                  strokeOpacity: 1.0,
-                  strokeWeight: 2
-                });
-                path.setMap(Map.map);   
-                $('#price_label').text('Price: $'+response.price)
+                if (response.origin_area.length > 0 && response.destiny_area.length > 0) {
+                    var origin_area = new google.maps.Polygon({
+                      paths: response.origin_area,
+                      strokeColor: '#FF0000',
+                      strokeOpacity: 0.8,
+                      strokeWeight: 3,
+                      fillColor: '#FF0000',
+                      fillOpacity: 0.35
+                    });
+                    var destiny_area = new google.maps.Polygon({
+                      paths: response.destiny_area,
+                      strokeColor: '#FF0000',
+                      strokeOpacity: 0.8,
+                      strokeWeight: 3,
+                      fillColor: '#FF0000',
+                      fillOpacity: 0.35
+                    });
+                    origin_area.setMap(Map.map);
+                    destiny_area.setMap(Map.map);
+                    Map.origin_polygon = origin_area;
+                    Map.destiny_polygon = destiny_area;
+                    $('#price_zone_label').text('Zone Price: $'+(response.price? response.price : 0));
+                } else {
+                    $('#price_zone_label').text('Zone Price Estimated: $30');    
+                }
+                
             } else {
                 
             }
+        }, 
+        error: function(){
+            console.log('error request zone');
         }
     });
-}
+};
 
 function searchUser(text){
     var myObject = new Object();
