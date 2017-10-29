@@ -2,8 +2,8 @@ class UsersController < ApplicationController
   
   require 'ci_uy'
   before_action :set_user, only: [:show, :edit, :update, :destroy]
-  before_action :check_admin, only:[:edit,:update]
-    skip_before_action :verify_authenticity_token, :only => [:search]
+  before_action :check_admin, only:[:edit,:update, :index, :show]
+  skip_before_action :verify_authenticity_token, :only => [:search]
 
   def main
     if current_user== nil
@@ -84,8 +84,8 @@ class UsersController < ApplicationController
               UserDiscount.createDiscount(@user.id)
             end
           
-          format.html { redirect_to @user, notice: 'User was successfully created.' }
-          format.json { render :show, status: :created, location: @user }
+          format.html { redirect_to "/", notice: 'User was successfully created.' }
+          
           else
             if(params[:inviterId])
               format.html { render :new, :existingUser => params[:inviterId] if params.has_key?(:inviterId) }

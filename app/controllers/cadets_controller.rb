@@ -1,5 +1,6 @@
 class CadetsController < ApplicationController
   before_action :set_cadet, only: [:show, :edit, :update, :destroy]
+  before_action :check_admin, only:[ :index]
   
   # GET /cadets
   # GET /cadets.json
@@ -37,8 +38,7 @@ class CadetsController < ApplicationController
       cadet = Cadet.find_by(email: params[:cadet][:email].downcase)
       if(cadet.blank?)
         if @cadet.save
-          format.html { redirect_to @cadet, notice: 'Cadet was successfully created.' }
-          format.json { render :show, status: :created, location: @cadet }
+          format.html { redirect_to '/cadets', notice: 'Cadet was successfully created.' }
         else
           format.html { render :new }
           format.json { render json: @cadet.errors, status: :unprocessable_entity }
@@ -70,8 +70,7 @@ class CadetsController < ApplicationController
   def destroy
     @cadet.destroy
     respond_to do |format|
-      format.html { redirect_to cadets_url, notice: 'Cadet was successfully destroyed.' }
-      format.json { head :no_content }
+      format.html { redirect_to '/cadet-login',notice: 'Cadet was successfully destroyed'}
     end
   end
   

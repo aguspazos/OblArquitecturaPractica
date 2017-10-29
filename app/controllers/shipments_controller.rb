@@ -20,9 +20,9 @@ class ShipmentsController < ApplicationController
 
   # GET /shipments
   # GET /shipments.json
-  # def index
-  #   @shipments = Shipment.all
-  # end
+   def index
+     redirect_to '/cadets'
+   end
 
   # GET /shipments/1
   # GET /shipments/1.json
