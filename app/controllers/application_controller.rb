@@ -16,6 +16,14 @@ class ApplicationController < ActionController::Base
     return unless  current_admin == nil
     redirect_to "/admin" 
   end
+  def check_user
+    return unless  current_user == nil
+    redirect_to "/" 
+  end
+  def check_cadet
+    return unless  current_cadet == nil
+    redirect_to "/cadet-login" 
+  end
   
   
   def render_404

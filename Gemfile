@@ -16,6 +16,8 @@ gem 'spring',                '2.0.2'
 gem 'spring-watcher-listen', '2.0.1'
 gem 'pg_search'
 gem 'ci_uy'
+gem 'rails-jquery-autocomplete'
+gem 'jquery-ui-rails'
 gem 'aws-sdk', '2.10.47'
 
 group :development, :test do

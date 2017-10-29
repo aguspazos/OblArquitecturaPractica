@@ -3,6 +3,8 @@ class UsersController < ApplicationController
   require 'ci_uy'
   before_action :set_user, only: [:show, :edit, :update, :destroy]
   before_action :check_admin, only:[:edit,:update]
+    skip_before_action :verify_authenticity_token, :only => [:search]
+
   def main
     if current_user== nil
       redirect_to '/login'
