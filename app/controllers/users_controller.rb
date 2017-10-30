@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   
   require 'ci_uy'
   before_action :set_user, only: [:show, :edit, :update, :destroy]
-  before_action :check_admin, only:[:edit,:update]
+  before_action :check_admin, only:[:edit,:update, :index, :show]
   skip_before_action :verify_authenticity_token, :only => [:search]
 
   def main
@@ -77,6 +77,7 @@ class UsersController < ApplicationController
     respond_to do |format|
         user = User.find_by(email: params[:user][:email].downcase)
         if(user.blank?)
+          @user.email = @user.email.downcase
           if @user.save
             puts params[:user]
             if (params.has_key?(:inviterId))
@@ -84,8 +85,8 @@ class UsersController < ApplicationController
               UserDiscount.createDiscount(@user.id)
             end
           
-          format.html { redirect_to @user, notice: 'User was successfully created.' }
-          format.json { render :show, status: :created, location: @user }
+          format.html { redirect_to "/", notice: 'User was successfully created.' }
+          
           else
             if(params[:inviterId])
               format.html { render :new, :existingUser => params[:inviterId] if params.has_key?(:inviterId) }

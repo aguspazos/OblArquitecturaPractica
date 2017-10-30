@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   root 'sessions#new_user'
   
   post '/shipments/calculate_price',  to: 'shipments#calculate_price'
+  post '/shipments/confirm',  to: 'shipments#confirm'
 
   post '/shipments/get_cost',  to: 'shipments#get_cost'
 

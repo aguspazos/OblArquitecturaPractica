@@ -26,10 +26,10 @@ end
 if Rails.env == 'production'
   # For production, run server configs
   #configure_server
-  configure_client
+  #configure_client
 else 
     #configure_cron
-    configure_client
-    configure_server
-    configure_cron
+    #configure_client
+    #configure_server
+    #configure_cron
 end

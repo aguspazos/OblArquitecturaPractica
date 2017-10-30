@@ -15,14 +15,15 @@ class ShipmentsController < ApplicationController
       redirect_to '/login'
     end
   end
+  
   def confirm
   end
 
   # GET /shipments
   # GET /shipments.json
-  # def index
-  #   @shipments = Shipment.all
-  # end
+   def index
+     redirect_to '/cadets'
+   end
 
   # GET /shipments/1
   # GET /shipments/1.json
@@ -100,6 +101,30 @@ class ShipmentsController < ApplicationController
     end
   end
   
+  def confirm
+    
+    @shipment = Shipment.find(params[:shipment_id])
+    respond_to do |format|
+      if(@shipment)
+        if(params[:shipment] && params[:shipment][:confirm_reception])
+         @shipment.status = Shipment.SENT
+          @shipment.delivery_time = DateTime.now
+          @shipment.confirm_reception = params[:shipment][:confirm_reception]
+          if @shipment.save
+            format.html{redirect_to '/cadets'}
+          else
+              format.html { render :show,location: @shipment }
+              format.json { render json: @shipment.errors, status: :unprocessable_entity }
+          end
+        else
+          @shipment.errors.add(:base, "Debe ingresar el comprobante de firma")
+          format.html { render :show,location: @shipment }
+          format.json { render json: @shipment.errors, status: :unprocessable_entity }
+        end
+      end
+    end
+  end
+  
   def get_cost
     alive = ping_server 
       if alive
@@ -112,7 +137,7 @@ class ShipmentsController < ApplicationController
         end
       else
         msg = {:status => "error", :errorMessage => "Service not available"}  
-    end
+      end
     respond_to do |format|
       format.json { render json: msg, status: :ok}
       format.html 
