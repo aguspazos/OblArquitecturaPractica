@@ -1,24 +1,43 @@
+EnviosYa
 
-     ,-----.,--.                  ,--. ,---.   ,--.,------.  ,------.
-    '  .--./|  | ,---. ,--.,--. ,-|  || o   \  |  ||  .-.  \ |  .---'
-    |  |    |  || .-. ||  ||  |' .-. |`..'  |  |  ||  |  \  :|  `--, 
-    '  '--'\|  |' '-' ''  ''  '\ `-' | .'  /   |  ||  '--'  /|  `---.
-     `-----'`--' `---'  `----'  `---'  `--'    `--'`-------' `------'
-    ----------------------------------------------------------------- 
+EnviosYa es una aplicacion que permite realizar envios de paquetes. Cuando un usuario realiza un pedido, especifica las caracteristicas del mismo y se le asigna un cadete responsable de realizar dicho envio.
 
+Getting Started
 
-Welcome to your Rails project on Cloud9 IDE!
+Para obtener una copia del proyecto en el ambiente de desarrollo :
+- Bajar el codigo del repositorio git
+- Ejecutar comando bundle install 
 
-To get started, just do the following:
+Prerequisitos
+- Cuenta de cloud9
 
-1. Run the project with the "Run Project" button in the menu bar on top of the IDE.
-2. Preview your new app by clicking on the URL that appears in the Run panel below (https://HOSTNAME/).
+Dependencias
+-rails
+-sqlite3
+-puma
+-sass-rails
+-uglifier
+-coffee-rails
+-jquery-rails
+-turbolinks
+-jbuilder
+-paperclip
+-omniauth-facebook
+-listen
+-spring
+-spring-watcher-listen
+-pg_search
+-ci_uy
+-rails-jquery-autocomplete
+-jquery-ui-rails
+-rest-client
+-geokit
+-aws-sdk
+-sidekiq
+-sidekiq-failures
+-sidekiq-cron
 
-Happy coding!
-The Cloud9 IDE team
-
-
-## Support & Documentation
-
-Visit http://docs.c9.io for support, or to learn more about using Cloud9 IDE. 
-To watch some training videos, visit http://www.youtube.com/user/c9ide
+Autores
+Mathias Gili
+Agustin Pazos
+Martin Long
