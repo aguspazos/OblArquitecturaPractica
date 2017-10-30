@@ -21,6 +21,7 @@ class CadetsController < ApplicationController
 
   # GET /cadets/new
   def new
+    STDERR.puts("Hi there1")
     @cadet = Cadet.new
   end
 
@@ -31,23 +32,46 @@ class CadetsController < ApplicationController
   # POST /cadets
   # POST /cadets.json
   def create
-    @cadet = Cadet.new(cadet_params)
-    @cadet.status = Cadet.PENDING
-    respond_to do |format|
-      cadet = Cadet.find_by(email: params[:cadet][:email].downcase)
-      if(cadet.blank?)
-        if @cadet.save
-          format.html { redirect_to @cadet, notice: 'Cadet was successfully created.' }
-          format.json { render :show, status: :created, location: @cadet }
+    begin
+      @cadet = Cadet.new(cadet_params)
+      STDERR.puts("Hi there2")
+      @cadet.status = Cadet.PENDING
+      STDERR.puts("Hi there3")
+      respond_to do |format|
+            STDERR.puts("Hi there4")
+        cadet = Cadet.find_by(email: params[:cadet][:email].downcase)
+            STDERR.puts("Hi there5")
+  
+        if(cadet.blank?)
+              STDERR.puts("Hi there6")
+  
+          if @cadet.save
+                        STDERR.puts("Hi there7")
+            format.html { redirect_to @cadet, notice: 'Cadet was successfully created.' }
+            format.json { render :show, status: :created, location: @cadet }
+          else
+                                  STDERR.puts("Hi there8")
+  
+            format.html { render :new }
+            format.json { render json: @cadet.errors, status: :unprocessable_entity }
+          end
         else
+          @cadet.errors.add(:base,"Ya existe un cadete con ese email")
           format.html { render :new }
           format.json { render json: @cadet.errors, status: :unprocessable_entity }
         end
-      else
-        @cadet.errors.add(:base,"Ya existe un cadete con ese email")
-        format.html { render :new }
-        format.json { render json: @cadet.errors, status: :unprocessable_entity }
       end
+        # do something dodgy
+      rescue ActiveRecord::RecordNotFound
+                                  STDERR.puts("Hi there9")
+      rescue ActiveRecord::ActiveRecordError
+                                  STDERR.puts("Hi there10")
+      rescue # StandardError
+                                  STDERR.puts("Hi there11")
+      rescue Exception => e
+      
+                                  STDERR.puts("Hi there12" + e.message)
+        raise
     end
   end
 

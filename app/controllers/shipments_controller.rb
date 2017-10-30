@@ -121,6 +121,8 @@ class ShipmentsController < ApplicationController
           format.json { render json: @shipment.errors, status: :unprocessable_entity }
         end
       end
+    end
+  end
       
   def get_cost
     alive = ping_server 

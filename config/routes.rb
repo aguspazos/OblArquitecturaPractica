@@ -27,7 +27,6 @@ Rails.application.routes.draw do
   post '/users/search', to:"users#search"
   resources :users
 
-
   get    '/cadet-login',   to: 'sessions#new_cadet'
   post   '/cadet-login',   to: 'sessions#create_cadet'
   delete '/cadet-logout',  to: 'sessions#destroy_cadet'

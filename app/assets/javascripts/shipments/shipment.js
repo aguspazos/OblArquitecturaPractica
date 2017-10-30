@@ -98,7 +98,7 @@ $(document).ready(function () {
 Map.request_cost = function(){
     $.ajax({
         type: "POST", 
-        url: "https://envios-ya-martinlg.c9users.io/shipments/get_cost",
+        url: "https://enviosyaarqsoftpr2017s2.mybluemix.net/shipments/get_cost",
         success: function (response) {
             if (response.status == 'ok') {
                 $('.loader').css('display','none');
@@ -141,7 +141,7 @@ Map.remove_polygons = function(){
 Map.calculate_price = function(origin, destiny){
     $.ajax({
         type: "POST", 
-        url: "https://envios-ya-martinlg.c9users.io/shipments/calculate_price",
+        url: "https://enviosyaarqsoftpr2017s2.mybluemix.net/calculate_price",
         data: {'origin_lat': (origin.lat), 'origin_lng': (origin.lng), 'destiny_lat': (destiny.lat), 'destiny_lng': (destiny.lng)},
         success: function (response) {
             if (response.status == 'ok') {
@@ -187,7 +187,7 @@ function searchUser(text){
     $( "#shipment_receiver_email" ).autocomplete()
     $.ajax({
             type: "POST", 
-            url: "https://enviosya-aguspazos.c9users.io/users/search",
+            url: "https://enviosyaarqsoftpr2017s2.mybluemix.net/search",
             async: false,
             contentType: "application/json",
             data: JSON.stringify(myObject),
