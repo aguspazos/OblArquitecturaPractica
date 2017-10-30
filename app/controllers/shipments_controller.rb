@@ -125,7 +125,8 @@ class ShipmentsController < ApplicationController
       end
     end
   end
-  
+
+
   def get_cost
     alive = ping_server 
       if alive
