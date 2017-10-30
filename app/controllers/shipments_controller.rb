@@ -62,7 +62,7 @@ class ShipmentsController < ApplicationController
           @shipment.cadet_id = cadet.id
           set_receiver
           set_discount
-          if(@shipment.final_price == 0)
+          if(@shipment.final_price == false || @shipment.final_price == 0)
             
             MailerHelperMailer.send_estimated_price(@shipment).deliver!
           end
@@ -116,9 +116,30 @@ class ShipmentsController < ApplicationController
           @shipment.status = Shipment.SENT
           @shipment.delivery_time = DateTime.now
           @shipment.confirm_reception = params[:shipment][:confirm_reception]
-          if(@shipment.final_price ==0)
-            #calculate
-            #send_discount
+          if(@shipment.final_price == false || @shipment.final_price ==0)
+            alive = ping_server 
+            if alive
+              areas = get_areas
+              origin_area = get_area_for_point @shipment.origin_lat, @shipment.origin_lng, areas
+              destiny_area = get_area_for_point @shipment.destiny_lat, @shipment.destiny_lng, areas
+              if origin_area != false && destiny_area != false
+                zone_price = calc_zone_price origin_area, destiny_area
+                @shipment.final_price = zone_price
+                @shipment.price = zone_price
+                #cost_per_kilogram = get_cost  
+              else
+                #TODO:// ADD TO RECALCULATE QUEUE
+                estimated_zone_price = 42
+                @shipment.final_price = estimated_zone_price
+                @shipment.price = estimated_zone_price
+              end
+            else
+              #TODO:// ADD TO RECALCULATE QUEUE
+              estimated_zone_price = 42
+              @shipment.final_price = estimated_zone_price
+              @shipment.price = estimated_zone_price
+            end
+            set_discount
           end
           MailerHelperMailer.send_price(@shipment).deliver!
           if @shipment.save

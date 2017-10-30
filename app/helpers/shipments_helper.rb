@@ -105,19 +105,15 @@ module ShipmentsHelper
     def set_discount
         userDiscount = UserDiscount.where(user_id: @shipment.sender_id).where(used: 0).first
         if(!userDiscount.blank?)
-            if(final_price != 0)
+            if(@shipment.final_price)
                 userDiscount.used = true
                 userDiscount.save
                 if(@shipment.sender_pays == true && @shipment.receiver_pays)
-                    @shipment.final_price -= @shipment.final_price/4 unless final_price == 0
                     @shipment.price -= @shipment.price/4
-                    
                 else
-                    @shipment.final_price -= @shipment.final_price/2 unless final_price == 0
                     @shipment.price -= @shipment.price/2            
                 end
             end
         end
     end
 end
-

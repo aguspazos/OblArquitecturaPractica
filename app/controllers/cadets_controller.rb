@@ -33,14 +33,9 @@ class CadetsController < ApplicationController
   # POST /cadets.json
   def create
     @cadet = Cadet.new(cadet_params)
-    STDERR.puts("Hi there2")
     @cadet.status = Cadet.PENDING
-    STDERR.puts("Hi there3")
     respond_to do |format|
-          STDERR.puts("Hi there4")
       cadet = Cadet.find_by(email: params[:cadet][:email].downcase)
-          STDERR.puts("Hi there5")
-  
       if(cadet.blank?)
   
         if @cadet.save
@@ -50,20 +45,10 @@ class CadetsController < ApplicationController
           format.html { render :new }
           format.json { render json: @cadet.errors, status: :unprocessable_entity }
         end
-        @cadet = Cadet.new(cadet_params)
-        @cadet.status = Cadet.PENDING
-        respond_to do |format|
-          cadet = Cadet.find_by(email: params[:cadet][:email].downcase)
-          if(cadet.blank?)
-            if @cadet.save
-              format.html { redirect_to '/cadets', notice: 'Cadet was successfully created.' }
-            else
-              @cadet.errors.add(:base,"Ya existe un cadete con ese email")
-              format.html { render :new }
-              format.json { render json: @cadet.errors, status: :unprocessable_entity }
-            end
-          end
-        end
+      else
+        @cadet.errors.add(:base,"Ya existe un cadete con ese email")
+        format.html { render :new }
+        format.json { render json: @cadet.errors, status: :unprocessable_entity }
       end
     end
   end

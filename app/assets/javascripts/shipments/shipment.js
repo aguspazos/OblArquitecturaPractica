@@ -158,7 +158,7 @@ Map.remove_polygons = function(){
 Map.calculate_price = function(origin, destiny){
     $.ajax({
         type: "POST", 
-        url: "https://enviosyaarqsoftpr2017s2.mybluemix.net/calculate_price",
+        url: "https://enviosyaarqsoftpr2017s2.mybluemix.net/shipments/calculate_price",
         data: {'origin_lat': (origin.lat), 'origin_lng': (origin.lng), 'destiny_lat': (destiny.lat), 'destiny_lng': (destiny.lng)},
         success: function (response) {
             if (response.status == 'ok') {
