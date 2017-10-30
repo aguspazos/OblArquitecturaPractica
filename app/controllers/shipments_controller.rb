@@ -61,6 +61,11 @@ class ShipmentsController < ApplicationController
         else
           @shipment.cadet_id = cadet.id
           set_receiver
+          set_discount
+          if(@shipment.final_price == 0)
+            
+            MailerHelperMailer.send_estimated_price(@shipment).deliver!
+          end
           if @shipment.save
             
             format.html { redirect_to @shipment, notice: 'Shipment was successfully created.' }
@@ -110,6 +115,11 @@ class ShipmentsController < ApplicationController
          @shipment.status = Shipment.SENT
           @shipment.delivery_time = DateTime.now
           @shipment.confirm_reception = params[:shipment][:confirm_reception]
+          if(@shipment.final_price ==0)
+            #calculate
+            #send_discount
+          end
+          MailerHelperMailer.send_price(@shipment).deliver!
           if @shipment.save
             format.html{redirect_to '/cadets'}
           else

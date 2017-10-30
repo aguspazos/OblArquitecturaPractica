@@ -1,4 +1,4 @@
-class CalculateEstimatedPricesJob < ApplicationJob
+class CalculateEstimatedPricesJob < ActiveJob
     queue_as :default
     
     def perform(*args)
