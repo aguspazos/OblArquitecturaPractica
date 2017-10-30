@@ -12,32 +12,32 @@ Prerequisitos
 - Cuenta de cloud9
 
 Dependencias
--rails
--sqlite3
--puma
--sass-rails
--uglifier
--coffee-rails
--jquery-rails
--turbolinks
--jbuilder
--paperclip
--omniauth-facebook
--listen
--spring
--spring-watcher-listen
--pg_search
--ci_uy
--rails-jquery-autocomplete
--jquery-ui-rails
--rest-client
--geokit
--aws-sdk
--sidekiq
--sidekiq-failures
--sidekiq-cron
+- rails
+- sqlite3
+- puma
+- sass-rails
+- uglifier
+- coffee-rails
+- jquery-rails
+- turbolinks
+- jbuilder
+- paperclip
+- omniauth-facebook
+- listen
+- spring
+- spring-watcher-listen
+- pg_search
+- ci_uy
+- rails-jquery-autocomplete
+- jquery-ui-rails
+- rest-client
+- geokit
+- aws-sdk
+- sidekiq
+- sidekiq-failures
+- sidekiq-cron
 
 Autores
-Mathias Gili
-Agustin Pazos
-Martin Long
+- Mathias Gili
+- Agustin Pazos
+- Martin Long
