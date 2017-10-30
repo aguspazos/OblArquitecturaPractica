@@ -1,5 +1,9 @@
 module ShipmentsHelper
 
+    def find_cadet_available_and_close(lat, lng)
+        return 0
+    end
+
     def get_areas
         begin
             areas = RestClient::Request.execute method: :get, url: "https://delivery-rates.mybluemix.net/areas", user: '178253', password: '5y239sa8CPpa'
