@@ -21,6 +21,9 @@ gem 'jquery-ui-rails'
 gem 'rest-client'
 gem 'geokit'
 gem 'aws-sdk', '2.10.47'
+gem 'sidekiq'
+gem 'sidekiq-failures'
+gem 'sidekiq-cron'
 
 group :development, :test do
   gem 'byebug', '9.0.6', platform: :mri

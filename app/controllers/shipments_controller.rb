@@ -15,14 +15,15 @@ class ShipmentsController < ApplicationController
       redirect_to '/login'
     end
   end
+  
   def confirm
   end
 
   # GET /shipments
   # GET /shipments.json
-  # def index
-  #   @shipments = Shipment.all
-  # end
+   def index
+     redirect_to '/cadets'
+   end
 
   # GET /shipments/1
   # GET /shipments/1.json
@@ -123,7 +124,8 @@ class ShipmentsController < ApplicationController
       end
     end
   end
-      
+
+
   def get_cost
     alive = ping_server 
       if alive

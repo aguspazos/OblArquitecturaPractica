@@ -1,6 +1,6 @@
 class CadetsController < ApplicationController
   before_action :set_cadet, only: [:show, :edit, :update, :destroy]
-  
+
   # GET /cadets
   # GET /cadets.json
   def index
@@ -32,46 +32,39 @@ class CadetsController < ApplicationController
   # POST /cadets
   # POST /cadets.json
   def create
-    begin
-      @cadet = Cadet.new(cadet_params)
-      STDERR.puts("Hi there2")
-      @cadet.status = Cadet.PENDING
-      STDERR.puts("Hi there3")
-      respond_to do |format|
-            STDERR.puts("Hi there4")
-        cadet = Cadet.find_by(email: params[:cadet][:email].downcase)
-            STDERR.puts("Hi there5")
+    @cadet = Cadet.new(cadet_params)
+    STDERR.puts("Hi there2")
+    @cadet.status = Cadet.PENDING
+    STDERR.puts("Hi there3")
+    respond_to do |format|
+          STDERR.puts("Hi there4")
+      cadet = Cadet.find_by(email: params[:cadet][:email].downcase)
+          STDERR.puts("Hi there5")
   
-        if(cadet.blank?)
-              STDERR.puts("Hi there6")
+      if(cadet.blank?)
   
-          if @cadet.save
-                        STDERR.puts("Hi there7")
-            format.html { redirect_to @cadet, notice: 'Cadet was successfully created.' }
-            format.json { render :show, status: :created, location: @cadet }
-          else
-                                  STDERR.puts("Hi there8")
-  
-            format.html { render :new }
-            format.json { render json: @cadet.errors, status: :unprocessable_entity }
-          end
+        if @cadet.save
+          format.html { redirect_to @cadet, notice: 'Cadet was successfully created.' }
+          format.json { render :show, status: :created, location: @cadet }
         else
-          @cadet.errors.add(:base,"Ya existe un cadete con ese email")
           format.html { render :new }
           format.json { render json: @cadet.errors, status: :unprocessable_entity }
         end
+        @cadet = Cadet.new(cadet_params)
+        @cadet.status = Cadet.PENDING
+        respond_to do |format|
+          cadet = Cadet.find_by(email: params[:cadet][:email].downcase)
+          if(cadet.blank?)
+            if @cadet.save
+              format.html { redirect_to '/cadets', notice: 'Cadet was successfully created.' }
+            else
+              @cadet.errors.add(:base,"Ya existe un cadete con ese email")
+              format.html { render :new }
+              format.json { render json: @cadet.errors, status: :unprocessable_entity }
+            end
+          end
+        end
       end
-        # do something dodgy
-      rescue ActiveRecord::RecordNotFound
-                                  STDERR.puts("Hi there9")
-      rescue ActiveRecord::ActiveRecordError
-                                  STDERR.puts("Hi there10")
-      rescue # StandardError
-                                  STDERR.puts("Hi there11")
-      rescue Exception => e
-      
-                                  STDERR.puts("Hi there12" + e.message)
-        raise
     end
   end
 
@@ -94,8 +87,7 @@ class CadetsController < ApplicationController
   def destroy
     @cadet.destroy
     respond_to do |format|
-      format.html { redirect_to cadets_url, notice: 'Cadet was successfully destroyed.' }
-      format.json { head :no_content }
+      format.html { redirect_to '/cadet-login',notice: 'Cadet was successfully destroyed'}
     end
   end
   

@@ -51,7 +51,6 @@
 <p>
   <%= image_tag @cadet.vehicle_documentation.url(:thumb) %>
 </p>
-<%= link_to 'Edit', edit_cadet_path(@cadet) %> |
-<%= link_to 'Back', cadets_path %>
+<%= link_to 'Edit', edit_cadet_path(@cadet) %>
 <%= link_to 'Log out', '/cadet-logout', method: :delete %>
 <%= link_to 'Destroy', @cadet, method: :delete %>

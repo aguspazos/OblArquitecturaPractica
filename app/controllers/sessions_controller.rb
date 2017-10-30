@@ -23,7 +23,7 @@ class SessionsController < ApplicationController
     cadet = Cadet.find_by(email: params[:session][:email].downcase)
     if cadet && cadet.authenticate(params[:session][:password])
       cadet_log_in cadet
-      redirect_to '/cadets'
+      redirect_to "/cadets"
     else
       flash.now[:danger] = 'Invalid email/password combination'
       render 'new_cadet'
@@ -37,7 +37,7 @@ class SessionsController < ApplicationController
   
   def new_user
     if current_user!= nil
-      redirect_to current_user
+      redirect_to '/users/main'
     end
   end
   

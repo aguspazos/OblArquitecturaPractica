@@ -187,7 +187,7 @@ function searchUser(text){
     $( "#shipment_receiver_email" ).autocomplete()
     $.ajax({
             type: "POST", 
-            url: "https://enviosyaarqsoftpr2017s2.mybluemix.net/search",
+            url: "https://enviosyaarqsoftpr2017s2.mybluemix.net/users/search",
             async: false,
             contentType: "application/json",
             data: JSON.stringify(myObject),

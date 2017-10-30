@@ -1,6 +1,6 @@
 class AdminsController < ApplicationController
   before_action :set_admin, only: [:show, :edit, :update, :destroy]
-   before_action :check_admin, only: [:show,:edit,:update,:destroy,:accept_cadet,:reject_cadet]
+  before_action :check_admin, only: [:show,:edit,:update,:destroy,:accept_cadet,:reject_cadet]
   
 
 
