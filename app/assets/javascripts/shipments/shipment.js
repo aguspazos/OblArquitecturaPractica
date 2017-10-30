@@ -7,6 +7,9 @@ Map.origin_polygon;
 Map.destiny_polygon;
 Map.pointsSelected = false;
 Map.markers_count = 0;
+Map.zone_price = 0;
+Map.price_per_kilo = 0;
+Map.price_per_zone_real = false;
 
 $(document).ready(function () {
     $('#shipment_receiver_email').on('keyup',function(e){
@@ -66,7 +69,17 @@ $(document).ready(function () {
             if ($.trim($('#shipment_receiver_email').val()) != '') {
                 if ($("#shipment_receiver_pays").is(":checked") || $("#shipment_sender_pays").is(":checked")) {
                     if (Map.markers_count==2) {
-                        $("form").submit();     
+                        if ($.trim($('#weight').val() != '')) {
+                            var is_final_price = Map.price_per_zone_real;
+                            var weight = Number($('#weight').val());
+                            var price = (Map.price_per_kilo * weight) + Map.zone_price;
+                            var final_price = is_final_price? price : 0;
+                            $('#price').val(price);
+                            $('#final_price').val(final_price);
+                            $("form").submit();         
+                        } else {
+                            Map.alert("Complete package weight");
+                        }
                     } else {
                         Map.alert("Select origin and destiny points")
                     }
@@ -103,15 +116,19 @@ Map.request_cost = function(){
             if (response.status == 'ok') {
                 $('.loader').css('display','none');
                 if (response.estimated == 'true') {
-                    $('#price_per_kilo').text('Price per kilo estimated: '+response.cost);
+                    $('#price_per_kilo').text('Price per kilo estimated: $'+response.cost);
+                    Map.price_per_kilo = response.cost;
                 } else {
-                    $('#price_per_kilo').text('Price per kilo: '+response.cost);
+                    $('#price_per_kilo').text('Price per kilo: $'+response.cost);
+                    Map.price_per_kilo = response.cost;
                 }
-                
+            } else {
+                Map.price_per_kilo = 30;
+                alert('Something went wrong');
             }
         }, 
         error: function(){
-            console.log('error request cost');
+            Map.price_per_kilo = 30;
         }
     });  
 };
@@ -167,16 +184,20 @@ Map.calculate_price = function(origin, destiny){
                     Map.origin_polygon = origin_area;
                     Map.destiny_polygon = destiny_area;
                     $('#price_zone_label').text('Zone Price: $'+(response.price? response.price : 0));
+                    Map.zone_price = response.price;
+                    Map.price_per_zone_real = true;
                 } else {
                     $('#price_zone_label').text('Zone Price Estimated: $30');    
+                    Map.price_per_zone_real = false;
                 }
                 
             } else {
-                
+                Map.price_per_zone_real = false;
             }
         }, 
         error: function(){
             console.log('error request zone');
+            Map.price_per_zone_real = false;
         }
     });
 };
