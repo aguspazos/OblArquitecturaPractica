@@ -15,6 +15,7 @@ class ShipmentsController < ApplicationController
       redirect_to '/login'
     end
   end
+  
   def confirm
   end
 
@@ -49,7 +50,7 @@ class ShipmentsController < ApplicationController
     if current_user == nil
       redirect_to '/login'
     else
-      @shipment = Shipment.new(origin_lat: params[:origin_lat], origin_lng: params[:origin_lng], destiny_lat: params[:destiny_lat], destiny_lng: params[:destiny_lng], sender_id: params[:sender_id], receiver_id:"", receiver_email: params[:shipment][:receiver_email], price: params[:price], final_price: params[:price], cadet_id:0, status: Shipment.PENDING, sender_pays: params[:shipment][:sender_pays], receiver_pays: params[:shipment][:receiver_pays], delivery_time: "", payment_method: params[:shipment][:payment_method])
+      @shipment = Shipment.new(origin_lat: params[:origin_lat], origin_lng: params[:origin_lng], destiny_lat: params[:destiny_lat], destiny_lng: params[:destiny_lng], sender_id: params[:sender_id], receiver_id:"", receiver_email: params[:shipment][:receiver_email], price: params[:price], final_price: params[:final_price], cadet_id:0, status: Shipment.PENDING, sender_pays: params[:shipment][:sender_pays], receiver_pays: params[:shipment][:receiver_pays], delivery_time: "", payment_method: params[:shipment][:payment_method])
       cadet = Cadet.getNearest(@shipment.origin_lat,@shipment.origin_lng)
   
       respond_to do |format|
@@ -60,9 +61,14 @@ class ShipmentsController < ApplicationController
         else
           @shipment.cadet_id = cadet.id
           set_receiver
+          set_discount
+          if(@shipment.final_price == false || @shipment.final_price == 0)
+            
+            MailerHelperMailer.send_estimated_price(@shipment).deliver!
+          end
           if @shipment.save
             
-            format.html { redirect_to @shipment, notice: 'Shipment was successfully created.' }
+            format.html { redirect_to "/users/main", notice: 'Shipment was successfully created.' }
             format.json { render :show, status: :created, location: @shipment }
           else
             format.html { render :new }
@@ -106,9 +112,36 @@ class ShipmentsController < ApplicationController
     respond_to do |format|
       if(@shipment)
         if(params[:shipment] && params[:shipment][:confirm_reception])
-         @shipment.status = Shipment.SENT
+          
+          @shipment.status = Shipment.SENT
           @shipment.delivery_time = DateTime.now
           @shipment.confirm_reception = params[:shipment][:confirm_reception]
+          if(@shipment.final_price == false || @shipment.final_price ==0)
+            alive = ping_server 
+            if alive
+              areas = get_areas
+              origin_area = get_area_for_point @shipment.origin_lat, @shipment.origin_lng, areas
+              destiny_area = get_area_for_point @shipment.destiny_lat, @shipment.destiny_lng, areas
+              if origin_area != false && destiny_area != false
+                zone_price = calc_zone_price origin_area, destiny_area
+                @shipment.final_price = zone_price
+                @shipment.price = zone_price
+                #cost_per_kilogram = get_cost  
+              else
+                #TODO:// ADD TO RECALCULATE QUEUE
+                estimated_zone_price = 42
+                @shipment.final_price = estimated_zone_price
+                @shipment.price = estimated_zone_price
+              end
+            else
+              #TODO:// ADD TO RECALCULATE QUEUE
+              estimated_zone_price = 42
+              @shipment.final_price = estimated_zone_price
+              @shipment.price = estimated_zone_price
+            end
+            set_discount
+          end
+          MailerHelperMailer.send_price(@shipment).deliver!
           if @shipment.save
             format.html{redirect_to '/cadets'}
           else
@@ -121,7 +154,10 @@ class ShipmentsController < ApplicationController
           format.json { render json: @shipment.errors, status: :unprocessable_entity }
         end
       end
-      
+    end
+  end
+
+
   def get_cost
     alive = ping_server 
       if alive

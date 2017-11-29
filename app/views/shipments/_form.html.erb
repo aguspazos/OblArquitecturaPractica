@@ -25,6 +25,7 @@
   <%= hidden_field_tag "sender_id", current_user.id %>
   <%= hidden_field_tag "receiver_id" %>
   <%= hidden_field_tag "price" %>
+  <%= hidden_field_tag "final_price" %>
   
 
   <div class="col-md-12">
@@ -37,7 +38,7 @@
   <div class="col-md-4 input_container">
     <div class="row">
       <%= form.label :receiver_email %>
-      <%= form.text_field :receiver_email, id: :shipment_receiver_email %>  
+      <%= form.text_field :receiver_email, id: :shipment_receiver_email, :autocomplete => :off %>  
     </div>
     <div class="row">
       <label for="weight">Package weight</label>
@@ -45,14 +46,14 @@
     </div>
   </div>
 
-    <%= form.label :receiver_email %>
-    <%= form.text_field :receiver_email, id: :shipment_receiver_email ,:autocomplete => :off  %>
+
   
   <div id="suggesstion-box"></div>
 
   </div>
 
   <div class="col-md-4 input_container">
+    
     <div class="row">
       <%= form.label :sender_pays %>  
       <%= form.check_box :sender_pays, id: :shipment_sender_pays  %>    
@@ -80,8 +81,5 @@
   </div>
   <div class="actions col-md-4">
     <button type="button" class="btn btn-warning" id="remove_markers">Remove markers</button>
-  </div>
-  <div class="col-md-12">
-    <button type="button" class="btn" id="request_cost">Request cost</button>
   </div>
 <% end %>

@@ -1,5 +1,9 @@
 module ShipmentsHelper
 
+    def find_cadet_available_and_close(lat, lng)
+        return 0
+    end
+
     def get_areas
         begin
             areas = RestClient::Request.execute method: :get, url: "https://delivery-rates.mybluemix.net/areas", user: '178253', password: '5y239sa8CPpa'
@@ -97,5 +101,19 @@ module ShipmentsHelper
         end
 
     end
+    
+    def set_discount
+        userDiscount = UserDiscount.where(user_id: @shipment.sender_id).where(used: 0).first
+        if(!userDiscount.blank?)
+            if(@shipment.final_price)
+                userDiscount.used = true
+                userDiscount.save
+                if(@shipment.sender_pays == true && @shipment.receiver_pays)
+                    @shipment.price -= @shipment.price/4
+                else
+                    @shipment.price -= @shipment.price/2            
+                end
+            end
+        end
+    end
 end
-
