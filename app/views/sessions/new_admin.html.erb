@@ -1,17 +1,22 @@
-<h1>Log in</h1>
 
-<div class="row">
-  <div class="col-md-6 col-md-offset-3">
+<div class="card"  style="width: 20rem; margin-left: auto; margin-top: 10rem; margin-right: auto;">
+  <div class="card-body">
+    <h4 class="card-title" style="text-align: center; font-size: 300%;">Log in</h4>
     <%= form_for(:session, url: 'admin-login') do |f| %>
 
       <%= f.label :email %>
-      <%= f.email_field :email, class: 'form-control' %>
+      <%= f.email_field :email, class: 'form-control', placeholder: 'name@example.com' %>
 
       <%= f.label :password %>
-      <%= f.password_field :password, class: 'form-control' %>
+      <%= f.password_field :password, class: 'form-control', placeholder: 'Password' %>
+      </br>
+      <div style="text-align: center;">
+        <%= f.submit "Log in", class: "btn btn-primary" %>
+        </br> </br>
+      </div>
 
-      <%= f.submit "Log in", class: "btn btn-primary" %>
     <% end %>
 
   </div>
 </div>
+

@@ -44,7 +44,7 @@ class CadetsController < ApplicationController
           format.json { render json: @cadet.errors, status: :unprocessable_entity }
         end
       else
-        @cadet.errors.add(:base,"Ya existe un cadete con ese email")
+        @cadet.errors.add(:base,"There is already a cadet with that email")
         format.html { render :new }
         format.json { render json: @cadet.errors, status: :unprocessable_entity }
       end

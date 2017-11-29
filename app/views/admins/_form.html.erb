@@ -10,23 +10,24 @@
       </ul>
     </div>
   <% end %>
-
+  
   <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name, id: :admin_name %>
+    <label for="admin_name">Name</label>
+    <input type="text" class="form-control" id="admin_name" name="admin[name]" placeholder="NameExample" required>
   </div>
 
   <div class="field">
-    <%= form.label :email %>
-    <%= form.text_field :email, id: :admin_email %>
+    <label for="admin_email">Email address</label>
+    <input type="email" class="form-control" id="admin_email" name="admin[email]" placeholder="name@example.com" required>
   </div>
 
   <div class="field">
-    <%= form.label :password %>
-    <%= form.text_field :password, id: :admin_password %>
+    
+    <label for="admin_password">Password</label>
+    <input type="password" class="form-control" id="admin_password" name="admin[password]" placeholder="Password" required>
   </div>
-
-  <div class="actions">
-    <%= form.submit %>
+  </br>
+  <div class="actions" style="text-align:center;">
+    <button type="submit" class="btn btn-primary" style="">Create</button>
   </div>
 <% end %>

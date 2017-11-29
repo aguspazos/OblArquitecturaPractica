@@ -1,47 +1,51 @@
 <%= form_with(model: user, local: true) do |form| %>
   <% if user.errors.any? %>
+  <div class="alert alert-danger" role="alert">
     <div id="error_explanation">
-      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
-
       <ul>
-      <% user.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
+  </div>
   <% end %>
 
   <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name, id: :user_name %>
+    <label for="user_name">Name</label>
+    <input type="text" class="form-control" id="user_name" name="user[name]" placeholder="NameExample" required>
   </div>
 
   <div class="field">
-    <%= form.label :lastName %>
-    <%= form.text_field :lastName, id: :user_lastName %>
+    <label for="lastName">Name</label>
+    <input type="text" class="form-control" id="user_lastName" name="user[lastName]" placeholder="LastNameExample" required>
   </div>
 
   <div class="field">
-    <%= form.label :email %>
-    <%= form.text_field :email, id: :user_email %>
+    <label for="user_email">Email address</label>
+    <input type="email" class="form-control" id="user_email" name="user[email]" placeholder="name@example.com" required>
   </div>
 
   <div class="field">
-    <%= form.label :password %>
-    <%= form.password_field :password, id: :user_password %>
+    
+    <label for="user_password">Password</label>
+    <input type="password" class="form-control" id="user_password" name="user[password]" placeholder="Password" required>
   </div>
 
   <div class="field">
-    <%= form.label :document %>
-    <%= form.text_field :document, id: :user_document %>
+    <label for="user_document">Document</label>
+    <input type="document" class="form-control" id="user_document" name="user[document]" placeholder="Document" required>
   </div>
+  
+
 
   <div class="field">
     <%= form.label :avatar %>
-    <%= form.file_field :avatar,id: :user_avatar %>
+    <%= form.file_field :avatar,id: :user_avatar, class: 'form-control'%>
   </div>
   
-  <div class="actions">
-    <%= form.submit %>
+  </br>
+  <div class="actions" style="text-align:center;">
+    <button type="submit" class="btn btn-primary" style="">Create</button>
   </div>
 <% end %>

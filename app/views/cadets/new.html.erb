@@ -1,5 +1,13 @@
-<h1>New Cadet</h1>
+<nav class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand"  style="font-size: 200%;" href="#">EnviosYa</a>
+  <a href="/cadet-login" class="card-link"  style="font-size: 200%; color:white">Back</a>
+</nav>
 
-<%= render 'form', cadet: @cadet %>
-
-<%= link_to 'Back', cadets_path %>
+</br>
+<div class="card"  style="width: 20rem; margin-left: auto; margin-right: auto;">
+  <div class="card-body">
+    <h4 class="card-title" style="text-align: center; font-size: 300%;">New Cadet</h4>
+    
+    <%= render 'form', cadet: @cadet %>
+  </div>
+</div>
