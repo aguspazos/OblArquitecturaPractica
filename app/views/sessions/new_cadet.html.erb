@@ -1,10 +1,8 @@
 
-<div class="card"  style="width: 20rem; margin-left: auto; margin-right: auto;">
+<div class="card"  style="width: 20rem; margin-top: 10rem; margin-left: auto; margin-right: auto;">
   <div class="card-body">
     <h4 class="card-title" style="text-align: center; font-size: 300%;">Log in</h4>
     
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3">
         <%= form_for(:session, url: 'cadet-login') do |f| %>
     
           <%= f.label :email %>
@@ -12,13 +10,17 @@
     
           <%= f.label :password %>
           <%= f.password_field :password, class: 'form-control' %>
-    
-          <%= f.submit "Log in", class: "btn btn-primary" %>
+          </br>
+          <div style="text-align: center;">
+            <%= f.submit "Log in", class: "btn btn-primary" %>
+            </br> </br>
+            <p>New Cadet? <%= link_to "Sign up now!", '/cadets/new' %></p>
+          </div>
+          
+          
+          
+          
         <% end %>
-    
-        <p>New Cadet? <%= link_to "Sign up now!", '/cadets/new' %></p>
-      </div>
-    </div>
     
     
   </div>

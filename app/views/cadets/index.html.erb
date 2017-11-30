@@ -1,40 +1,45 @@
+<nav class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand"  style="font-size: 200%;" href="#">EnviosYa</a>
+</nav>
+
+
+<div class="card" style="margin-left: 3%; margin-right: 3%;">
+  <div class="card-body">
+    <h4 class="card-title" style="text-align: center; font-size: 300%;">Cadet</h4>
+
+    <p>Envios pendientes: </p>
+    
+    <table class="table table-hover table-dark">
+      <thead>
+        <tr>
+        </tr>
+      </thead>
+      <tbody>
+        <% @pendingShipments.each do |shipment| %>
+          <tr>
+            <th scope="row">De <%= shipment.sender.email %> A <%= shipment.receiver_email %></th>
+            <td><a  role="button" href="shipment/<%= shipment.id %>"  class="btn btn-danger">Details</a></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <p> Envios Realizados: </p>
+    <table class="table table-hover table-dark">
+      <thead>
+        <tr>
+        </tr>
+      </thead>
+      <tbody>
+        <% @sentShipments.each do |shipment| %>
+          <tr>
+            <th scope="row">De <%= shipment.sender.email %> A <%= shipment.receiver_email %></th>
+            <td><a  role="button" href="shipment/<%= shipment.id %>"  class="btn btn-danger">Details</a></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <p id="notice"><%= notice %></p>
 
-<h1>Cadet</h1>
-
-
-<h3> Envios pendientes: </h3>
-<table>
-  <thead>
-    <tr>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @pendingShipments.each do |shipment| %>
-      <tr>
-        <td>De <%= shipment.sender.email %> A <%= shipment.receiver_email %> </td>
-        <td><%= link_to 'Details', shipment %></td>
-      </tr>
-      
-    <% end %>
-  </tbody>
-</table>
-
-<h3> Envios Realizados: </h3>
-<table>
-  <thead>
-    <tr>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @sentShipments.each do |shipment| %>
-      <tr>
-        <td>De <%= shipment.sender.email %> A <%= shipment.receiver_email %> </td>
-        <td><%= link_to 'Details', shipment %></td>
-      </tr>
-      
-    <% end %>
-  </tbody>
-</table>

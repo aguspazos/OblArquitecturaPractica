@@ -1,3 +1,14 @@
-<h1>Welcome <%= current_user.name %></h1>
+<nav class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand"  style="font-size: 200%;" href="#">EnviosYa</a>
+      <% if current_user %>
+          <a id="sign_out" href="/signout"><strong><%= current_user.name %></strong>  Sign out</a>
+      <% end %>
+</nav>
 
-<%= link_to 'Create shipment', '/shipments/new' %>
+</br>
+<div class="card"  style="width: 20rem; margin-left: auto; margin-right: auto;">
+  <div style="text-align:center;" class="card-body">
+    <h4 class="card-title" style="text-align: center; font-size: 300%;">Welcome <%= current_user.name %></h4>
+    <a   role="button"href="/shipments/new"  class="btn btn-primary">Create shipment</a>
+  </div>
+</div>

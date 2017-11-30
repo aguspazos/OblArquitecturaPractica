@@ -55,7 +55,7 @@ class ShipmentsController < ApplicationController
   
       respond_to do |format|
         if(cadet.blank?)
-          @shipment.errors.add(:base, "No contamos con ningún cadete disponible, intente en unos minutos")
+          @shipment.errors.add(:base, "We don´t have any available cadets, try in a few minutes")
           format.html { render :new }
           format.json { render json: @shipment.errors, status: :unprocessable_entity }
         else

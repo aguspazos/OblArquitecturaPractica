@@ -1,21 +1,31 @@
 
 <%= form_with(model: shipment, local: true) do |form| %>
   <% if shipment.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(shipment.errors.count, "error") %> prohibited this shipment from being saved:</h2>
-
-      <ul>
-      <% shipment.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
   
-    <%= javascript_include_tag 'shipments/shipment.js', 'data-turbolinks-track' => true %>
-  <h1>Create Shipment</h1>
-  <h4>Choose origin and destiny</h4>
-  <div id='map'></div>
+  
+  <div class="alert alert-danger" role="alert">
+      <div id="error_explanation">
+        <ul>
+          <% shipment.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+
+  
+  <%= javascript_include_tag 'shipments/shipment.js', 'data-turbolinks-track' => true %>
+  
+  </br>
+  <div class="card"  style="margin-left: 2%; margin-right: 2%;">
+    <div class="card-body">
+    <h4 class="card-title" style="text-align: center; font-size: 300%;">Create Shipment</h4>
+    <p class="card-text"><strong>Choose origin and destiny</strong></p>
+    <div id='map'style="height: 350px;"></div>
+    </div>
+  </div>
+  
 
     
   <%= hidden_field_tag "origin_lat" %>
@@ -27,59 +37,67 @@
   <%= hidden_field_tag "price" %>
   <%= hidden_field_tag "final_price" %>
   
-
-  <div class="col-md-12">
-    <p id="price_zone_label">Zone Price: </p> 
-  </div>
-  <div class="col-md-12">
-    <p id="price_per_kilo" style="float: left;">Price per kilo: </p> 
-    <div class="loader" style="float: left;"></div>
-  </div>
-  <div class="col-md-4 input_container">
-    <div class="row">
-      <%= form.label :receiver_email %>
-      <%= form.text_field :receiver_email, id: :shipment_receiver_email, :autocomplete => :off %>  
-    </div>
-    <div class="row">
-      <label for="weight">Package weight</label>
-      <input type="text" id="weight" >
-    </div>
-  </div>
-
-
   
-  <div id="suggesstion-box"></div>
-
+  
+  <div class="row" style="margin: 2%;">
+    <div class="col-sm-6" >
+      <div class="card"  >
+        <div class="card-body">
+          <p id="price_zone_label" style= "font-weight: bold;" class="card-text">Zone Price:</p>
+          <p id="price_per_kilo" style= "font-weight: bold;" class="card-text">Price per kilo:</p>
+          <div class="loader" style="float: left;"></div>
+          <div class="field">
+            <label for="shipment_receiver_email">Receiver email</label>
+            <input type="email"  autocomplete="off" class="form-control" id="shipment_receiver_email" name="shipment[receiver_email]" placeholder="example@example.com" required>
+          </div>
+          <div class="field">
+            <label for="weight">Package weight</label>
+            <input type="text"  class="form-control" id="weight" name="shipment[receiver_email]" placeholder="weight"   onkeypress='return event.charCode >= 48 && event.charCode <= 57'     required>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6" >
+      <div class="card" style="width: 20rem;">
+        <div class="card-body">
+          
+            <label for="shipment_sender_pays">Who pays</label>
+            <div class="form-field">
+              <label class="form-check-label">
+                <input class="form-check-input" id="shipment_sender_pays"e type="checkbox" value="1"><strong>Sender pays</strong>
+              </label>
+            </div>
+            <div class="form-field">
+              <label class="form-check-label">
+                <input class="form-check-input" id="shipment_receiver_pays"e type="checkbox" value="2"><strong>Receiver pays</strong> 
+              </label>
+            </div>
+            
+            <label style="margin-rigth: 2px"for="weight">Payment Method</label>
+            <div style="margin-rigth: 2px" class="form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" name="shipment[payment_method]" id="payment_method" value="1" checked>
+                 <strong>Online</strong>
+              </label>
+            </div>
+            <div style="margin-rigth: 2px" class="form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" name="shipment[payment_method]" id="payment_method" value="2">
+                <strong>Cash</strong>
+              </label>
+            </div>
+            
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="col-md-4 input_container">
-    
-    <div class="row">
-      <%= form.label :sender_pays %>  
-      <%= form.check_box :sender_pays, id: :shipment_sender_pays  %>    
-    </div>
-    <div class="row">
-      <%= form.label :receiver_pays %>
-      <%= form.check_box :receiver_pays, id: :shipment_receiver_pays %>  
-    </div>
-  </div>
-  <div class="col-md-4">
-    <div class="row">
-      <%= form.label :payment_method %>
-    </div>
-    <div class="row input_container">
-      <%= form.label :payment_method, "Online", :value => 1  %>
-      <%= form.radio_button :payment_method, 1, :checked =>true %>
-      <%= form.label :payment_method, "Cash", :value => 2  %>
-      <%= form.radio_button :payment_method, 2 %>  
-    </div>
-  </div>
-
-  <div id="error_message" class="alert alert-warning"></div>
-  <div class="actions col-md-8">
-    <button type="button" class="btn btn-primary" id="submit_button">Create</button>
-  </div>
-  <div class="actions col-md-4">
+  <div id="error_message" style="display:none" class="alert alert-danger"></div>
+  
+  <div class="actions" style="text-align:center; margin:2px;">
+    <button style="margin:20px;"type="button" class="btn btn-primary" id="submit_button">Create</button>
     <button type="button" class="btn btn-warning" id="remove_markers">Remove markers</button>
   </div>
+  
+  
 <% end %>

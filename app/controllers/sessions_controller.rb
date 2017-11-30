@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
   
   def new_cadet
     if current_cadet!= nil
-      redirect_to current_cadet
+      redirect_to "/cadets"
     end
   end
   
