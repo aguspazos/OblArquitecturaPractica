@@ -1,5 +1,3 @@
-require 'typhoeus'
-
 class CadetsController < ApplicationController
 
   before_action :set_cadet, only: [:show, :edit, :update, :destroy]
@@ -11,19 +9,28 @@ class CadetsController < ApplicationController
       redirect_to '/cadet-login'
     else
       @cadet = current_cadet
-       #@shipments = getShipmentsFromCadet();
-       #@pendingShipments = @shipments
-       #@sentShipments = @shipments
-      @pendingShipments = Shipment.where(cadet_id: @cadet.id).where(status: Shipment.PENDING)
-       @sentShipments = Shipment.where(status: Shipment.SENT).where(cadet_id: @cadet.id)
+       shipments = getShipmentsFromCadet();
+       
+      # shipments.each do |shipment|
+      #   puts shipment
+      # end
+      @pendingShipments =shipments.select {|s| s.status == Shipment.PENDING}
+       @sentShipments = shipments.select {|s| s.status == Shipment.SENT}
       
     end
   end
 
 def getShipmentsFromCadet()
-  response = Typhoeus.get(SHIPMENTS_PATH+'/shipments/'+@cadet.id.to_s)
-  puts response.body
+  parsedResponse = getRequest(SHIPMENTS_PATH+'/shipments/getFromCadet/'+@cadet.id.to_s)
+    if(parsedResponse["status"] == "ok")
+      shipments = Shipment.allFromJson(parsedResponse["shipments"])
+      puts shipments
+      return shipments
+    else
+      return []
+    end
 end
+
   # GET /cadets/1
   # GET /cadets/1.json
   def show
