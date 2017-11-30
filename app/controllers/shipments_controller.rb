@@ -66,7 +66,15 @@ class ShipmentsController < ApplicationController
             
             MailerHelperMailer.send_estimated_price(@shipment).deliver!
           end
-          if @shipment.save
+          url = URI.parse(SHIPMENTS_PATH+ '/shipments')
+          http = Net::HTTP.new(url.host, url.port)
+          http.use_ssl = true
+        
+          request = Net::HTTP::Post.new(url.path, {'Content-Type' => 'application/json'})
+          request.body = params.to_json
+          response = http.request(request)
+          print(response.code)
+          if(response.code == "200")
             
             format.html { redirect_to "/users/main", notice: 'Shipment was successfully created.' }
             format.json { render :show, status: :created, location: @shipment }

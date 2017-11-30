@@ -24,10 +24,18 @@
 <% if current_user %>
   Signed in as <strong><%= current_user.name %></strong>!
   <%= link_to "Sign out", signout_path, id: "sign_out" %>
-<% else %>
-  <%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in" %>
 <% end %>
-
+<br>
+<% if current_cadet %>
+  Cadet signed in as  <strong><%= current_cadet.email %></strong>!
+  <%= link_to "Sign out", '/cadet-logout', id: "sign_out_cadet",method: :delete %>
+<% end %>
+<br>
+<% if current_admin %>
+  Admin signed in  as <strong><%= current_admin.name %></strong>!
+  <%= link_to "Sign out", 'admin-logout', id: "sign_out_admin",method: :delete %>
+<% end %>
+<br>
 <%= yield %>
 
 </body>

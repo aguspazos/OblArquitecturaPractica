@@ -7,6 +7,7 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 
 module Workspace
+
   class Application < Rails::Application
     
     Rails.application.config.assets.precompile += ['shipments/shipment.js', 'shipments/shipment.css','jquery.min.js']

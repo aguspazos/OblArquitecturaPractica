@@ -4,7 +4,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include SessionsHelper
   helper_method :current_user
-
+  SHIPMENTS_PATH = "https://enviosya-shipment-aguspazos.c9users.io"
+  SHIPMENT_REQUEST_TOKEN = "123456789"
   def domain 
     @domain = "https://enviosya-aguspazos.c9users.io/"
   end
