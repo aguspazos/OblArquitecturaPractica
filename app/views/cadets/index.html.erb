@@ -14,7 +14,7 @@
     <% @pendingShipments.each do |shipment| %>
       <tr>
         <td>De <%= shipment.sender.email %> A <%= shipment.receiver_email %> </td>
-        <td><%= link_to 'Details', shipment %></td>
+        <td><%= link_to 'Details', '/shipments/'+shipment.id.to_s%></td>
       </tr>
       
     <% end %>

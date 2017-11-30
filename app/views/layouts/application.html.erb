@@ -25,26 +25,27 @@
   
   
 </head>
-<body style="background-color: Silver">
+<body>
   
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <!-- Then Material JavaScript on top of Bootstrap JavaScript -->
-    <script src="/material/js/material.min.js"></script> 
-    
-    
-    <% flash.each do |message_type, message| %>
-      <div class="alert alert-<%= message_type %>"><%= message %></div>
-    <% end %>  
-    <% if current_user %>
-      Signed in as <strong><%= current_user.name %></strong>!
-      <%= link_to "Sign out", signout_path, id: "sign_out" %>
-    <% end %>
-    
-     <%= yield %>
+<% flash.each do |message_type, message| %>
+  <div class="alert alert-<%= message_type %>"><%= message %></div>
+<% end %>  
+<% if current_user %>
+  Signed in as <strong><%= current_user.name %></strong>!
+  <%= link_to "Sign out", signout_path, id: "sign_out" %>
+<% end %>
+<br>
+<% if current_cadet %>
+  Cadet signed in as  <strong><%= current_cadet.email %></strong>!
+  <%= link_to "Sign out", '/cadet-logout', id: "sign_out_cadet",method: :delete %>
+<% end %>
+<br>
+<% if current_admin %>
+  Admin signed in  as <strong><%= current_admin.name %></strong>!
+  <%= link_to "Sign out", 'admin-logout', id: "sign_out_admin",method: :delete %>
+<% end %>
+<br>
+<%= yield %>
 
 </body>
 </html>

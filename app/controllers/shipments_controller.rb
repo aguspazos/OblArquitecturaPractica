@@ -66,13 +66,18 @@ class ShipmentsController < ApplicationController
             
             MailerHelperMailer.send_estimated_price(@shipment).deliver!
           end
-          if @shipment.save
+        
+          params[:cadet_id] = @shipment.cadet_id
+          params[:final_price] = @shipment.final_price
+          params[:receiver_id] = @shipment.receiver_id
+          response = postRequest(SHIPMENTS_PATH+ '/shipments',params)
+          if(response.code == "200")
             
             format.html { redirect_to "/users/main", notice: 'Shipment was successfully created.' }
             format.json { render :show, status: :created, location: @shipment }
           else
             format.html { render :new }
-            format.json { render json: @shipment.errors, status: :unprocessable_entity }
+            format.json { render json: response.body, status: :unprocessable_entity }
           end
         end
       end
@@ -204,7 +209,14 @@ class ShipmentsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_shipment
-      @shipment = Shipment.find(params[:id])
+      if(params[:id])
+        parsedResponse = getRequest(SHIPMENTS_PATH+'/shipments/'+params[:id])
+          if(parsedResponse["status"] == "ok")
+            @shipment = Shipment.fromJson(parsedResponse["shipment"])
+          else
+            return nil
+          end
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
