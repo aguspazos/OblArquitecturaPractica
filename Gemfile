@@ -27,6 +27,7 @@ gem 'sidekiq-failures'
 gem 'sidekiq-cron'
 gem 'bootstrap',     '~> 4.0.0.beta'
 gem 'material-sass', '~> 4.0.0.beta'
+gem 'typhoeus'
 
 group :development, :test do
   gem 'byebug', '9.0.6', platform: :mri
@@ -35,6 +36,7 @@ end
 group :development do
     gem 'pg',                 '0.20.0'
   gem 'web-console',           '3.5.1'
+
 end
 
 group :production do

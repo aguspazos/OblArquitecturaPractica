@@ -1,4 +1,5 @@
 class CadetsController < ApplicationController
+
   before_action :set_cadet, only: [:show, :edit, :update, :destroy]
 
   # GET /cadets
@@ -8,11 +9,27 @@ class CadetsController < ApplicationController
       redirect_to '/cadet-login'
     else
       @cadet = current_cadet
-      @pendingShipments = Shipment.where(cadet_id: @cadet.id).where(status: Shipment.PENDING)
-      @sentShipments = Shipment.where(status: Shipment.SENT)
+       shipments = getShipmentsFromCadet();
+       
+      # shipments.each do |shipment|
+      #   puts shipment
+      # end
+      @pendingShipments =shipments.select {|s| s.status == Shipment.PENDING}
+       @sentShipments = shipments.select {|s| s.status == Shipment.SENT}
       
     end
   end
+
+def getShipmentsFromCadet()
+  parsedResponse = getRequest(SHIPMENTS_PATH+'/shipments/getFromCadet/'+@cadet.id.to_s)
+    if(parsedResponse["status"] == "ok")
+      shipments = Shipment.allFromJson(parsedResponse["shipments"])
+      puts shipments
+      return shipments
+    else
+      return []
+    end
+end
 
   # GET /cadets/1
   # GET /cadets/1.json

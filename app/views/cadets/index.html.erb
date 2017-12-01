@@ -6,7 +6,6 @@
 <div class="card" style="margin-left: 3%; margin-right: 3%;">
   <div class="card-body">
     <h4 class="card-title" style="text-align: center; font-size: 300%;">Cadet</h4>
-
     <p>Envios pendientes: </p>
     
     <table class="table table-hover table-dark">
@@ -18,7 +17,7 @@
         <% @pendingShipments.each do |shipment| %>
           <tr>
             <th scope="row">De <%= shipment.sender.email %> A <%= shipment.receiver_email %></th>
-            <td><a  role="button" href="shipment/<%= shipment.id %>"  class="btn btn-danger">Details</a></td>
+            <td><a  role="button" href="shipments/<%= shipment.id %>"  class="btn btn-danger">Details</a></td>
           </tr>
         <% end %>
       </tbody>
@@ -33,7 +32,7 @@
         <% @sentShipments.each do |shipment| %>
           <tr>
             <th scope="row">De <%= shipment.sender.email %> A <%= shipment.receiver_email %></th>
-            <td><a  role="button" href="shipment/<%= shipment.id %>"  class="btn btn-danger">Details</a></td>
+            <td><a  role="button" href="shipments/<%= shipment.id %>"  class="btn btn-danger">Details</a></td>
           </tr>
         <% end %>
       </tbody>
