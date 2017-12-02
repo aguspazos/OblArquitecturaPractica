@@ -71,4 +71,3 @@ Rails.application.routes.draw do
   get '*404', :to => 'application#render_404'
   
 end
-

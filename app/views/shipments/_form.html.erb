@@ -9,11 +9,10 @@
           <% shipment.errors.full_messages.each do |message| %>
             <li><%= message %></li>
           <% end %>
-        <% end %>
         </ul>
       </div>
     </div>
-
+  <% end %>
   
   <%= javascript_include_tag 'shipments/shipment.js', 'data-turbolinks-track' => true %>
   
