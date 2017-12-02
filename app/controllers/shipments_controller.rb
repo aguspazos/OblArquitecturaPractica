@@ -55,7 +55,7 @@ class ShipmentsController < ApplicationController
   
       respond_to do |format|
         if(cadet.blank?)
-          @shipment.errors.add(:base, "We don´t have any available cadets, try in a few minutes")
+          @shipment.errors.add(:base, "No contamos con ningún cadete disponible, intente en unos minutos")
           format.html { render :new }
           format.json { render json: @shipment.errors, status: :unprocessable_entity }
         else
@@ -66,18 +66,21 @@ class ShipmentsController < ApplicationController
             
             MailerHelperMailer.send_estimated_price(@shipment).deliver!
           end
+          url = URI.parse(SHIPMENTS_PATH+ '/shipments')
+          http = Net::HTTP.new(url.host, url.port)
+          http.use_ssl = true
         
-          params[:cadet_id] = @shipment.cadet_id
-          params[:final_price] = @shipment.final_price
-          params[:receiver_id] = @shipment.receiver_id
-          response = postRequest(SHIPMENTS_PATH+ '/shipments',params)
+          request = Net::HTTP::Post.new(url.path, {'Content-Type' => 'application/json'})
+          request.body = params.to_json
+          response = http.request(request)
+          print(response.code)
           if(response.code == "200")
             
             format.html { redirect_to "/users/main", notice: 'Shipment was successfully created.' }
             format.json { render :show, status: :created, location: @shipment }
           else
             format.html { render :new }
-            format.json { render json: response.body, status: :unprocessable_entity }
+            format.json { render json: @shipment.errors, status: :unprocessable_entity }
           end
         end
       end
@@ -154,7 +157,7 @@ class ShipmentsController < ApplicationController
               format.json { render json: @shipment.errors, status: :unprocessable_entity }
           end
         else
-          @shipment.errors.add(:base, "You must enter the voucher")
+          @shipment.errors.add(:base, "Debe ingresar el comprobante de firma")
           format.html { render :show,location: @shipment }
           format.json { render json: @shipment.errors, status: :unprocessable_entity }
         end
@@ -209,14 +212,7 @@ class ShipmentsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_shipment
-      if(params[:id])
-        parsedResponse = getRequest(SHIPMENTS_PATH+'/shipments/'+params[:id])
-          if(parsedResponse["status"] == "ok")
-            @shipment = Shipment.fromJson(parsedResponse["shipment"])
-          else
-            return nil
-          end
-      end
+      @shipment = Shipment.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
