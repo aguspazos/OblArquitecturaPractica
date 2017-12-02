@@ -23,4 +23,15 @@ module ShipmentRequestHelper
           response = http.request(request)
           return response
     end 
+    
+    def putRequest(url,putParams)
+          uri = URI.parse(url)
+          http = Net::HTTP.new(uri.host, uri.port)
+          http.use_ssl = true
+        
+          request = Net::HTTP::Put.new(uri.path, {'Content-Type' => 'application/json'})
+          request.body = putParams.to_json
+          response = http.request(request)
+          return response
+    end 
 end

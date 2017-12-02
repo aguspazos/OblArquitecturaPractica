@@ -109,9 +109,10 @@
       <div class="card">
         <div class="card-body">
           <h4 class="card-title">Confirm reception:</h4>
-          <p>
-            <%= image_tag @shipment.confirm_reception.url(:medium) if @shipment.status == Shipment.SENT %>
-          </p>
+         <p>
+            Comprobante de entrega: <br>
+            <%= image_tag @shipment.confirm_reception_url if @shipment.status == Shipment.SENT %>
+        </p>
           
           <% if @shipment.status == Shipment.PENDING %>
             <%= render 'form_confirm_reseption', shipment: @shipment %>
@@ -120,6 +121,4 @@
       </div>
     </div>
   </div>
-
-
 
