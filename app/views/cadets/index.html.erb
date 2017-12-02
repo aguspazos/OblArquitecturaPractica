@@ -1,12 +1,15 @@
 <nav class="navbar navbar-dark bg-dark">
-  <a class="navbar-brand"  style="font-size: 200%;" href="#">EnviosYa</a>
+  <a class="navbar-brand"  style="font-size: 200%;" href="#">EnviosYa</a>  
+  <% if current_cadet %>
+    <a id="sign_out" href="/signout"><strong><%= current_cadet.first_name %></strong>  Sign out</a>
+  <% end %>
 </nav>
 
-
+</br>
 <div class="card" style="margin-left: 3%; margin-right: 3%;">
   <div class="card-body">
     <h4 class="card-title" style="text-align: center; font-size: 300%;">Cadet</h4>
-    <p>Envios pendientes: </p>
+      <p><strong>Envios pendientes:</strong> </p>
     
     <table class="table table-hover table-dark">
       <thead>
@@ -22,7 +25,7 @@
         <% end %>
       </tbody>
     </table>
-    <p> Envios Realizados: </p>
+    <p> <strong>Envios Realizados:</strong> </p>
     <table class="table table-hover table-dark">
       <thead>
         <tr>

@@ -1,99 +1,124 @@
+
+<nav class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand"  style="font-size: 200%;" href="#">EnviosYa</a>
+  <a href="/cadets" class="card-link"  style="font-size: 200%; color:white">Back</a>
+</nav>
 <p id="notice"><%= notice %></p>
 
-<p>
-  
-  <% if @shipment.errors.any? %>
+    
+<% if @shipment.errors.any? %>
+  <div class="alert alert-danger" role="alert">
     <div id="error_explanation">
-      <h2><%= pluralize(@shipment.errors.count, "error") %> prohibited this shipment from being saved:</h2>
-
       <ul>
-      <% @shipment.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% @shipment.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
-  <% end %>
-  <strong>Origin lat:</strong>
-  <%= @shipment.origin_lat %>
-</p>
-
-<p>
-  <strong>Origin lng:</strong>
-  <%= @shipment.origin_lng %>
-</p>
-
-<p>
-  <strong>Destiny lat:</strong>
-  <%= @shipment.destiny_lat %>
-</p>
-
-<p>
-  <strong>Destiny lng:</strong>
-  <%= @shipment.destiny_lng %>
-</p>
-
-<p>
-  <strong>Sender:</strong>
-  <%= @shipment.sender_id %>
-</p>
-
-<p>
-  <strong>Receiver:</strong>
-  <%= @shipment.receiver_id %>
-</p>
-
-<p>
-  <strong>Receiver email:</strong>
-  <%= @shipment.receiver_email %>
-</p>
-
-<p>
-  <strong>Price:</strong>
-  <%= @shipment.price %>
-</p>
-
-<p>
-  <strong>Final price:</strong>
-  <%= @shipment.final_price %>
-</p>
-
-<p>
-  <strong>Cadet:</strong>
-  <%= @shipment.cadet_id %>
-</p>
-
-<p>
-  <strong>Status:</strong>
-  <%= @shipment.status %>
-</p>
-
-<p>
-  <strong>Sender pays:</strong>
-  <%= @shipment.sender_pays %>
-</p>
-
-<p>
-  <strong>Receiver pays:</strong>
-  <%= @shipment.receiver_pays %>
-</p>
-
-<p>
-  <strong>Delivery time:</strong>
-  <%= @shipment.delivery_time %>
-</p>
-
-<p>
-  <strong>Payment method:</strong>
-  <%= @shipment.payment_method %>
-</p>
-
-<p>
-  Comprobante de entrega: <br>
-  <%= image_tag @shipment.confirm_reception_url if @shipment.status == Shipment.SENT %>
-</p>
-
-<% if @shipment.status == Shipment.PENDING %>
-  <%= render 'form_confirm_reseption', shipment: @shipment %>
+  </div>
 <% end %>
+  
+  
+  
+  <div class="row" style="margin: 2%;">
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Shipping details</h4>
+          
+          
+          <table class="table table-hover table-dark">
+            <thead>
+              <tr>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                  <td>
+                    <p> 
+                      <strong>Origin lat:</strong>
+                      <%= @shipment.origin_lat %>
+                    </p> 
+                    <p>
+                      <strong>Destiny lat:</strong>
+                      <%= @shipment.destiny_lat %>
+                    </p>
+                    <p>
+                      <strong>Sender:</strong>
+                      <%= @shipment.sender_id %>
+                    </p>
+                    <p>
+                      <strong>Price:</strong>
+                      <%= @shipment.price %>
+                    </p>  
+                    <p>
+                      <strong>Receiver email:</strong>
+                      <%= @shipment.receiver_email %>
+                    </p>
+                    <p>
+                      <strong>Sender pays:</strong>
+                      <%= @shipment.sender_pays %>
+                    </p>                   
+                    <p>
+                      <strong>Delivery time:</strong>
+                      <%= @shipment.delivery_time %>
+                    </p>   
+                    <p>
+                      <strong>Status:</strong>
+                      <%= @shipment.status %>
+                    </p>
+                              
+                  </td>
+                  <td>
+                    <p>
+                      <strong>Origin lng:</strong>
+                      <%= @shipment.origin_lng %>
+                    </p>    
+                    <p>
+                      <strong>Destiny lng:</strong>
+                      <%= @shipment.destiny_lng %>
+                    </p>
+                    <p>
+                      <strong>Receiver:</strong>
+                      <%= @shipment.receiver_id %>
+                    </p>
+                    <p>
+                      <strong>Final price:</strong>
+                      <%= @shipment.final_price %>
+                    </p> 
+                    <p>
+                      <strong>Cadet:</strong>
+                      <%= @shipment.cadet_id %>
+                    </p>
+                    <p>
+                      <strong>Receiver pays:</strong>
+                      <%= @shipment.receiver_pays %>
+                    </p>
+                    <p>
+                      <strong>Payment method:</strong>
+                      <%= @shipment.payment_method %>
+                    </p>                    
+                  </td>                  
+                </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Confirm reception:</h4>
+         <p>
+            Comprobante de entrega: <br>
+            <%= image_tag @shipment.confirm_reception_url if @shipment.status == Shipment.SENT %>
+        </p>
+          
+          <% if @shipment.status == Shipment.PENDING %>
+            <%= render 'form_confirm_reseption', shipment: @shipment %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<%= link_to 'Back', '/cadets' %>

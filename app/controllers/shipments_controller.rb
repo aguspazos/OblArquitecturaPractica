@@ -158,7 +158,7 @@ class ShipmentsController < ApplicationController
               format.json { render json: @shipment.errors, status: :unprocessable_entity }
           end
         else
-          @shipment.errors.add(:base, "Debe ingresar el comprobante de firma")
+          @shipment.errors.add(:base, "You must enter the voucher")
           format.html { render :show,location: @shipment }
           format.json { render json: @shipment.errors, status: :unprocessable_entity }
         end
