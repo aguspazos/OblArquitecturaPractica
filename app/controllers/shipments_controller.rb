@@ -71,7 +71,7 @@ class ShipmentsController < ApplicationController
           params[:final_price] = @shipment.final_price
           params[:receiver_id] = @shipment.receiver_id
           response = postRequest(SHIPMENTS_PATH+ '/shipments',params)
-          if(response.code == "200")
+          if(response != nil && response.code == "200")
             
             format.html { redirect_to "/users/main", notice: 'Shipment was successfully created.' }
             format.json { render :show, status: :created, location: @shipment }
@@ -113,7 +113,7 @@ class ShipmentsController < ApplicationController
   
   def confirm
     
-    @shipment = Shipment.find(params[:shipment_id])
+    set_shipment
     respond_to do |format|
       if(@shipment)
         if(params[:shipment] && params[:shipment][:confirm_reception])
@@ -147,9 +147,13 @@ class ShipmentsController < ApplicationController
             set_discount
           end
           MailerHelperMailer.send_price(@shipment).deliver!
-          if @shipment.save
+          shipmentConfirmed = confirm_shipment
+          puts "SHIPMENT CONFIRMED" + shipmentConfirmed
+          if shipmentConfirmed == "ok"
             format.html{redirect_to '/cadets'}
           else
+            puts shipmentConfirmed
+              @shipment.errors.add(:base,shipmentConfirmed)
               format.html { render :show,location: @shipment }
               format.json { render json: @shipment.errors, status: :unprocessable_entity }
           end
@@ -160,6 +164,31 @@ class ShipmentsController < ApplicationController
         end
       end
     end
+  end
+  
+  def confirm_shipment
+    putParams = {}
+    putParams[:final_price] = @shipment.final_price
+    putParams[:price] = @shipment.price
+    putParams[:confirm_reception_url] = @shipment.confirm_reception.url(:medium)
+    putParams[:id] = @shipment.id
+    response = postRequest(SHIPMENTS_PATH+ '/shipments/confirm',putParams)
+      if response != nil
+        parsedResponse = JSON.parse response.body
+        puts parsedResponse
+        if response.code == "200"
+          if parsedResponse["status"] == "ok"
+            return "ok"
+          else
+            return parsedResponse["errorMessage"]
+          end
+        else
+          return "Error inesperado, verifique su conexión a internet"
+        end
+      else
+        return "Error inesperado, verifique su conexión a internet"
+        
+      end      
   end
 
 
@@ -211,7 +240,7 @@ class ShipmentsController < ApplicationController
     def set_shipment
       if(params[:id])
         parsedResponse = getRequest(SHIPMENTS_PATH+'/shipments/'+params[:id])
-          if(parsedResponse["status"] == "ok")
+          if(parsedResponse != nil && parsedResponse["status"] == "ok")
             @shipment = Shipment.fromJson(parsedResponse["shipment"])
           else
             return nil

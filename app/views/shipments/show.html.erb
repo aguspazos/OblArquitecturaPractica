@@ -89,7 +89,7 @@
 
 <p>
   Comprobante de entrega: <br>
-  <%= image_tag @shipment.confirm_reception.url(:medium) if @shipment.status == Shipment.SENT %>
+  <%= image_tag @shipment.confirm_reception_url if @shipment.status == Shipment.SENT %>
 </p>
 
 <% if @shipment.status == Shipment.PENDING %>
