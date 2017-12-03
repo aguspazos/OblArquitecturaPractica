@@ -1,22 +1,22 @@
-
-<div class="card"  style="width: 20rem; margin-left: auto; margin-top: 10rem; margin-right: auto;">
-  <div class="card-body">
-    <h4 class="card-title" style="text-align: center; font-size: 300%;">Log in</h4>
-    <%= form_for(:session, url: 'admin-login') do |f| %>
-
-      <%= f.label :email %>
-      <%= f.email_field :email, class: 'form-control', placeholder: 'name@example.com' %>
-
-      <%= f.label :password %>
-      <%= f.password_field :password, class: 'form-control', placeholder: 'Password' %>
-      </br>
-      <div style="text-align: center;">
-        <%= f.submit "Log in", class: "btn btn-primary" %>
-        </br> </br>
-      </div>
-
-    <% end %>
-
-  </div>
+<div style="background-image: url('ic.gif'); background-repeat: repeat-x;">
+  <div class="card"  style="width: 20rem; margin-left: auto; margin-top: 10rem; margin-right: auto;border-radius: 9px;">
+    <div class="card-body">
+      <h4 class="card-title" style="text-align: center; font-size: 300%;">Log in</h4>
+      <%= form_for(:session, url: 'admin-login') do |f| %>
+  
+        <%= f.label :email %>
+        <%= f.email_field :email, class: 'form-control', placeholder: 'name@example.com' %>
+  
+        <%= f.label :password %>
+        <%= f.password_field :password, class: 'form-control', placeholder: 'Password' %>
+        </br>
+        <div style="text-align: center;">
+          <%= f.submit "Log in", class: "btn btn-primary" %>
+          </br> </br>
+        </div>
+  
+      <% end %>
+  
+    </div>
 </div>
-
+</div>
