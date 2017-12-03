@@ -23,27 +23,25 @@ class ShipmentsController < ApplicationController
   # GET /shipments.json
    def index
     # redirect_to '/cadets'
+    puts "vos si"
       shipments = getShipmentsEstimatedPrice
       puts "sabelo"
-      puts shipments
         shipments.each do |shipment|
-          puts "la hice"
-            @shipment = shipment
-            alive = false
+          puts shipment.id
+             alive = false
             alive = ApplicationController.helpers.ping_server
             if alive
               areas = ApplicationController.helpers.get_areas
-              origin_area = ApplicationController.helpers.get_area_for_point @shipment.origin_lat, @shipment.origin_lng, areas
-              destiny_area = ApplicationController.helpers.get_area_for_point @shipment.destiny_lat, @shipment.destiny_lng, areas
+              origin_area = ApplicationController.helpers.get_area_for_point shipment.origin_lat, shipment.origin_lng, areas
+              destiny_area = ApplicationController.helpers.get_area_for_point shipment.destiny_lat, shipment.destiny_lng, areas
               if origin_area != false && destiny_area != false
                   puts "EMPEZAMOS ACÁ"
                 zone_price = ApplicationController.helpers.calc_zone_price origin_area, destiny_area
-                @shipment.final_price = true
-                @shipment.price = zone_price + 20 * 50
-                puts "CHETEANDO "+@shipment.price.to_s
-                ApplicationController.helpers.set_discount @shipment
-                puts "FIN" + @shipment.price.to_s
-                      updateShipment @shipment
+                shipment.final_price = true
+                shipment.price = zone_price + 20 * 50
+                puts "CHETEANDO "+shipment.price.to_s
+                ApplicationController.helpers.set_discount shipment
+                      updateShipment shipment
 
               else
                 "no areas"
@@ -52,16 +50,24 @@ class ShipmentsController < ApplicationController
             end
           end
    end
+   
+#     def updateShipment(shipment)
+# putParams = {}
+#     putParams[:final_price] = shipment.final_price ? 1 : 0
+#     putParams[:price] = shipment.price
+#     putParams[:id] = shipment.id
+#         parsedResponse = postRequest(SHIPMENTS_PATH+ '/shipments/updatePrice',putParams)
+#     end
 
- def getShipmentsEstimatedPrice
-         parsedResponse = ApplicationController.helpers.getRequest(SHIPMENTS_PATH+'/shipments/getAllWithEstimatedPrice')
-        if(parsedResponse != nil && parsedResponse["status"] == "ok")
-          shipments = Shipment.allFromJson(parsedResponse["shipments"])
-          return shipments
-        else
-          return []
-        end
-    end
+# def getShipmentsEstimatedPrice
+#         parsedResponse = ApplicationController.helpers.getRequest(SHIPMENTS_PATH+'/shipments/getAll/estimated')
+#         if(parsedResponse != nil && parsedResponse["status"] == "ok")
+#           shipments = Shipment.allFromJson(parsedResponse["shipments"])
+#           return shipments
+#         else
+#           return []
+#         end
+#     end
   # GET /shipments/1
   # GET /shipments/1.json
   def show
@@ -108,7 +114,7 @@ class ShipmentsController < ApplicationController
           http.use_ssl = true
         
           params[:cadet_id] = @shipment.cadet_id
-          params[:final_price] = @shipment.final_price
+          params[:final_price] = @shipment.final_price ? 1 : 0
           params[:receiver_id] = @shipment.receiver_id
           response = postRequest(SHIPMENTS_PATH+ '/shipments',params)
           
@@ -176,24 +182,24 @@ class ShipmentsController < ApplicationController
               destiny_area = get_area_for_point @shipment.destiny_lat, @shipment.destiny_lng, areas
               if origin_area != false && destiny_area != false
                 zone_price = calc_zone_price origin_area, destiny_area
-                @shipment.final_price = zone_price
+                @shipment.final_price = 1 + 10*50
                 @shipment.price = zone_price
                 #cost_per_kilogram = get_cost  
               else
                 #TODO:// ADD TO RECALCULATE QUEUE
-                estimated_zone_price = 42
-                @shipment.final_price = estimated_zone_price
-                @shipment.price = estimated_zone_price
+                estimated_zone_price = 50
+                @shipment.final_price = 0
+                @shipment.price = estimated_zone_price + 10*50
               end
             else
               #TODO:// ADD TO RECALCULATE QUEUE
-              estimated_zone_price = 42
-              @shipment.final_price = estimated_zone_price
-              @shipment.price = estimated_zone_price
+              estimated_zone_price = 50
+              @shipment.final_price = 0
+              @shipment.price = estimated_zone_price + 10*50
             end
             set_discount @shipment
           end
-          MailerHelperMailer.send_price(@shipment).deliver!
+          MailerHelperMailer.send_price(@shipment).deliver! if @shipment.final_price != false && @shipment.final_price !=0
           shipmentConfirmed = confirm_shipment
           if shipmentConfirmed == "ok"
             format.html{redirect_to '/cadets'}
@@ -208,19 +214,25 @@ class ShipmentsController < ApplicationController
           format.html { render :show,location: @shipment }
           format.json { render json: @shipment.errors, status: :unprocessable_entity }
         end
+      else
+         @shipment.errors.add(:base, "No encontramos ese shipment")
+          format.html { render :show,location: @shipment }
+          format.json { render json: @shipment.errors, status: :unprocessable_entity }
       end
+      
     end
   end
   
   def confirm_shipment
     putParams = {}
-    putParams[:final_price] = @shipment.final_price
+    putParams[:final_price] = @shipment.final_price ? 1 : 0
     putParams[:price] = @shipment.price
     putParams[:id] = @shipment.id
     shipmentWithImage = Shipment.new
     shipmentWithImage.confirm_reception = @shipment.confirm_reception
     shipmentWithImage.save
-    putParams[:confirm_reception_url] = shipmentWithImage.confirm_reception.url(:medium)
+    puts "url"+ shipmentWithImage.confirm_reception.url(:medium)
+    putParams[:confirm_reception_url] = shipmentWithImage.confirm_reception.url(:medium) 
 
     parsedResponse = postRequest(SHIPMENTS_PATH+ '/shipments/confirm',putParams)
       if response != nil

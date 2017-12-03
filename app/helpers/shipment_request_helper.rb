@@ -4,10 +4,12 @@ module ShipmentRequestHelper
 
     
     def getRequest(url)
-
+        puts "mmm?  "
          response = Net::HTTP.get(URI.parse(url + "?token=" + SHIPMENT_REQUEST_TOKEN))
       begin
+      puts "aaaaaa"
         parsedResponse = JSON.parse response
+        puts parsedResponse
         return parsedResponse
       rescue JSON::ParserError
         puts "ERROR PARSING JSON in "+url
