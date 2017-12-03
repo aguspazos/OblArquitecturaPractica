@@ -107,6 +107,8 @@ $(document).ready(function () {
             Map.remove_markers();
             Map.remove_polygons();
             Map.markers_count = 0;
+            Map.price_per_zone_real=false;
+            Map.get_price_attempts=0;
         }
     });
 });
@@ -114,7 +116,7 @@ $(document).ready(function () {
 Map.request_cost = function(){
     $.ajax({
         type: "POST", 
-        url: "https://enviosya-aguspazos.c9users.io/shipments/get_cost",
+        url: "https://oblarquitecturapractica-mathiasgili.c9users.io/shipments/get_cost",
         success: function (response) {
             if (response.status == 'ok') {
                 $('.loader').css('display','none');
@@ -161,7 +163,7 @@ Map.remove_polygons = function(){
 Map.calculate_price = function(origin, destiny){
     $.ajax({
         type: "POST", 
-        url: "https://enviosya-aguspazos.c9users.io/shipments/calculate_price",
+        url: "https://oblarquitecturapractica-mathiasgili.c9users.io/shipments/calculate_price",
         data: {'origin_lat': (origin.lat), 'origin_lng': (origin.lng), 'destiny_lat': (destiny.lat), 'destiny_lng': (destiny.lng)},
         success: function (response) {
             if (response.status == 'ok') {
@@ -198,6 +200,8 @@ Map.calculate_price = function(origin, destiny){
                         } else {
                             $('#price_zone_label').text('Zone Price Estimated: $30');
                         }
+                    }else{
+                         $('#price_zone_label').text('Zone Price Estimated: $30');
                     }
                     Map.price_per_zone_real = false;
                 }
@@ -210,6 +214,8 @@ Map.calculate_price = function(origin, destiny){
                     } else {
                         $('#price_zone_label').text('Zone Price Estimated: $30');
                     }
+                }else{
+                     $('#price_zone_label').text('Zone Price Estimated: $30');
                 }
                 Map.price_per_zone_real = false;
             }
@@ -222,6 +228,8 @@ Map.calculate_price = function(origin, destiny){
                 } else {
                     $('#price_zone_label').text('Zone Price Estimated: $30');
                 }
+            }else{
+                 $('#price_zone_label').text('Zone Price Estimated: $30');
             }
             Map.price_per_zone_real = false;
         }
@@ -234,7 +242,7 @@ function searchUser(text){
     $( "#shipment_receiver_email" ).autocomplete()
     $.ajax({
             type: "POST", 
-            url: "https://enviosya-aguspazos.c9users.io/users/search",
+            url: "https://oblarquitecturapractica-mathiasgili.c9users.io/users/search",
             async: false,
             contentType: "application/json",
             data: JSON.stringify(myObject),
