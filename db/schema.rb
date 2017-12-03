@@ -52,6 +52,10 @@ ActiveRecord::Schema.define(version: 20171203222944) do
     t.string "license_content_type"
     t.integer "license_file_size"
     t.datetime "license_updated_at"
+    t.string "confirm_reception_file_name"
+    t.string "confirm_reception_content_type"
+    t.integer "confirm_reception_file_size"
+    t.datetime "confirm_reception_updated_at"
     t.string "vehicle_documentation_file_name"
     t.string "vehicle_documentation_content_type"
     t.integer "vehicle_documentation_file_size"
@@ -114,12 +118,17 @@ ActiveRecord::Schema.define(version: 20171203222944) do
     t.string "lastName"
     t.string "email"
     t.string "document"
+    t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "avatar_file_name"
     t.string "avatar_content_type"
     t.integer "avatar_file_size"
     t.datetime "avatar_updated_at"
+    t.string "provider"
+    t.string "uid"
+    t.string "oauth_token"
+    t.datetime "oauth_expires_at"
     t.string "password"
   end
 

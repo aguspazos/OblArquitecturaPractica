@@ -54,16 +54,7 @@ $(document).ready(function () {
                 $('#destiny_lat').val(marker.position.lat);
                 $('#destiny_lng').val(marker.position.lng);
                 Map.calculate_price(Map.origin_marker.position, marker.position);
-                if(Map.get_price_attempts<3){
-                    if(!Map.price_per_zone_real){
-                        if (confirm("You want to try again? ") ) {
-                             Map.calculate_price(Map.origin_marker.position, marker.position);
-                             Map.get_price_attempts++;
-                        } else {
-                            $('#price_zone_label').text('Zone Price Estimated: $30');
-                        }
-                     }
-                }
+               
                 
             } 
             google.maps.event.addListener(marker , 'click', function(){
@@ -117,6 +108,8 @@ $(document).ready(function () {
             Map.remove_markers();
             Map.remove_polygons();
             Map.markers_count = 0;
+            Map.price_per_zone_real=false;
+            Map.get_price_attempts=0;
         }
     });
 });
@@ -124,7 +117,7 @@ $(document).ready(function () {
 Map.request_cost = function(){
     $.ajax({
         type: "POST", 
-        url: "https://enviosya-aguspazos.c9users.io//shipments/calculate_weight_price",
+        url: "https://oblarquitecturapractica-mathiasgili.c9users.io/shipments/calculate_weight_price",
         data: {'user_id': ($("#sender_id").val())},
         success: function (response) {
             if (response.status == 'ok') {
@@ -171,9 +164,10 @@ Map.remove_polygons = function(){
 Map.calculate_price = function(origin, destiny){
     var sender_id = $('#sender_id').val();
     $.ajax({
-        type: "POST", 
-        url: "https://enviosya-aguspazos.c9users.io//shipments/calculate_zone_price",
+        type: "POST",
+        url: "https://oblarquitecturapractica-mathiasgili.c9users.io/shipments/calculate_zone_price",
         data: {'origin_lat': (origin.lat), 'origin_lng': (origin.lng), 'destiny_lat': (destiny.lat), 'destiny_lng': (destiny.lng), 'user_id': ($('#sender_id').val())},
+
         success: function (response) {
             if (response.status == 'ok') {
                 if (response.origin_area.length > 0 && response.destiny_area.length > 0) {
@@ -201,16 +195,45 @@ Map.calculate_price = function(origin, destiny){
                     Map.zone_price = response.price;
                     Map.price_per_zone_real = true;
                 } else {
-                    $('#price_zone_label').text('Zone Price Estimated: $30');    
+                    $('#price_zone_label').text('Zone Price Estimated: $30'); 
+                    if(Map.get_price_attempts<3){
+                        if (confirm("You want to try again? ") ) {
+                             Map.get_price_attempts++;
+                             Map.calculate_price(Map.origin_marker.position,  Map.destiny_marker.position);
+                        } else {
+                            $('#price_zone_label').text('Zone Price Estimated: $30');
+                        }
+                    }else{
+                         $('#price_zone_label').text('Zone Price Estimated: $30');
+                    }
                     Map.price_per_zone_real = false;
                 }
                 
             } else {
+                if(Map.get_price_attempts<3){
+                    if (confirm("You want to try again? ") ) {
+                         Map.get_price_attempts++;
+                         Map.calculate_price(Map.origin_marker.position, Map.destiny_marker.position);
+                    } else {
+                        $('#price_zone_label').text('Zone Price Estimated: $30');
+                    }
+                }else{
+                     $('#price_zone_label').text('Zone Price Estimated: $30');
+                }
                 Map.price_per_zone_real = false;
             }
         }, 
         error: function(){
-            console.log('error request zone');
+             if(Map.get_price_attempts<3){
+                if (confirm("You want to try again? ") ) {
+                     Map.get_price_attempts++;
+                     Map.calculate_price(Map.origin_marker.position,  Map.destiny_marker.position);
+                } else {
+                    $('#price_zone_label').text('Zone Price Estimated: $30');
+                }
+            }else{
+                 $('#price_zone_label').text('Zone Price Estimated: $30');
+            }
             Map.price_per_zone_real = false;
         }
     });
@@ -222,7 +245,7 @@ function searchUser(text){
     $( "#shipment_receiver_email" ).autocomplete()
     $.ajax({
             type: "POST", 
-            url: "https://enviosya-aguspazos.c9users.io//users/search",
+            url: "https://oblarquitecturapractica-mathiasgili.c9users.io/users/search",
             async: false,
             contentType: "application/json",
             data: JSON.stringify(myObject),
