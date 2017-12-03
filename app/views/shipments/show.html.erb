@@ -111,7 +111,7 @@
           <h4 class="card-title">Confirm reception:</h4>
          <p>
             Comprobante de entrega: <br>
-            <%= image_tag @shipment.confirm_reception_url if @shipment.status == Shipment.SENT %>
+            <%= image_tag @shipment.confirm_reception_url if @shipment.status == Shipment.SENT && @shipment.confirm_reception_url != nil %>
         </p>
           
           <% if @shipment.status == Shipment.PENDING %>

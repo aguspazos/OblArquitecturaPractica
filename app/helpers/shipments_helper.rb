@@ -108,6 +108,8 @@ module ShipmentsHelper
     def set_discount(shipment)
         userDiscount = UserDiscount.where(user_id: shipment.sender_id).where(used: 0).first
 
+    
+
         if(!userDiscount.blank?)
             if(shipment.final_price)
                 userDiscount.used = true
