@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   helper_method :current_user
-  SHIPMENTS_PATH = "https://enviosya-shipment-aguspazos.c9users.io"
+  SHIPMENTS_PATH = "https://enviosyashipmentsarqsoftpr.mybluemix.net" #"https://enviosya-shipment-aguspazos.c9users.io"
   SHIPMENT_REQUEST_TOKEN = "123456789"
   
   

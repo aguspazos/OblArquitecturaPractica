@@ -1,7 +1,7 @@
 class CalculatePrice < ApplicationJob
     queue_as :default
     
-  SHIPMENTS_PATH = "https://enviosya-shipment-aguspazos.c9users.io"
+  SHIPMENTS_PATH = 'https://enviosyashipmentsarqsoftpr.mybluemix.net'#"https://enviosya-shipment-aguspazos.c9users.io"
     
     def perform(*args)
         puts "running"
@@ -24,9 +24,10 @@ class CalculatePrice < ApplicationJob
                 zone_price = ApplicationController.helpers.calc_zone_price origin_area,  
                 cost = get_cost_per_kilo
                 if(cost != false)
+                    puts "pasa cost"
                   shipment.price = zone_price + cost["cost"] * shipment.weight
                   shipment.final_price = true
-                    puts zone_price
+                   
                     ApplicationController.helpers.set_discount shipment
                     updateShipment shipment
                 else
@@ -55,9 +56,7 @@ class CalculatePrice < ApplicationJob
     def getShipmentsEstimatedPrice
         puts "entra"
          parsedResponse = ApplicationController.helpers.getRequest(SHIPMENTS_PATH+'/shipments/getAll/estimated')
-         puts "response:"
         if(parsedResponse != nil && parsedResponse["status"] == "ok")
-            puts "LA CONCHA DE LA LORA GUAGUAGUA"
           shipments = Shipment.allFromJson(parsedResponse["shipments"])
           return shipments
         else

@@ -7,7 +7,7 @@ module ShipmentRequestHelper
         puts "mmm?  "
          response = Net::HTTP.get(URI.parse(url + "?token=" + SHIPMENT_REQUEST_TOKEN))
       begin
-      puts "aaaaaa"
+      puts url
         parsedResponse = JSON.parse response
         puts parsedResponse
         return parsedResponse
