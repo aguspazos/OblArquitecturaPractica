@@ -23,8 +23,43 @@ class ShipmentsController < ApplicationController
   # GET /shipments.json
    def index
      redirect_to '/cadets'
+      # shipments = getShipmentsEstimatedPrice
+      # puts "sabelo"
+      # puts shipments
+      #   shipments.each do |shipment|
+      #     puts "la hice"
+      #       @shipment = shipment
+      #       alive = false
+      #       alive = ApplicationController.helpers.ping_server
+      #       if alive
+      #         areas = ApplicationController.helpers.get_areas
+      #         origin_area = ApplicationController.helpers.get_area_for_point @shipment.origin_lat, @shipment.origin_lng, areas
+      #         destiny_area = ApplicationController.helpers.get_area_for_point @shipment.destiny_lat, @shipment.destiny_lng, areas
+      #         if origin_area != false && destiny_area != false
+      #             puts "EMPEZAMOS ACÁ"
+      #           zone_price = ApplicationController.helpers.calc_zone_price origin_area, destiny_area
+      #           @shipment.final_price = true
+      #           @shipment.price = zone_price + 20 * 50
+      #           puts "CHETEANDO "+@shipment.price.to_s
+      #           ApplicationController.helpers.set_discount @shipment
+      #           puts "FIN" + @shipment.price.to_s
+      #         else
+      #           "no areas"
+      #         end
+              
+      #       end
+      #     end
    end
 
+ def getShipmentsEstimatedPrice
+         parsedResponse = ApplicationController.helpers.getRequest(SHIPMENTS_PATH+'/shipments/getAllWithEstimatedPrice')
+        if(parsedResponse != nil && parsedResponse["status"] == "ok")
+          shipments = Shipment.allFromJson(parsedResponse["shipments"])
+          return shipments
+        else
+          return []
+        end
+    end
   # GET /shipments/1
   # GET /shipments/1.json
   def show
@@ -61,7 +96,7 @@ class ShipmentsController < ApplicationController
         else
           @shipment.cadet_id = cadet.id
           set_receiver
-          set_discount
+          set_discount @shipment
           if(@shipment.final_price == false || @shipment.final_price == 0)
             
             MailerHelperMailer.send_estimated_price(@shipment).deliver!
@@ -147,7 +182,7 @@ class ShipmentsController < ApplicationController
               @shipment.final_price = estimated_zone_price
               @shipment.price = estimated_zone_price
             end
-            set_discount
+            set_discount @shipment
           end
           MailerHelperMailer.send_price(@shipment).deliver!
           shipmentConfirmed = confirm_shipment

@@ -6,7 +6,6 @@ class ApplicationController < ActionController::Base
   include ShipmentRequestHelper
   helper_method :current_user
   SHIPMENTS_PATH = "https://enviosya-shipment-aguspazos.c9users.io"
-  SHIPMENT_REQUEST_TOKEN = "123456789"
   def domain 
     @domain = "https://enviosya-aguspazos.c9users.io/"
   end

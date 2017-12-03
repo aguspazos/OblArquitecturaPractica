@@ -1,8 +1,10 @@
 module ShipmentRequestHelper
 
+  SHIPMENT_REQUEST_TOKEN = "123456789"
+
     
     def getRequest(url)
-         response = Net::HTTP.get(URI.parse(url))
+         response = Net::HTTP.get(URI.parse(url + "?token=" + SHIPMENT_REQUEST_TOKEN))
       begin
         parsedResponse = JSON.parse response
         return parsedResponse
@@ -19,6 +21,7 @@ module ShipmentRequestHelper
           http.use_ssl = true
         
           request = Net::HTTP::Post.new(uri.path, {'Content-Type' => 'application/json'})
+          postParams["token"] = SHIPMENT_REQUEST_TOKEN
           request.body = postParams.to_json
           response = http.request(request)
           return response
