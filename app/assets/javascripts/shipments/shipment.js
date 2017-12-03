@@ -77,6 +77,7 @@ $(document).ready(function () {
                             var weight = Number($('#weight').val());
                             var price = (Map.price_per_kilo * weight) + Map.zone_price;
                             var final_price = is_final_price? price : 0;
+                            $('#weight').val(weight);
                             $('#price').val(price);
                             $('#final_price').val(final_price);
                             $("form").submit();         
@@ -116,7 +117,8 @@ $(document).ready(function () {
 Map.request_cost = function(){
     $.ajax({
         type: "POST", 
-        url: "https://oblarquitecturapractica-mathiasgili.c9users.io/shipments/get_cost",
+        url: "https://oblarquitecturapractica-mathiasgili.c9users.io/shipments/calculate_weight_price",
+        data: {'user_id': ($("#sender_id").val())},
         success: function (response) {
             if (response.status == 'ok') {
                 $('.loader').css('display','none');
@@ -129,7 +131,6 @@ Map.request_cost = function(){
                 }
             } else {
                 Map.price_per_kilo = 30;
-                alert('Something went wrong');
             }
         }, 
         error: function(){
@@ -161,10 +162,12 @@ Map.remove_polygons = function(){
 };
 
 Map.calculate_price = function(origin, destiny){
+    var sender_id = $('#sender_id').val();
     $.ajax({
-        type: "POST", 
-        url: "https://oblarquitecturapractica-mathiasgili.c9users.io/shipments/calculate_price",
-        data: {'origin_lat': (origin.lat), 'origin_lng': (origin.lng), 'destiny_lat': (destiny.lat), 'destiny_lng': (destiny.lng)},
+        type: "POST",
+        url: "https://oblarquitecturapractica-mathiasgili.c9users.io/shipments/calculate_zone_price",
+        data: {'origin_lat': (origin.lat), 'origin_lng': (origin.lng), 'destiny_lat': (destiny.lat), 'destiny_lng': (destiny.lng), 'user_id': ($('#sender_id').val())},
+
         success: function (response) {
             if (response.status == 'ok') {
                 if (response.origin_area.length > 0 && response.destiny_area.length > 0) {

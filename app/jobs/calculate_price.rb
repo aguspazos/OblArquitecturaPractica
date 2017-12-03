@@ -11,9 +11,7 @@ class CalculatePrice < ApplicationJob
         shipments.each do |shipment|
             @shipment = shipment
             alive = false
-            puts "nomore"
              alive = ApplicationController.helpers.ping_server
-             puts "algo"
             if alive
                 puts "alive"
               areas = ApplicationController.helpers.get_areas
@@ -23,14 +21,17 @@ class CalculatePrice < ApplicationJob
               destiny_area = ApplicationController.helpers.get_area_for_point @shipment.destiny_lat, @shipment.destiny_lng, areas
               puts "destiny"
               if origin_area != false && destiny_area != false
-                  puts "SABELO"
-                zone_price = ApplicationController.helpers.calc_zone_price origin_area, destiny_area
-                @shipment.final_price = true
-                puts zone_price
-                @shipment.price = zone_price + 20 * 50
-                ApplicationController.helpers.set_discount @shipment
-                updateShipment @shipment
-                
+                zone_price = ApplicationController.helpers.calc_zone_price origin_area,  
+                cost = get_cost_per_kilo
+                if(cost != false)
+                  shipment.price = zone_price + cost["cost"] * shipment.weight
+                  shipment.final_price = true
+                    puts zone_price
+                    ApplicationController.helpers.set_discount shipment
+                    updateShipment shipment
+                else
+                    puts "No cost_per_kilo"
+                end
               else
                 puts "no areas"
               end
@@ -54,6 +55,7 @@ class CalculatePrice < ApplicationJob
     def getShipmentsEstimatedPrice
         puts "entra"
          parsedResponse = ApplicationController.helpers.getRequest(SHIPMENTS_PATH+'/shipments/getAll/estimated')
+         puts "response:"
         if(parsedResponse != nil && parsedResponse["status"] == "ok")
             puts "LA CONCHA DE LA LORA GUAGUAGUA"
           shipments = Shipment.allFromJson(parsedResponse["shipments"])

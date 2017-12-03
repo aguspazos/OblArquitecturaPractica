@@ -2,3 +2,4 @@ calculate_price:
   cron: "* * * * *"
   class: "CalculatePrice"
   queue: default
+
