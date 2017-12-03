@@ -8,8 +8,10 @@ module ShipmentsHelper
         begin
             areas = RestClient::Request.execute method: :get, url: "https://delivery-rates.mybluemix.net/areas", user: '178253', password: '5y239sa8CPpa'
             areas_json = JSON.parse(areas) 
+            puts "safo"
             return parse_areas(areas_json)
         rescue RestClient::ExceptionWithResponse => err
+        puts "ERROR"
             return []
         end
     end
@@ -75,6 +77,7 @@ module ShipmentsHelper
             new_area = {"id" => id, "polygon" => parsed_area, "cost_to_areas" => cost_to_areas, "name" => name}
             parsed_areas.push(new_area)
         end
+
         return parsed_areas
     end
     
@@ -102,16 +105,17 @@ module ShipmentsHelper
 
     end
     
-    def set_discount
-        userDiscount = UserDiscount.where(user_id: @shipment.sender_id).where(used: 0).first
+    def set_discount(shipment)
+        userDiscount = UserDiscount.where(user_id: shipment.sender_id).where(used: 0).first
+
         if(!userDiscount.blank?)
-            if(@shipment.final_price)
+            if(shipment.final_price)
                 userDiscount.used = true
                 userDiscount.save
-                if(@shipment.sender_pays == true && @shipment.receiver_pays)
-                    @shipment.price -= @shipment.price/4
+                if(shipment.sender_pays == true && shipment.receiver_pays)
+                    shipment.price -= shipment.price/4
                 else
-                    @shipment.price -= @shipment.price/2            
+                    shipment.price -= shipment.price/2            
                 end
             end
         end

@@ -13,7 +13,9 @@ Rails.application.routes.draw do
   post '/shipments/confirm',  to: 'shipments#confirm'
   
   
-  
+  require 'sidekiq/web'
+  require 'sidekiq/cron/web'
+  mount Sidekiq::Web => '/sidekiq'
 
   get '/shipments/create-shipment',  to: 'shipments#create_shipment'
   
@@ -69,5 +71,7 @@ Rails.application.routes.draw do
   
 
   get '*404', :to => 'application#render_404'
+  
+
   
 end

@@ -14,6 +14,9 @@ class CadetsController < ApplicationController
       # shipments.each do |shipment|
       #   puts shipment
       # end
+      shipments.each do |s|
+        puts "status = "+ s.status.to_s
+      end
       @pendingShipments =shipments.select {|s| s.status == Shipment.PENDING}
        @sentShipments = shipments.select {|s| s.status == Shipment.SENT}
       
@@ -22,9 +25,8 @@ class CadetsController < ApplicationController
 
 def getShipmentsFromCadet()
   parsedResponse = getRequest(SHIPMENTS_PATH+'/shipments/getFromCadet/'+@cadet.id.to_s)
-    if(parsedResponse["status"] == "ok")
+    if(parsedResponse != nil && parsedResponse["status"] == "ok")
       shipments = Shipment.allFromJson(parsedResponse["shipments"])
-      puts shipments
       return shipments
     else
       return []
