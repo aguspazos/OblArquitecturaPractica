@@ -1,6 +1,9 @@
 <nav class="navbar navbar-dark bg-dark">
   <a class="navbar-brand"  style="font-size: 200%;" href="#">EnviosYa</a>
-  <%= current_admin != nil ? current_admin.name : '' %>
+  
+  <% if current_admin %>
+      <a id="sign_out" href="/admin-logout"><strong><%= current_admin.name %></strong>  Sign out</a>
+  <% end %>
 </nav>
 </br>
 
@@ -18,7 +21,7 @@
           <th scope="col">Password</th>
           <th scope="col">Document</th>
           <th scope="col">Available</th>
-          <th scope="col", colspan="3">Accept or Reject</th>
+          <th scope="col", colspan="3"></th>
         </tr>
       </thead>
       <tbody>
@@ -39,6 +42,9 @@
         <% end %>
       </tbody>
     </table>
+      <div class="actions" style="text-align:center;">
+        <a  role="button"href="/users"  class="btn btn-primary">Ver Usuarios</a>
+      </div>
     
   </div>
 </div>

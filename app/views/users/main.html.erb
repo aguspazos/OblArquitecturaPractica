@@ -8,7 +8,24 @@
 </br>
 <div class="card"  style="width: 20rem; margin-left: auto; margin-right: auto;">
   <div style="text-align:center;" class="card-body">
-    <h4 class="card-title" style="text-align: center; font-size: 300%;">Welcome <%= current_user.name %></h4>
+    <h4 class="card-title" style="text-align: center; font-size: 300%;">Welcome</h4>
     <a   role="button"href="/shipments/new"  class="btn btn-primary">Create shipment</a>
+  </div>
+</div>
+
+
+
+<div class="card" style="width: 50rem; margin-left: auto; margin-right: auto;margin-bottom: 2%; margin-top: 2%;">
+  <div style="text-align:center;" class="card-body">
+    <div class="media">
+      <img class="mr-3" style="  max-width:250px; margin:2%;" src=<%= current_user.avatar %>  >
+      <div class="media-body">
+        </br>
+        <h1 style="font-size: 250%;;" class="text-left">Name:  <%= current_user.name %></h1>
+        <h1 style="font-size: 250%;;" class="text-left">Last Name:  <%= current_user.lastName %></h1>
+        <h1 style="font-size: 250%;;" class="text-left">Email:  <%= current_user.email %></h1>
+        <h1 style="font-size: 250%;;" class="text-left">Document:  <%= current_user.document %></h1>
+        </div>
+    </div>
   </div>
 </div>
