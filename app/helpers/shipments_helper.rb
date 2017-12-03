@@ -18,8 +18,7 @@ module ShipmentsHelper
         begin
             cost = RestClient::Request.execute method: :get, url: "https://delivery-rates.mybluemix.net/cost", user: '178253', password: '5y239sa8CPpa'
             cost_json = JSON.parse(cost) 
-            puts cost_json
-            return 50
+            return cost_json
         rescue RestClient::ExceptionWithResponse => err
             return false
         end
@@ -42,9 +41,6 @@ module ShipmentsHelper
         return area_origin['cost_to_areas'][id]
     end
     
-    def get_cost(package_price)
-        
-    end
     
     def ping_server
         body = RestClient::Request.execute method: :get, url: "https://delivery-rates.mybluemix.net/", user: '178253', password: '5y239sa8CPpa'
@@ -117,28 +113,49 @@ module ShipmentsHelper
         end
     end
     
-    def update_estimated_price(user_id=0, zone_price=0, weight_price=0)
-        puts user_id
-        puts zone_price
-        real_zone_price = zone_price
-        real_weight_price = weight_price
-        if zone_price == 0 
-            real_zone_price = 50
-        end
-        if weight_price == 0
-            real_weight_price = 50
-        end
-        final_price = user_id != 0 && weight_price != 0
+    def update_estimated_zone_price(user_id, price=0)
         estimated_price = EstimatedPrice.where(user_id: user_id).first
         if estimated_price
-            estimated_price.zone_price = real_zone_price.to_i
-            estimated_price.weight_price = real_weight_price.to_i
-            estimated_price.final_price = final_price
+            if price == 0
+                estimated_price.final_zone_price = false
+                estimated_price.zone_price = 50
+            else
+                estimated_price.final_zone_price = true
+                estimated_price.zone_price = price
+            end
             estimated_price.save
-            
-        else 
-            estimated_price = EstimatedPrice.create(user_id: user_id, zone_price: real_zone_price, weight_price: real_weight_price.to_i, final_price: final_price)
+        else
+            if price == 0
+                EstimatedPrice.create(user_id: user_id, zone_price: 50, weight_price: 0, final_zone_price: false, final_weight_price: false)
+            else
+                EstimatedPrice.create(user_id: user_id, zone_price: price, weight_price: 0, final_zone_price: true, final_weight_price: false)
+            end
         end
-        return estimated_price
+    end
+    
+    def update_estimated_weight_price(user_id, price=0)
+        puts "a verr"
+        estimated_price = EstimatedPrice.where(user_id: user_id).first
+        if estimated_price
+            puts "que"
+        else
+            puts "so"
+        end
+        if estimated_price
+            if price == 0
+                estimated_price.final_weight_price = false
+                estimated_price.weight_price = 50
+            else
+                estimated_price.final_weight_price = true
+                estimated_price.weight_price = price
+            end
+            estimated_price.save
+        else
+            if price == 0
+                EstimatedPrice.create(user_id: user_id, zone_price: 0, weight_price: 50, final_zone_price: false, final_weight_price: false)
+            else
+                EstimatedPrice.create(user_id: user_id, zone_price: 0, weight_price: price, final_zone_price: false, final_weight_price: true)
+            end
+        end
     end
 end

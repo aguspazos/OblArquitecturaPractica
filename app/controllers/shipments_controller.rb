@@ -50,7 +50,9 @@ class ShipmentsController < ApplicationController
         estimated_weight_price = estimated_price.weight_price
         estimated_zone_price = estimated_price.zone_price
         price = estimated_weight_price + estimated_zone_price
-        final_price = estimated_price.final_price
+        final_zone_price = estimated_price.final_zone_price
+        final_weight_price = estimated_price.final_weight_price
+        final_price = final_zone_price && final_weight_price
         @shipment = Shipment.new(origin_lat: params[:origin_lat], origin_lng: params[:origin_lng], destiny_lat: params[:destiny_lat], destiny_lng: params[:destiny_lng], sender_id: params[:sender_id], receiver_id:"", receiver_email: params[:shipment][:receiver_email], price: price, final_price: final_price, cadet_id:0, status: Shipment.PENDING, sender_pays: params[:shipment][:sender_pays], receiver_pays: params[:shipment][:receiver_pays], delivery_time: "", payment_method: params[:shipment][:payment_method])
         cadet = Cadet.getNearest(@shipment.origin_lat,@shipment.origin_lng)
         respond_to do |format|
@@ -87,7 +89,7 @@ class ShipmentsController < ApplicationController
     end
   end
   
-  def calculate_price
+  def calculate_zone_price
     if params[:origin_lat] && params[:origin_lng] && params[:destiny_lat] && params[:destiny_lng] && params[:user_id]
       alive = ping_server 
       if alive
@@ -95,18 +97,43 @@ class ShipmentsController < ApplicationController
         origin_area = get_area_for_point params[:origin_lat], params[:origin_lng], areas
         destiny_area = get_area_for_point params[:destiny_lat], params[:destiny_lng], areas
         if origin_area != false && destiny_area != false
-          zone_price = calc_zone_price origin_area, destiny_area
-          update_estimated_price(params[:user_id], zone_price)
-          #cost_per_kilogram = get_cost  
+          zone_price =  calc_zone_price origin_area, destiny_area
+          update_estimated_zone_price(params[:user_id], zone_price)
           msg = {:status => "ok", :price => zone_price , :origin_area => origin_area['polygon'], :destiny_area => destiny_area['polygon']}    
         else
-          estimated_zone_price = 40
-          msg = {:status => "ok", :price => estimated_zone_price , :origin_area => [], :destiny_area => []}    
+          update_estimated_zone_price(params[:user_id])
+          msg = {:status => "ok", :price => 50 , :origin_area => [], :destiny_area => []}    
         end
       else
-        msg = {:status => "error", :errorMessage => "Service not available"}
+        update_estimated_price(params[:user_id]) 
+        msg = {:status => "ok", :price => 50 , :origin_area => [], :destiny_area => []}    
       end
     else 
+      msg = {:status => "error", :errorMessage => "Invalid data"}
+    end
+    respond_to do |format|
+      format.json { render json: msg, status: :ok}
+      format.html 
+    end
+  end
+  
+  def calculate_weight_price
+    if params[:user_id]
+      alive = ping_server 
+      if alive
+        cost = get_cost_per_kilo
+        if cost!= false
+          update_estimated_weight_price(params[:user_id], cost["cost"])
+          msg = {:status => "ok", :cost => cost["cost"] }
+        else
+          update_estimated_weight_price(params[:user_id])
+          msg = {:status => "ok", :cost => 30, :estimated => "true" }  
+        end
+      else
+        update_estimated_weight_price(params[:user_id])
+          msg = {:status => "ok", :cost => 30, :estimated => "true" }  
+      end
+    else
       msg = {:status => "error", :errorMessage => "Invalid data"}
     end
     respond_to do |format|
@@ -193,26 +220,6 @@ class ShipmentsController < ApplicationController
         return "Error inesperado, verifique su conexión a internet"
         
       end      
-  end
-
-
-  def get_cost
-    alive = ping_server 
-      if alive
-        cost = get_cost_per_kilo
-        if cost!= false
-          msg = {:status => "ok", :cost => cost }
-        else
-          estimated_cost = 50
-          msg = {:status => "ok", :cost => estimated_cost, :estimated => "true" }  
-        end
-      else
-        msg = {:status => "error", :errorMessage => "Service not available"}  
-      end
-    respond_to do |format|
-      format.json { render json: msg, status: :ok}
-      format.html 
-    end
   end
 
   # PATCH/PUT /shipments/1
