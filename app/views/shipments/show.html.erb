@@ -1,7 +1,7 @@
 
 <nav class="navbar navbar-dark bg-dark">
   <a class="navbar-brand"  style="font-size: 200%;" href="#">EnviosYa</a>
-  <a href="/cadets" class="card-link"  style="font-size: 200%; color:white">Back</a>
+  <a href="/cadets" >Back</a>
 </nav>
 <p id="notice"><%= notice %></p>
 
@@ -110,7 +110,7 @@
         <div class="card-body">
           <h4 class="card-title">Confirm reception:</h4>
          <p>
-            Comprobante de entrega: <br>
+            Proof of delivery: <br>
             <%= image_tag @shipment.confirm_reception_url if @shipment.status == Shipment.SENT %>
         </p>
           
