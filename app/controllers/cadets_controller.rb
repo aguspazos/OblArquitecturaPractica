@@ -56,7 +56,7 @@ end
     respond_to do |format|
       cadet = Cadet.find_by(email: params[:cadet][:email].downcase)
       if(cadet.blank?)
-  
+        @cadet.available=true
         if @cadet.save
           format.html { redirect_to @cadet, notice: 'Cadet was successfully created.' }
           format.json { render :show, status: :created, location: @cadet }

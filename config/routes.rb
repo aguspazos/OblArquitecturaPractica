@@ -30,7 +30,7 @@ Rails.application.routes.draw do
 
   get    '/cadet-login',   to: 'sessions#new_cadet'
   post   '/cadet-login',   to: 'sessions#create_cadet'
-  delete '/cadet-logout',  to: 'sessions#destroy_cadet'
+  get '/cadet-logout',  to: 'sessions#destroy_cadet'
   
   get    '/login',   to: 'sessions#new_user'
   post   '/login',   to: 'sessions#create_user'
@@ -41,7 +41,7 @@ Rails.application.routes.draw do
   get    '/admins/reject_cadet', to:'admins#reject_cadet'
   get    '/admin-login',   to: 'sessions#new_admin'
   post   '/admin-login',   to: 'sessions#create_admin'
-  delete '/admin-logout',  to: 'sessions#destroy_admin'
+  get '/admin-logout',  to: 'sessions#destroy_admin'
     resources :admins
 
 

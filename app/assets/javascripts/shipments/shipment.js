@@ -10,6 +10,7 @@ Map.markers_count = 0;
 Map.zone_price = 0;
 Map.price_per_kilo = 0;
 Map.price_per_zone_real = false;
+Map.get_price_attempts=0;
 
 $(document).ready(function () {
     $('#shipment_receiver_email').on('keyup',function(e){
@@ -53,6 +54,17 @@ $(document).ready(function () {
                 $('#destiny_lat').val(marker.position.lat);
                 $('#destiny_lng').val(marker.position.lng);
                 Map.calculate_price(Map.origin_marker.position, marker.position);
+                if(Map.get_price_attempts<3){
+                    if(!Map.price_per_zone_real){
+                        if (confirm("You want to try again? ") ) {
+                             Map.calculate_price(Map.origin_marker.position, marker.position);
+                             Map.get_price_attempts++;
+                        } else {
+                            $('#price_zone_label').text('Zone Price Estimated: $30');
+                        }
+                     }
+                }
+                
             } 
             google.maps.event.addListener(marker , 'click', function(){
                 var infowindow = new google.maps.InfoWindow({
@@ -232,6 +244,7 @@ function searchUser(text){
                     }
 
                  });
+                 
 
             }
     });

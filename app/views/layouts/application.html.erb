@@ -4,7 +4,10 @@
   
   <meta charset="utf-8">
   <meta content="initial-scale=1, shrink-to-fit=no, width=device-width" name="viewport">
-  <title>Workspace</title>
+  <link rel="shortcut icon" style="border-radius: 9px;" type="image/x-icon" href="/ic.gif">
+  <title>EnviosYa</title>
+  
+      
   
   <!-- CSS -->
   <!-- Add Material font (Roboto) and Material icon as needed -->
@@ -25,20 +28,11 @@
 </head>
 <body style="background-color: Silver">
   
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>-->
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>-->
-    <!--<script src="js/bootstrap.min.js"></script>-->
-    <!-- Then Material JavaScript on top of Bootstrap JavaScript -->
-    <!--<script src="/material/js/material.min.js"></script> -->
-    
-    
     <% flash.each do |message_type, message| %>
     
     
       <% if notice != nil %>
-        <div class="alert alert-danger" style="margin:0" role="alert">
+        <div class="alert alert-success" style="margin:0" role="alert">
           <p id="notice"><%= message %></p>
         </div>
       <% end %>  

@@ -110,7 +110,7 @@
         <div class="card-body">
           <h4 class="card-title">Confirm reception:</h4>
          <p>
-            Comprobante de entrega: <br>
+            Proof of delivery: <br>
             <%= image_tag @shipment.confirm_reception_url if @shipment.status == Shipment.SENT && @shipment.confirm_reception_url != nil %>
         </p>
           
