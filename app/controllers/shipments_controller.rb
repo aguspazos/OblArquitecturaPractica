@@ -22,9 +22,46 @@ class ShipmentsController < ApplicationController
   # GET /shipments
   # GET /shipments.json
    def index
-     redirect_to '/cadets'
+    # redirect_to '/cadets'
+      shipments = getShipmentsEstimatedPrice
+      puts "sabelo"
+      puts shipments
+        shipments.each do |shipment|
+          puts "la hice"
+            @shipment = shipment
+            alive = false
+            alive = ApplicationController.helpers.ping_server
+            if alive
+              areas = ApplicationController.helpers.get_areas
+              origin_area = ApplicationController.helpers.get_area_for_point @shipment.origin_lat, @shipment.origin_lng, areas
+              destiny_area = ApplicationController.helpers.get_area_for_point @shipment.destiny_lat, @shipment.destiny_lng, areas
+              if origin_area != false && destiny_area != false
+                  puts "EMPEZAMOS ACÁ"
+                zone_price = ApplicationController.helpers.calc_zone_price origin_area, destiny_area
+                @shipment.final_price = true
+                @shipment.price = zone_price + 20 * 50
+                puts "CHETEANDO "+@shipment.price.to_s
+                ApplicationController.helpers.set_discount @shipment
+                puts "FIN" + @shipment.price.to_s
+                      updateShipment @shipment
+
+              else
+                "no areas"
+              end
+              
+            end
+          end
    end
 
+ def getShipmentsEstimatedPrice
+         parsedResponse = ApplicationController.helpers.getRequest(SHIPMENTS_PATH+'/shipments/getAllWithEstimatedPrice')
+        if(parsedResponse != nil && parsedResponse["status"] == "ok")
+          shipments = Shipment.allFromJson(parsedResponse["shipments"])
+          return shipments
+        else
+          return []
+        end
+    end
   # GET /shipments/1
   # GET /shipments/1.json
   def show
@@ -55,17 +92,20 @@ class ShipmentsController < ApplicationController
   
       respond_to do |format|
         if(cadet.blank?)
-          @shipment.errors.add(:base, "We don´t have any available cadets, try in a few minutes")
+          @shipment.errors.add(:base, "No contamos con ningún cadete disponible, intente en unos minutos")
           format.html { render :new }
           format.json { render json: @shipment.errors, status: :unprocessable_entity }
         else
           @shipment.cadet_id = cadet.id
           set_receiver
-          set_discount
+          set_discount @shipment
           if(@shipment.final_price == false || @shipment.final_price == 0)
             
             MailerHelperMailer.send_estimated_price(@shipment).deliver!
           end
+          url = URI.parse(SHIPMENTS_PATH+ '/shipments')
+          http = Net::HTTP.new(url.host, url.port)
+          http.use_ssl = true
         
           params[:cadet_id] = @shipment.cadet_id
           params[:final_price] = @shipment.final_price
@@ -84,7 +124,7 @@ class ShipmentsController < ApplicationController
             end
           else
             format.html { render :new }
-            format.json { render json: response.body, status: :unprocessable_entity }
+            format.json { render json: @shipment.errors, status: :unprocessable_entity }
           end
         end
       end
@@ -151,7 +191,7 @@ class ShipmentsController < ApplicationController
               @shipment.final_price = estimated_zone_price
               @shipment.price = estimated_zone_price
             end
-            set_discount
+            set_discount @shipment
           end
           MailerHelperMailer.send_price(@shipment).deliver!
           shipmentConfirmed = confirm_shipment
@@ -164,7 +204,7 @@ class ShipmentsController < ApplicationController
               format.json { render json: @shipment.errors, status: :unprocessable_entity }
           end
         else
-          @shipment.errors.add(:base, "You must enter the voucher")
+          @shipment.errors.add(:base, "Debe ingresar el comprobante de firma")
           format.html { render :show,location: @shipment }
           format.json { render json: @shipment.errors, status: :unprocessable_entity }
         end
