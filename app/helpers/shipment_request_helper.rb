@@ -2,7 +2,7 @@ module ShipmentRequestHelper
 
     
     def getRequest(url)
-         response = Net::HTTP.get(URI.parse(url))
+         response = Net::HTTP.get(URI.parse(url+"?token="+ApplicationController::SHIPMENT_REQUEST_TOKEN))
       begin
         parsedResponse = JSON.parse response
         return parsedResponse
@@ -17,11 +17,23 @@ module ShipmentRequestHelper
           uri = URI.parse(url)
           http = Net::HTTP.new(uri.host, uri.port)
           http.use_ssl = true
-        
+          postParams["token"] = ApplicationController::SHIPMENT_REQUEST_TOKEN
+  
           request = Net::HTTP::Post.new(uri.path, {'Content-Type' => 'application/json'})
           request.body = postParams.to_json
           response = http.request(request)
-          return response
+          if response.code == "200"
+            begin
+              parsedResponse = JSON.parse response.body
+
+              return parsedResponse
+            rescue JSON::ParserError
+              puts "ERROR PARSING JSON in "+url
+              return nil;
+            end
+          else
+            return nil
+          end
     end 
     
     def putRequest(url,putParams)

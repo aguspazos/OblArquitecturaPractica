@@ -71,10 +71,17 @@ class ShipmentsController < ApplicationController
           params[:final_price] = @shipment.final_price
           params[:receiver_id] = @shipment.receiver_id
           response = postRequest(SHIPMENTS_PATH+ '/shipments',params)
-          if(response != nil && response.code == "200")
-            
-            format.html { redirect_to "/users/main", notice: 'Shipment was successfully created.' }
-            format.json { render :show, status: :created, location: @shipment }
+          
+          if(response != nil)
+            if response["status"] == "ok"
+              format.html { redirect_to "/users/main", notice: 'Shipment was successfully created.' }
+              format.json { render :show, status: :created, location: @shipment }
+            else
+              errorMessage = response["errorMessage"]
+               @shipment.errors.add(:base, errorMessage)
+              format.html { render :new }
+              format.json { render json: @shipment.errors, status: :unprocessable_entity }
+            end
           else
             format.html { render :new }
             format.json { render json: response.body, status: :unprocessable_entity }
@@ -148,7 +155,6 @@ class ShipmentsController < ApplicationController
           end
           MailerHelperMailer.send_price(@shipment).deliver!
           shipmentConfirmed = confirm_shipment
-          puts "SHIPMENT CONFIRMED" + shipmentConfirmed
           if shipmentConfirmed == "ok"
             format.html{redirect_to '/cadets'}
           else
@@ -170,21 +176,19 @@ class ShipmentsController < ApplicationController
     putParams = {}
     putParams[:final_price] = @shipment.final_price
     putParams[:price] = @shipment.price
-    putParams[:confirm_reception_url] = @shipment.confirm_reception.url(:medium)
     putParams[:id] = @shipment.id
-    response = postRequest(SHIPMENTS_PATH+ '/shipments/confirm',putParams)
+    shipmentWithImage = Shipment.new
+    shipmentWithImage.confirm_reception = @shipment.confirm_reception
+    shipmentWithImage.save
+    putParams[:confirm_reception_url] = shipmentWithImage.confirm_reception.url(:medium)
+
+    parsedResponse = postRequest(SHIPMENTS_PATH+ '/shipments/confirm',putParams)
       if response != nil
-        parsedResponse = JSON.parse response.body
-        puts parsedResponse
-        if response.code == "200"
           if parsedResponse["status"] == "ok"
             return "ok"
           else
             return parsedResponse["errorMessage"]
           end
-        else
-          return "Error inesperado, verifique su conexión a internet"
-        end
       else
         return "Error inesperado, verifique su conexión a internet"
         
