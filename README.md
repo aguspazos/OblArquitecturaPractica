@@ -37,7 +37,11 @@ Dependencias
 - sidekiq-failures
 - sidekiq-cron
 
+Repositorio de servicios de shipments: https://github.com/ArqSoftPr2017/EnviosYaShipments.git
+
 Autores
 - Mathias Gili
 - Agustin Pazos
 - Martin Long
+
+
