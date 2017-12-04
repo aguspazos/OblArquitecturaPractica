@@ -1,5 +1,13 @@
-<h1>New User</h1>
+<nav class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand"  style="font-size: 200%;" href="#">EnviosYa</a>
+  <a href="/" class="card-link"  style="font-size: 200%; color:white">Back</a>
+</nav>
 
-<%= render 'form', user: @user ,existingUser: @existingUser%>
-
-<%= link_to 'Back', users_path %>
+</br>
+<div class="card"  style="width: 20rem; margin-left: auto; margin-right: auto;">
+  <div class="card-body">
+    <h4 class="card-title" style="text-align: center; font-size: 300%;">New User</h4>
+    
+    <%= render 'form', user: @user ,existingUser: @existingUser%>
+  </div>
+</div>

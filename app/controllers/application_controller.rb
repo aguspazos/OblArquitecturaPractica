@@ -2,11 +2,14 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+  helper_method :current_user
+  SHIPMENTS_PATH = "https://enviosyashipmentsarqsoftpr.mybluemix.net" #"https://enviosya-shipment-aguspazos.c9users.io"
+  SHIPMENT_REQUEST_TOKEN = "25f9e794323b453885f5181f1b624d0b"
+  
+  
   include SessionsHelper
   include ShipmentRequestHelper
-  helper_method :current_user
-  SHIPMENTS_PATH = "https://enviosya-shipment-aguspazos.c9users.io"
-  SHIPMENT_REQUEST_TOKEN = "123456789"
+  
   def domain 
     @domain = "https://enviosya-aguspazos.c9users.io/"
   end

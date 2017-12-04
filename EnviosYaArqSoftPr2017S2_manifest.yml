@@ -1,0 +1,22 @@
+services:
+- EnviosYAArqSoftPr2017s2-redis
+- availability-monitoring-auto
+- EnviosYAArqSoftPr2017s2-db
+stack: cflinuxfs2
+applications:
+- name: EnviosYaArqSoftPr2017S2
+  instances: 1
+  memory: 256M
+  disk_quota: 1024M
+  routes:
+  - route: EnviosYAArqSoftPr2017s2.mybluemix.net
+  buildpack: https://github.com/cloudfoundry/ruby-buildpack.git
+  command: rails server -p $PORT
+- name: EnviosYaArqSoftPr2017S2-worker
+  instances: 1
+  memory: 256M
+  disk_quota: 1024M
+  no-route: true
+  command: sidekiq
+  
+  

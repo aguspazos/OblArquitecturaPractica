@@ -10,6 +10,7 @@ Map.markers_count = 0;
 Map.zone_price = 0;
 Map.price_per_kilo = 0;
 Map.price_per_zone_real = false;
+Map.get_price_attempts=0;
 
 $(document).ready(function () {
     $('#shipment_receiver_email').on('keyup',function(e){
@@ -53,6 +54,8 @@ $(document).ready(function () {
                 $('#destiny_lat').val(marker.position.lat);
                 $('#destiny_lng').val(marker.position.lng);
                 Map.calculate_price(Map.origin_marker.position, marker.position);
+               
+                
             } 
             google.maps.event.addListener(marker , 'click', function(){
                 var infowindow = new google.maps.InfoWindow({
@@ -74,6 +77,7 @@ $(document).ready(function () {
                             var weight = Number($('#weight').val());
                             var price = (Map.price_per_kilo * weight) + Map.zone_price;
                             var final_price = is_final_price? price : 0;
+                            $('#weight').val(weight);
                             $('#price').val(price);
                             $('#final_price').val(final_price);
                             $("form").submit();         
@@ -104,6 +108,8 @@ $(document).ready(function () {
             Map.remove_markers();
             Map.remove_polygons();
             Map.markers_count = 0;
+            Map.price_per_zone_real=false;
+            Map.get_price_attempts=0;
         }
     });
 });
@@ -111,7 +117,8 @@ $(document).ready(function () {
 Map.request_cost = function(){
     $.ajax({
         type: "POST", 
-        url: "https://enviosya-aguspazos.c9users.io/shipments/get_cost",
+        url: "https://enviosyaarqsoftpr2017s2.mybluemix.net/shipments/calculate_weight_price",
+        data: {'user_id': ($("#sender_id").val())},
         success: function (response) {
             if (response.status == 'ok') {
                 $('.loader').css('display','none');
@@ -124,7 +131,6 @@ Map.request_cost = function(){
                 }
             } else {
                 Map.price_per_kilo = 30;
-                alert('Something went wrong');
             }
         }, 
         error: function(){
@@ -156,10 +162,12 @@ Map.remove_polygons = function(){
 };
 
 Map.calculate_price = function(origin, destiny){
+    var sender_id = $('#sender_id').val();
     $.ajax({
-        type: "POST", 
-        url: "https://enviosya-aguspazos.c9users.io/shipments/calculate_price",
-        data: {'origin_lat': (origin.lat), 'origin_lng': (origin.lng), 'destiny_lat': (destiny.lat), 'destiny_lng': (destiny.lng)},
+        type: "POST",
+        url: "https://enviosyaarqsoftpr2017s2.mybluemix.net/shipments/calculate_zone_price",
+        data: {'origin_lat': (origin.lat), 'origin_lng': (origin.lng), 'destiny_lat': (destiny.lat), 'destiny_lng': (destiny.lng), 'user_id': ($('#sender_id').val())},
+
         success: function (response) {
             if (response.status == 'ok') {
                 if (response.origin_area.length > 0 && response.destiny_area.length > 0) {
@@ -187,16 +195,45 @@ Map.calculate_price = function(origin, destiny){
                     Map.zone_price = response.price;
                     Map.price_per_zone_real = true;
                 } else {
-                    $('#price_zone_label').text('Zone Price Estimated: $30');    
+                    $('#price_zone_label').text('Zone Price Estimated: $30'); 
+                    if(Map.get_price_attempts<3){
+                        if (confirm("You want to try again? ") ) {
+                             Map.get_price_attempts++;
+                             Map.calculate_price(Map.origin_marker.position,  Map.destiny_marker.position);
+                        } else {
+                            $('#price_zone_label').text('Zone Price Estimated: $30');
+                        }
+                    }else{
+                         $('#price_zone_label').text('Zone Price Estimated: $30');
+                    }
                     Map.price_per_zone_real = false;
                 }
                 
             } else {
+                if(Map.get_price_attempts<3){
+                    if (confirm("You want to try again? ") ) {
+                         Map.get_price_attempts++;
+                         Map.calculate_price(Map.origin_marker.position, Map.destiny_marker.position);
+                    } else {
+                        $('#price_zone_label').text('Zone Price Estimated: $30');
+                    }
+                }else{
+                     $('#price_zone_label').text('Zone Price Estimated: $30');
+                }
                 Map.price_per_zone_real = false;
             }
         }, 
         error: function(){
-            console.log('error request zone');
+             if(Map.get_price_attempts<3){
+                if (confirm("You want to try again? ") ) {
+                     Map.get_price_attempts++;
+                     Map.calculate_price(Map.origin_marker.position,  Map.destiny_marker.position);
+                } else {
+                    $('#price_zone_label').text('Zone Price Estimated: $30');
+                }
+            }else{
+                 $('#price_zone_label').text('Zone Price Estimated: $30');
+            }
             Map.price_per_zone_real = false;
         }
     });
@@ -208,7 +245,7 @@ function searchUser(text){
     $( "#shipment_receiver_email" ).autocomplete()
     $.ajax({
             type: "POST", 
-            url: "https://enviosya-aguspazos.c9users.io/users/search",
+            url: "https://enviosyaarqsoftpr2017s2.mybluemix.net/users/search",
             async: false,
             contentType: "application/json",
             data: JSON.stringify(myObject),
@@ -232,6 +269,7 @@ function searchUser(text){
                     }
 
                  });
+                 
 
             }
     });

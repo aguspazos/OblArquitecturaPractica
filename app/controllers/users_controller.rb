@@ -97,7 +97,7 @@ class UsersController < ApplicationController
             format.json { render json: @user.errors, status: :unprocessable_entity }
           end
         else
-          @user.errors.add(:base,"Ya existe un usuario con ese email")
+          @user.errors.add(:base,"There is already a user with that email")
             if(params[:inviterId])
               format.html { render :new, :existingUser => params[:inviterId] if params.has_key?(:inviterId) }
             else

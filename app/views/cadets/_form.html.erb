@@ -1,67 +1,82 @@
 <%= form_with(model: cadet, local: true) do |form| %>
   <% if cadet.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(cadet.errors.count, "error") %> prohibited this cadet from being saved:</h2>
-
-      <ul>
-      <% cadet.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+    <div class="alert alert-danger" role="alert">
+      <div id="error_explanation">
+        <ul>
+        <% cadet.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
+      </div>
     </div>
   <% end %>
-
-  <div class="field">
-    <%= form.label :first_name %>
-    <%= form.text_field :first_name, id: :cadet_first_name %>
-  </div>
-
-  <div class="field">
-    <%= form.label :last_name %>
-    <%= form.text_field :last_name, id: :cadet_last_name %>
-  </div>
-
-  <div class="field">
-    <%= form.label :email %>
-    <%= form.text_field :email, id: :cadet_email %>
-  </div>
   
-  <div class="field">
-    <%= form.label :password %>
-    <%= form.password_field :password, id: :cadet_password %>
-  </div>
-
-  <div class="field">
-    <%= form.label :document %>
-    <%= form.text_field :document, id: :cadet_document %>
-  </div>
-
-  <div class="field">
-    <%= form.label :available %>
-    <%= form.check_box :available, id: :cadet_available %>
-  </div>
-
-  <div class="field">
-    <%= form.label :position %>
-    <%= form.text_field :position, id: :cadet_position %>
-  </div>
   
-  <div class="field">
-    <%= form.label :avatar %>
-    <%= form.file_field :avatar,id: :user_avatar %>
-  </div>
+  <div class="row" style="margin:2%;">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">New Cadet</h4>
+         <div class="field">
+            <label for="cadet_first_name">Name</label>
+            <input type="text" class="form-control" id="cadet_first_name" name="cadet[first_name]" placeholder="NameExample" required>
+          </div>
+          <div class="field">
+            <label for="cadet_last_name">Name</label>
+            <input type="text" class="form-control" id="cadet_last_name" name="cadet[last_name]" placeholder="LastNameExample" required>
+          </div>
+          <div class="field">
+            <label for="cadet_email">Email address</label>
+            <input type="email" class="form-control" id="cadet_email" name="cadet[email]" placeholder="name@example.com" required>
+            
+          </div>
+            <div class="field">
+            
+            <label for="cadet_password">Password</label>
+            <input type="password" class="form-control" id="cadet_password" name="cadet[password]" placeholder="Password" required>
+          </div>
+        
+          <div class="field">
+            <label for="cadet_document">Document</label>
+            <input type="document" class="form-control" id="cadet_document" name="cadet[document]" placeholder="Document" required>
+          </div>
+          </br>
+          <div class="form-field">
+            <label class="form-check-label">
+              <input class="form-check-input" id="cadet_availabl"e type="checkbox"  checked="checked" value=1 hidden> 
+            </label>
+          </div> 
   
-  <div class="field">
-    <%= form.label :license %>
-    <%= form.file_field :license,id: :cadet_license %>
+      </div>
+    </div>
   </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+         <div class="field">
+            <%= form.label :avatar %>
+            <%= form.file_field :avatar,id: :cadet_avatar , class: 'form-control' %>
+          </div>
+          
+          <div class="field">
+            <%= form.label :license %>
+            <%= form.file_field :license,id: :cadet_license, class: 'form-control' %>
+          </div>
+          
+          <div class="field">
+            <%= form.label :vehicle_documentation %>
+            <%= form.file_field :vehicle_documentation,id: :cadet_vehicle_documentation, class: 'form-control' %>
+          </div>
+        
+          </br>
+          <div class="actions" style="text-align:center;">
+            <button type="submit" class="btn btn-primary" style="">Create</button>
+          </div>
+    </div>
+  </div>
+</div>
   
-  <div class="field">
-    <%= form.label :vehicle_documentation %>
-    <%= form.file_field :vehicle_documentation,id: :cadet_vehicle_documentation %>
-  </div>
 
-  <div class="actions">
-    <%= form.submit %>
-  </div>
+ 
+ 
 <% end %>

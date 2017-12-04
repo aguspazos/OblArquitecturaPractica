@@ -1,3 +1,33 @@
-<h1>Welcome <%= current_user.name %></h1>
+<nav class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand"  style="font-size: 200%;" href="#">EnviosYa</a>
+      <% if current_user %>
+          <a id="sign_out" href="/signout"><strong><%= current_user.name %></strong>  Sign out</a>
+      <% end %>
+</nav>
 
-<%= link_to 'Create shipment', '/shipments/new' %>
+</br>
+<div class="card"  style="width: 20rem; margin-left: auto; margin-right: auto;border-radius: 150px;">
+  <div style="text-align:center;" class="card-body">
+    <h4 class="card-title" style="text-align: center; font-size: 300%;">Welcome</h4>
+    <a   role="button"href="/shipments/new"  class="btn btn-primary">Create shipment</a>
+  </div>
+</div>
+
+
+
+<div class="card" style="width: 50rem; margin-left: auto; margin-right: auto;margin-bottom: 2%; margin-top: 2%;border-radius: 15px;">
+  <div style="text-align:left;" class="card-body">
+    <div class="media">
+      <img class="mr-3" style="  max-width:350px; margin:2%;" src=<%= current_user.avatar %>  >
+      <div class="media-body" ></br></br>
+        <a class="chip chip-action" href=""disabled><img alt="Chip Image" class="chip-img" src="/icon.png">Name: </a> <strong><%= current_user.name %></strong>  
+        </br></br>
+        
+        <a class="chip chip-action" href=""><img alt="Chip Image" class="chip-img" src="/icon.png">Last Name: </a> <strong><%= current_user.lastName %></strong>
+        </br></br>
+        <a class="chip chip-action" href=""><img alt="Chip Image" class="chip-img" src="/icon.png">Email: </a> <strong><%= current_user.email %></strong>
+        </br></br>
+        <a class="chip chip-action" href=""><img alt="Chip Image" class="chip-img" src="/icon.png">Document:  </a> <strong><%= current_user.document %></strong>
+    </div>
+  </div>
+</div>

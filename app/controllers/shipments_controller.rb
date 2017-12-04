@@ -24,7 +24,24 @@ class ShipmentsController < ApplicationController
    def index
      redirect_to '/cadets'
    end
+   
+#     def updateShipment(shipment)
+# putParams = {}
+#     putParams[:final_price] = shipment.final_price ? 1 : 0
+#     putParams[:price] = shipment.price
+#     putParams[:id] = shipment.id
+#         parsedResponse = postRequest(SHIPMENTS_PATH+ '/shipments/updatePrice',putParams)
+#     end
 
+# def getShipmentsEstimatedPrice
+#         parsedResponse = ApplicationController.helpers.getRequest(SHIPMENTS_PATH+'/shipments/getAll/estimated')
+#         if(parsedResponse != nil && parsedResponse["status"] == "ok")
+#           shipments = Shipment.allFromJson(parsedResponse["shipments"])
+#           return shipments
+#         else
+#           return []
+#         end
+#     end
   # GET /shipments/1
   # GET /shipments/1.json
   def show
@@ -39,68 +56,80 @@ class ShipmentsController < ApplicationController
     end
   end
 
-  # GET /shipments/1/edit
-  # def edit
-  # end
-
-
   # POST /shipments
   # POST /shipments.json
   def create
     if current_user == nil
       redirect_to '/login'
     else
-      @shipment = Shipment.new(origin_lat: params[:origin_lat], origin_lng: params[:origin_lng], destiny_lat: params[:destiny_lat], destiny_lng: params[:destiny_lng], sender_id: params[:sender_id], receiver_id:"", receiver_email: params[:shipment][:receiver_email], price: params[:price], final_price: params[:final_price], cadet_id:0, status: Shipment.PENDING, sender_pays: params[:shipment][:sender_pays], receiver_pays: params[:shipment][:receiver_pays], delivery_time: "", payment_method: params[:shipment][:payment_method])
-      cadet = Cadet.getNearest(@shipment.origin_lat,@shipment.origin_lng)
-  
-      respond_to do |format|
-        if(cadet.blank?)
-          @shipment.errors.add(:base, "No contamos con ningún cadete disponible, intente en unos minutos")
-          format.html { render :new }
-          format.json { render json: @shipment.errors, status: :unprocessable_entity }
-        else
-          @shipment.cadet_id = cadet.id
-          set_receiver
-          set_discount
-          if(@shipment.final_price == false || @shipment.final_price == 0)
-            
-            MailerHelperMailer.send_estimated_price(@shipment).deliver!
-          end
-        
-          params[:cadet_id] = @shipment.cadet_id
-          params[:final_price] = @shipment.final_price
-          params[:receiver_id] = @shipment.receiver_id
-          response = postRequest(SHIPMENTS_PATH+ '/shipments',params)
-          if(response.code == "200")
-            
-            format.html { redirect_to "/users/main", notice: 'Shipment was successfully created.' }
-            format.json { render :show, status: :created, location: @shipment }
-          else
+      puts "Algo bien"
+      estimated_price = EstimatedPrice.where(user_id: params[:sender_id]).first
+      puts "algo mal"
+      if estimated_price
+        estimated_weight_price = estimated_price.weight_price
+        estimated_zone_price = estimated_price.zone_price
+        price = estimated_weight_price * params[:shipment][:weight].to_i + estimated_zone_price
+        final_zone_price = estimated_price.final_zone_price
+        final_weight_price = estimated_price.final_weight_price
+        final_price = final_zone_price && final_weight_price
+        @shipment = Shipment.new(origin_lat: params[:origin_lat], origin_lng: params[:origin_lng], destiny_lat: params[:destiny_lat], destiny_lng: params[:destiny_lng], sender_id: params[:sender_id], receiver_id:"", receiver_email: params[:shipment][:receiver_email], price: price, final_price: final_price, cadet_id:0, status: Shipment.PENDING, sender_pays: params[:shipment][:sender_pays], receiver_pays: params[:shipment][:receiver_pays], delivery_time: "", payment_method: params[:shipment][:payment_method], weight: params[:shipment][:weight])
+        cadet = Cadet.getNearest(@shipment.origin_lat,@shipment.origin_lng)
+        respond_to do |format|
+          if(cadet.blank?)
+            @shipment.errors.add(:base, "We don´t have any available cadets, try in a few minutes")
             format.html { render :new }
-            format.json { render json: response.body, status: :unprocessable_entity }
+            format.json { render json: @shipment.errors, status: :unprocessable_entity }
+          else
+            @shipment.cadet_id = cadet.id
+            set_receiver
+            set_discount @shipment
+            if(@shipment.final_price == false || @shipment.final_price == 0)
+              
+               MailerHelperMailer.send_estimated_price(@shipment).deliver!
+            end
+          
+            params[:cadet_id] = @shipment.cadet_id
+            params[:final_price] = @shipment.final_price
+            params[:receiver_id] = @shipment.receiver_id
+            response = postRequest(SHIPMENTS_PATH+ '/shipments',params)
+            if(response != nil)
+              if response["status"] == "ok"
+                format.html { redirect_to "/users/main", notice: 'Shipment was successfully created.' }
+                format.json { render :show, status: :created, location: @shipment }
+              else
+                errorMessage = response["errorMessage"]
+                 @shipment.errors.add(:base, errorMessage)
+                format.html { render :new }
+                format.json { render json: @shipment.errors, status: :unprocessable_entity }
+              end
+            else
+              format.html { render :new }
+              format.json { render json: @shipment.errors, status: :unprocessable_entity }
+            end
           end
         end
       end
     end
   end
   
-  def calculate_price
-    if params[:origin_lat] && params[:origin_lng] && params[:destiny_lat] && params[:destiny_lng]
+  def calculate_zone_price
+    if params[:origin_lat] && params[:origin_lng] && params[:destiny_lat] && params[:destiny_lng] && params[:user_id]
       alive = ping_server 
       if alive
         areas = get_areas
         origin_area = get_area_for_point params[:origin_lat], params[:origin_lng], areas
         destiny_area = get_area_for_point params[:destiny_lat], params[:destiny_lng], areas
         if origin_area != false && destiny_area != false
-          zone_price = calc_zone_price origin_area, destiny_area
-          #cost_per_kilogram = get_cost  
+          zone_price =  calc_zone_price origin_area, destiny_area
+          update_estimated_zone_price(params[:user_id], zone_price)
           msg = {:status => "ok", :price => zone_price , :origin_area => origin_area['polygon'], :destiny_area => destiny_area['polygon']}    
         else
-          estimated_zone_price = 40
-          msg = {:status => "ok", :price => estimated_zone_price , :origin_area => [], :destiny_area => []}    
+          update_estimated_zone_price(params[:user_id])
+          msg = {:status => "ok", :price => 50 , :origin_area => [], :destiny_area => []}    
         end
       else
-        msg = {:status => "error", :errorMessage => "Service not available"}
+        update_estimated_price(params[:user_id]) 
+        msg = {:status => "ok", :price => 50 , :origin_area => [], :destiny_area => []}    
       end
     else 
       msg = {:status => "error", :errorMessage => "Invalid data"}
@@ -111,9 +140,34 @@ class ShipmentsController < ApplicationController
     end
   end
   
+  def calculate_weight_price
+    if params[:user_id]
+      alive = ping_server 
+      if alive
+        cost = get_cost_per_kilo
+        if cost!= false
+          update_estimated_weight_price(params[:user_id], cost["cost"])
+          msg = {:status => "ok", :cost => cost["cost"] }
+        else
+          update_estimated_weight_price(params[:user_id])
+          msg = {:status => "ok", :cost => 30, :estimated => "true" }  
+        end
+      else
+        update_estimated_weight_price(params[:user_id])
+          msg = {:status => "ok", :cost => 30, :estimated => "true" }  
+      end
+    else
+      msg = {:status => "error", :errorMessage => "Invalid data"}
+    end
+    respond_to do |format|
+      format.json { render json: msg, status: :ok}
+      format.html 
+    end
+  end
+  
   def confirm
     
-    @shipment = Shipment.find(params[:shipment_id])
+    set_shipment
     respond_to do |format|
       if(@shipment)
         if(params[:shipment] && params[:shipment][:confirm_reception])
@@ -129,27 +183,34 @@ class ShipmentsController < ApplicationController
               destiny_area = get_area_for_point @shipment.destiny_lat, @shipment.destiny_lng, areas
               if origin_area != false && destiny_area != false
                 zone_price = calc_zone_price origin_area, destiny_area
-                @shipment.final_price = zone_price
-                @shipment.price = zone_price
-                #cost_per_kilogram = get_cost  
+                @shipment.price = zone_price  + 10*50
+                cost = get_cost_per_kilo
+                if(cost != false)
+                  @shipment.price = zone_price + cost["cost"] * @shipment.weight
+                  @shipment.final_price = 1
+                else
+                  @shipment.final_price = 0
+                end
+                
               else
-                #TODO:// ADD TO RECALCULATE QUEUE
-                estimated_zone_price = 42
-                @shipment.final_price = estimated_zone_price
-                @shipment.price = estimated_zone_price
+                estimated_zone_price = 50
+                @shipment.final_price = 0
+                @shipment.price = estimated_zone_price + 10*50
               end
             else
-              #TODO:// ADD TO RECALCULATE QUEUE
-              estimated_zone_price = 42
-              @shipment.final_price = estimated_zone_price
-              @shipment.price = estimated_zone_price
+              estimated_zone_price = 50
+              @shipment.final_price = 0
+              @shipment.price = estimated_zone_price + 10*50
             end
-            set_discount
+            set_discount @shipment
           end
-          MailerHelperMailer.send_price(@shipment).deliver!
-          if @shipment.save
+          MailerHelperMailer.send_price(@shipment).deliver! if @shipment.final_price != false && @shipment.final_price !=0
+          shipmentConfirmed = confirm_shipment
+          if shipmentConfirmed == "ok"
             format.html{redirect_to '/cadets'}
           else
+            puts shipmentConfirmed
+              @shipment.errors.add(:base,shipmentConfirmed)
               format.html { render :show,location: @shipment }
               format.json { render json: @shipment.errors, status: :unprocessable_entity }
           end
@@ -158,28 +219,37 @@ class ShipmentsController < ApplicationController
           format.html { render :show,location: @shipment }
           format.json { render json: @shipment.errors, status: :unprocessable_entity }
         end
+      else
+         @shipment.errors.add(:base, "No encontramos ese shipment")
+          format.html { render :show,location: @shipment }
+          format.json { render json: @shipment.errors, status: :unprocessable_entity }
       end
+      
     end
   end
+  
+  def confirm_shipment
+    putParams = {}
+    putParams[:final_price] = @shipment.final_price ? 1 : 0
+    putParams[:price] = @shipment.price
+    putParams[:id] = @shipment.id
+    shipmentWithImage = Shipment.new
+    shipmentWithImage.confirm_reception = @shipment.confirm_reception
+    shipmentWithImage.save
+    puts "url"+ shipmentWithImage.confirm_reception.url(:medium)
+    putParams[:confirm_reception_url] = shipmentWithImage.confirm_reception.url(:medium) 
 
-
-  def get_cost
-    alive = ping_server 
-      if alive
-        cost = get_cost_per_kilo
-        if cost!= false
-          msg = {:status => "ok", :cost => cost }
-        else
-          estimated_cost = 50
-          msg = {:status => "ok", :cost => estimated_cost, :estimated => "true" }  
-        end
+    parsedResponse = postRequest(SHIPMENTS_PATH+ '/shipments/confirm',putParams)
+      if response != nil
+          if parsedResponse["status"] == "ok"
+            return "ok"
+          else
+            return parsedResponse["errorMessage"]
+          end
       else
-        msg = {:status => "error", :errorMessage => "Service not available"}  
-      end
-    respond_to do |format|
-      format.json { render json: msg, status: :ok}
-      format.html 
-    end
+        return "Error inesperado, verifique su conexión a internet"
+        
+      end      
   end
 
   # PATCH/PUT /shipments/1
@@ -211,7 +281,7 @@ class ShipmentsController < ApplicationController
     def set_shipment
       if(params[:id])
         parsedResponse = getRequest(SHIPMENTS_PATH+'/shipments/'+params[:id])
-          if(parsedResponse["status"] == "ok")
+          if(parsedResponse != nil && parsedResponse["status"] == "ok")
             @shipment = Shipment.fromJson(parsedResponse["shipment"])
           else
             return nil
@@ -221,6 +291,6 @@ class ShipmentsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def shipment_params
-      params.require(:shipment).permit(:origin_lat, :origin_lng, :destiny_lat, :destiny_lng, :sender_id, :receiver_id, :receiver_email, :price, :final_price, :cadet_id, :status, :sender_pays, :receiver_pays, :delivery_time, :payment_method,:confirm_reception)
+      params.require(:shipment).permit(:origin_lat, :origin_lng, :destiny_lat, :destiny_lng, :sender_id, :receiver_id, :receiver_email, :price, :final_price, :cadet_id, :status, :sender_pays, :receiver_pays, :delivery_time, :payment_method,:confirm_reception,:weight)
     end
 end

@@ -14,6 +14,9 @@ class CadetsController < ApplicationController
       # shipments.each do |shipment|
       #   puts shipment
       # end
+      shipments.each do |s|
+        puts "status = "+ s.status.to_s
+      end
       @pendingShipments =shipments.select {|s| s.status == Shipment.PENDING}
        @sentShipments = shipments.select {|s| s.status == Shipment.SENT}
       
@@ -22,9 +25,8 @@ class CadetsController < ApplicationController
 
 def getShipmentsFromCadet()
   parsedResponse = getRequest(SHIPMENTS_PATH+'/shipments/getFromCadet/'+@cadet.id.to_s)
-    if(parsedResponse["status"] == "ok")
+    if(parsedResponse != nil && parsedResponse["status"] == "ok")
       shipments = Shipment.allFromJson(parsedResponse["shipments"])
-      puts shipments
       return shipments
     else
       return []
@@ -54,16 +56,15 @@ end
     respond_to do |format|
       cadet = Cadet.find_by(email: params[:cadet][:email].downcase)
       if(cadet.blank?)
-  
+        @cadet.available=true
         if @cadet.save
-          format.html { redirect_to @cadet, notice: 'Cadet was successfully created.' }
-          format.json { render :show, status: :created, location: @cadet }
+          format.html { redirect_to '/cadet-login',notice: 'Cadet was successfully crated'}
         else
           format.html { render :new }
           format.json { render json: @cadet.errors, status: :unprocessable_entity }
         end
       else
-        @cadet.errors.add(:base,"Ya existe un cadete con ese email")
+        @cadet.errors.add(:base,"There is already a cadet with that email")
         format.html { render :new }
         format.json { render json: @cadet.errors, status: :unprocessable_entity }
       end

@@ -1,4 +1,5 @@
-generate_random_user:
+calculate_price:
   cron: "* * * * *"
-  class: "GenerateRandomUserJob"
+  class: "CalculatePrice"
   queue: default
+

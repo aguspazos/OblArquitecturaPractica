@@ -33,7 +33,7 @@ h4{
 }
 
 #error_message{
-    display: none;
+    display: none !important;
 }
 
 .loader {
@@ -45,7 +45,11 @@ h4{
     width: 18px;
     height: 18px;
 }
-
+.ui-autocomplete{
+    background: white !important;
+    width: 400px;
+    
+}
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }

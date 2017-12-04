@@ -1,42 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Workspace</title>
+  
+  <meta charset="utf-8">
+  <meta content="initial-scale=1, shrink-to-fit=no, width=device-width" name="viewport">
+  <link rel="shortcut icon" style="border-radius: 9px;" type="image/x-icon" href="/ic.gif">
+  <title>EnviosYa</title>
+  
+      
+  
+  <!-- CSS -->
+  <!-- Add Material font (Roboto) and Material icon as needed -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCF9196u3KCJdvmTenZhNVxiu7IGFsGZPY"></script>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
-  <%= javascript_include_tag 'jquery.min', 'jquery-ui-1.9.2.custom.min.js' %>
+  <!--<%= javascript_include_tag 'jquery.min', 'jquery-ui-1.9.2.custom.min.js' %>-->
   <%= csrf_meta_tags %>
   
-  <%= stylesheet_link_tag 'jquery-ui-1.9.2.custom' %>
-
-
+  <!--<%= stylesheet_link_tag 'jquery-ui-1.9.2.custom' %>-->
+  
 
   
   
-</div>
 </head>
-<body>
+<body style="background-color: Silver">
   
-<% flash.each do |message_type, message| %>
-  <div class="alert alert-<%= message_type %>"><%= message %></div>
-<% end %>  
-<% if current_user %>
-  Signed in as <strong><%= current_user.name %></strong>!
-  <%= link_to "Sign out", signout_path, id: "sign_out" %>
-<% end %>
-<br>
-<% if current_cadet %>
-  Cadet signed in as  <strong><%= current_cadet.email %></strong>!
-  <%= link_to "Sign out", '/cadet-logout', id: "sign_out_cadet",method: :delete %>
-<% end %>
-<br>
-<% if current_admin %>
-  Admin signed in  as <strong><%= current_admin.name %></strong>!
-  <%= link_to "Sign out", 'admin-logout', id: "sign_out_admin",method: :delete %>
-<% end %>
-<br>
-<%= yield %>
+    <% flash.each do |message_type, message| %>
+    
+    
+      <% if notice != nil %>
+        <div class="alert alert-success" style="margin:0" role="alert">
+          <p id="notice"><%= message %></p>
+        </div>
+      <% end %>  
+    <% end %>  
+    <% if current_user %>
+    <% end %>
+    
+     <%= yield %>
 
 </body>
 </html>

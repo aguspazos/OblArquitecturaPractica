@@ -4,16 +4,19 @@ Rails.application.routes.draw do
   root 'sessions#new_user'
   
   post '/shipments/calculate_price',  to: 'shipments#calculate_price'
+  post '/shipments/calculate_zone_price',  to: 'shipments#calculate_zone_price'
   post '/shipments/confirm',  to: 'shipments#confirm'
 
-  post '/shipments/get_cost',  to: 'shipments#get_cost'
+  post '/shipments/calculate_weight_price',  to: 'shipments#calculate_weight_price'
 
   
   
   post '/shipments/confirm',  to: 'shipments#confirm'
   
   
-  
+  require 'sidekiq/web'
+  require 'sidekiq/cron/web'
+  mount Sidekiq::Web => '/sidekiq'
 
   get '/shipments/create-shipment',  to: 'shipments#create_shipment'
   
@@ -29,7 +32,7 @@ Rails.application.routes.draw do
 
   get    '/cadet-login',   to: 'sessions#new_cadet'
   post   '/cadet-login',   to: 'sessions#create_cadet'
-  delete '/cadet-logout',  to: 'sessions#destroy_cadet'
+  get '/cadet-logout',  to: 'sessions#destroy_cadet'
   
   get    '/login',   to: 'sessions#new_user'
   post   '/login',   to: 'sessions#create_user'
@@ -40,7 +43,7 @@ Rails.application.routes.draw do
   get    '/admins/reject_cadet', to:'admins#reject_cadet'
   get    '/admin-login',   to: 'sessions#new_admin'
   post   '/admin-login',   to: 'sessions#create_admin'
-  delete '/admin-logout',  to: 'sessions#destroy_admin'
+  get '/admin-logout',  to: 'sessions#destroy_admin'
     resources :admins
 
 
@@ -70,5 +73,6 @@ Rails.application.routes.draw do
 
   get '*404', :to => 'application#render_404'
   
-end
 
+  
+end
