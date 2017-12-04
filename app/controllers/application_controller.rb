@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   helper_method :current_user
   SHIPMENTS_PATH = "https://enviosyashipmentsarqsoftpr.mybluemix.net" #"https://enviosya-shipment-aguspazos.c9users.io"
-  SHIPMENT_REQUEST_TOKEN = "123456789"
+  SHIPMENT_REQUEST_TOKEN = "25f9e794323b453885f5181f1b624d0b"
   
   
   include SessionsHelper

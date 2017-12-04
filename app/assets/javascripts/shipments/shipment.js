@@ -117,7 +117,7 @@ $(document).ready(function () {
 Map.request_cost = function(){
     $.ajax({
         type: "POST", 
-        url: "https://oblarquitecturapractica-mathiasgili.c9users.io/shipments/calculate_weight_price",
+        url: "https://enviosyaarqsoftpr2017s2.mybluemix.net/shipments/calculate_weight_price",
         data: {'user_id': ($("#sender_id").val())},
         success: function (response) {
             if (response.status == 'ok') {
@@ -165,7 +165,7 @@ Map.calculate_price = function(origin, destiny){
     var sender_id = $('#sender_id').val();
     $.ajax({
         type: "POST",
-        url: "https://oblarquitecturapractica-mathiasgili.c9users.io/shipments/calculate_zone_price",
+        url: "https://enviosyaarqsoftpr2017s2.mybluemix.net/shipments/calculate_zone_price",
         data: {'origin_lat': (origin.lat), 'origin_lng': (origin.lng), 'destiny_lat': (destiny.lat), 'destiny_lng': (destiny.lng), 'user_id': ($('#sender_id').val())},
 
         success: function (response) {
@@ -245,7 +245,7 @@ function searchUser(text){
     $( "#shipment_receiver_email" ).autocomplete()
     $.ajax({
             type: "POST", 
-            url: "https://oblarquitecturapractica-mathiasgili.c9users.io/users/search",
+            url: "https://enviosyaarqsoftpr2017s2.mybluemix.net/users/search",
             async: false,
             contentType: "application/json",
             data: JSON.stringify(myObject),

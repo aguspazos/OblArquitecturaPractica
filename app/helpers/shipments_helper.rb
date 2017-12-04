@@ -8,7 +8,6 @@ module ShipmentsHelper
         begin
             areas = RestClient::Request.execute method: :get, url: "https://delivery-rates.mybluemix.net/areas", user: '178253', password: '5y239sa8CPpa'
             areas_json = JSON.parse(areas) 
-            puts "safo"
             return parse_areas(areas_json)
         rescue RestClient::ExceptionWithResponse => err
         puts "ERROR"

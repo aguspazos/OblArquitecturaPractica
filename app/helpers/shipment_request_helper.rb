@@ -1,6 +1,6 @@
 module ShipmentRequestHelper
 
-  SHIPMENT_REQUEST_TOKEN = "123456789"
+  SHIPMENT_REQUEST_TOKEN = "25f9e794323b453885f5181f1b624d0b"
 
     
     def getRequest(url)

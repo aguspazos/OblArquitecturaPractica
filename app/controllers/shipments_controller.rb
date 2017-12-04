@@ -22,33 +22,7 @@ class ShipmentsController < ApplicationController
   # GET /shipments
   # GET /shipments.json
    def index
-    # redirect_to '/cadets'
-    puts "vos si"
-      shipments = getShipmentsEstimatedPrice
-      puts "sabelo"
-        shipments.each do |shipment|
-          puts shipment.id
-             alive = false
-            alive = ApplicationController.helpers.ping_server
-            if alive
-              areas = ApplicationController.helpers.get_areas
-              origin_area = ApplicationController.helpers.get_area_for_point shipment.origin_lat, shipment.origin_lng, areas
-              destiny_area = ApplicationController.helpers.get_area_for_point shipment.destiny_lat, shipment.destiny_lng, areas
-              if origin_area != false && destiny_area != false
-                  puts "EMPEZAMOS ACÁ"
-                zone_price = ApplicationController.helpers.calc_zone_price origin_area, destiny_area
-                shipment.final_price = true
-                shipment.price = zone_price + 20 * 50
-                puts "CHETEANDO "+shipment.price.to_s
-                ApplicationController.helpers.set_discount shipment
-                      updateShipment shipment
-
-              else
-                "no areas"
-              end
-              
-            end
-          end
+     redirect_to '/cadets'
    end
    
 #     def updateShipment(shipment)
@@ -88,7 +62,9 @@ class ShipmentsController < ApplicationController
     if current_user == nil
       redirect_to '/login'
     else
+      puts "Algo bien"
       estimated_price = EstimatedPrice.where(user_id: params[:sender_id]).first
+      puts "algo mal"
       if estimated_price
         estimated_weight_price = estimated_price.weight_price
         estimated_zone_price = estimated_price.zone_price
